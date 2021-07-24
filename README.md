@@ -1,4 +1,4 @@
-# CSSWENG-S14 Group 6 Project
+# AGC Print
 
 ## Members
 - Product Owner: Jacob Dy 
