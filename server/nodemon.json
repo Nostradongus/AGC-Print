@@ -1,0 +1,8 @@
+{
+  "watch": ["src"],
+  "ext": "js,json,ts",
+  "ignore": ["node_modules", "coverage"],
+  "exec": "node ./src/index.js",
+  "restartable": "rs",
+  "env": { "NODE_ENV": "development" }
+}
