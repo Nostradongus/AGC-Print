@@ -1,18 +1,31 @@
-require('dotenv-safe').config();
-const express = require('express');
-const morgan = require('morgan');
-const swaggerUi = require('swagger-ui-express');
-const connectDB = require('./config/connectDB');
-const YAML = require('yamljs');
-const path = require('path');
-const cors = require('cors');
-const logger = require('./logger');
+// Modules
+import dotenv from 'dotenv-safe';
+import express from 'express';
+import morgan from 'morgan';
+import swaggerUi from 'swagger-ui-express';
+import YAML from 'yamljs';
+import path from 'path';
+import cors from 'cors';
+import logger from './logger/index.js';
+import connectDB from './config/connectDB.js';
+
+// Routes
+import indexRoutes from './routes/index.js';
+import userRoutes from './routes/users.js';
+
+dotenv.config();
 
 connectDB();
 
 const app = express();
-
-const pathName = path.join(__dirname, 'config', 'swagger', 'swagger.yaml');
+const __dirname = path.resolve();
+const pathName = path.join(
+  __dirname,
+  'src',
+  'config',
+  'swagger',
+  'swagger.yaml'
+);
 const specs = YAML.load(pathName);
 
 app.use(express.json());
@@ -33,8 +46,8 @@ app.use(
 );
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
-app.use('/', require('./routes/index'));
-app.use('/users', require('./routes/users'));
+app.use('/', indexRoutes);
+app.use('/users', userRoutes);
 
 const { PORT, HOST } = process.env;
 

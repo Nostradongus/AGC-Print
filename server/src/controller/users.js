@@ -1,6 +1,6 @@
-const UserService = require('../service/userService');
+import UserService from '../service/userService.js';
 
-exports.getUsers = async (req, res) => {
+export const getUsers = async (req, res) => {
   try {
     const users = await UserService.getUsers();
     res.send(users);
@@ -9,7 +9,7 @@ exports.getUsers = async (req, res) => {
   }
 };
 
-exports.getUser = async (req, res) => {
+export const getUser = async (req, res) => {
   try {
     const user = await UserService.getUser(req.params.username);
     if (user != null) {
@@ -21,7 +21,7 @@ exports.getUser = async (req, res) => {
   }
 };
 
-exports.addUser = async (req, res) => {
+export const addUser = async (req, res) => {
   try {
     const user = await UserService.addUser(req.body);
     res.send(user);

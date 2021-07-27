@@ -8,7 +8,8 @@
   "extends": ["google", "prettier", "plugin:node/recommended"],
   "plugins": ["prettier"],
   "parserOptions": {
-    "ecmaVersion": 12
+    "ecmaVersion": 12,
+    "sourceType": "module"
   },
   "rules": {
     "prettier/prettier": "error",
@@ -19,6 +20,7 @@
     "object-shorthand": "off",
     "class-methods-use-this": "off",
     "consistent-return": "off",
-    "new-cap": ["error", { "capIsNewExceptionPattern": "^express\\.." }]
+    "new-cap": ["error", { "capIsNewExceptionPattern": "^express\\.." }],
+    "node/no-unsupported-features/es-syntax": "off"
   }
 }

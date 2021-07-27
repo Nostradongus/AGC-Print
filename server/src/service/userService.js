@@ -1,4 +1,4 @@
-const User = require('../model/User');
+import User from '../model/User.js';
 
 const UserService = {
   getUsers: async () => User.find({}),
@@ -14,4 +14,4 @@ const UserService = {
   },
 };
 
-module.exports = UserService;
+export default UserService;

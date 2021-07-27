@@ -1,4 +1,5 @@
-const { format, createLogger, transports } = require('winston');
+import winston from 'winston';
+const { format, createLogger, transports } = winston;
 const { combine, timestamp, errors, json } = format;
 
 const custom = {
@@ -34,4 +35,4 @@ const buildProdLogger = () =>
     ],
   });
 
-module.exports = buildProdLogger;
+export default buildProdLogger;
