@@ -1,10 +1,13 @@
 // get user service static object from service folder
 import UserService from '../service/user_service.js';
+import dotenv from 'dotenv-safe';
 import jwt from 'jsonwebtoken';
 
 // import bcrypt module for password hashing
 import bcrypt from 'bcrypt';
 const saltRounds = 10;
+
+dotenv.config();
 
 // index controller object for index controller methods
 const indexController = {
@@ -26,22 +29,29 @@ const indexController = {
   },
   // index controller method to login user
   postLogin: async (req, res) => {
-    const uName = req.body.username;
-    const pw = req.body.password;
+    // temporary username and password values
+    const uName = 'JuanKoch';
+    const pw = 'lesugokewu';
 
     // if user data exist in the database
-    if (UserService.getUser(uName)) {
+    const user = await UserService.getUser({ username: uName });
+    if (user != null) {
       // compare user stored password with the inputted password
-      bcrypt.compare(pw, res.password, function (equal) {
-        // if password inputted matches the stored password
-        if (equal) {
-          const details = {
-            uName: uName,
-          };
-          // send back username to client
-          return res.json(details);
-        }
-      });
+      // bcrypt.compare(pw, user.password, function (equal) {
+      //   // if password inputted matches the stored password
+      //   if (equal) {
+      //     const accessToken = jwt.sign(uName, process.env.TOKEN_SECRET);
+      //     // send back username to client
+      //     return res.json({ accessToken: accessToken });
+      //   }
+      // });
+
+      // TEMPORARY
+      if (pw === user.password) {
+        const accessToken = jwt.sign(uName, process.env.TOKEN_SECRET);
+        // send back username to client
+        return res.json({ accessToken: accessToken });
+      }
     }
 
     // username or password is incorrect, send error message

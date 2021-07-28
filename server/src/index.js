@@ -19,9 +19,6 @@ import workerRoutes from './routes/worker_routes.js';
 dotenv.config();
 const { PORT, HOST } = process.env;
 
-// token
-
-
 // connect to AGC Print database
 connectDatabase();
 
