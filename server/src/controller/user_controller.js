@@ -32,13 +32,15 @@ const userController = {
   getUser: async (req, res) => {
     try {
       // retrieve a specific user from the database given the username data from the request
-      const user = await UserService.getUser(req.params.username);
+      const user = await UserService.getUser({ username: req.params.username });
+
       // if user exists in the database, send the data back to the client
       if (user != null) {
-        return res.send(user);
+        res.send(user);
       }
+
       // if user does not exist, send error status and message
-      res.status(404).json({ message: 'User not found!' });
+      res.json({ message: 'User not found!' });
     } catch (err) {
       // if error has occurred, send server error status and message
       res.status(500).json({ message: 'Server Error' });

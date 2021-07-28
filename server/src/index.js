@@ -19,14 +19,17 @@ dotenv.config();
 const { PORT, HOST, MONGO_URI, SECRET } = process.env;
 
 // connect to agc-print database
-// additional connection options
 const options = {
   useUnifiedTopology: true,
   useNewUrlParser: true,
 };
 // connect using mongoose
 mongoose.connect(MONGO_URI, options, function (error) {
-  if (error) throw error;
+  if (error) {
+    logger.info(`Error: cannot connect to database`);
+  } else {
+    logger.info(`AGC Print database connected: ${MONGO_URI}`);
+  }
 });
 
 const app = express();
@@ -57,7 +60,7 @@ app.use(
   })
 );
 
-// implementation to server
+// routes implementation
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 app.use('/', indexRoutes);
 app.use('/users', userRoutes);

@@ -13,8 +13,5 @@ router.get('/', userController.getUsers);
 // route for retrieving a specific user data from the database
 router.get('/:username', userController.getUser);
 
-// route for adding a new user to the database
-router.post('/register', userController.addUser);
-
 // export user routes
 export default router;

@@ -5,8 +5,8 @@ import Worker from '../model/Worker.js';
 const WorkerService = {
   // this method retrieves and returns all worker account data in the database
   getWorkers: async () => Worker.find({}),
-  // this method retrieves and returns a specific worker account data based on given username
-  getWorker: async (username) => Worker.findOne({ username }),
+  // this method retrieves and returns a specific worker account data based on given data
+  getWorker: async (data) => Worker.findOne(data),
   // this method adds a new worker account data to the Worker collection in the database
   addWorker: async (worker) => {
     // create new Worker data object
