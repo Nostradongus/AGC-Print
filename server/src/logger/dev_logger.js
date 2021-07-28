@@ -1,4 +1,5 @@
-const { format, createLogger, transports, addColors } = require('winston');
+import winston from 'winston';
+const { format, createLogger, transports, addColors } = winston;
 const { combine, timestamp, printf, colorize, errors } = format;
 
 const custom = {
@@ -35,4 +36,4 @@ const buildDevLogger = () =>
     transports: [new transports.Console()],
   });
 
-module.exports = buildDevLogger;
+export default buildDevLogger;

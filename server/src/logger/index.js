@@ -1,5 +1,5 @@
-const buildDevLogger = require('./dev_logger');
-const buildProdLogger = require('./prod_logger');
+import buildDevLogger from './dev_logger.js';
+import buildProdLogger from './prod_logger.js';
 
 let logger = null;
 const { NODE_ENV } = process.env;
@@ -10,4 +10,4 @@ if (NODE_ENV === 'development') {
   logger = buildProdLogger();
 }
 
-module.exports = logger;
+export default logger;
