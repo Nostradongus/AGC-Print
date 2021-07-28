@@ -1,5 +1,7 @@
-// TODO: to be deleted
 // sample file to add dummy data
+
+// import database module for database connection
+import connectDB from './config/connectDB.js';
 
 // import faker module for dummy data
 import faker from 'faker';
@@ -12,6 +14,7 @@ import Worker from './model/Worker.js';
 // import mongoose for database connection
 import mongoose from 'mongoose';
 import dotenv from 'dotenv-safe';
+import db from './config/connectDB.js';
 
 // data containers
 const users = [];
@@ -46,35 +49,21 @@ for (var ctr = 0; ctr < 10; ctr++) {
 
   orders.push({
     id: ctr,
-    user: faker.name.findName(),
-    workerInCharge: faker.name.findName(),
+    user: uname,
+    workerInCharge: wuname,
     description: faker.lorem.word(),
     price: 500.0,
     status: faker.lorem.word(),
     size: faker.lorem.word(),
-    dataRequested: faker.date.future(),
-    dateShipped: faker.date.future(),
+    dateRequested: '07-21-21',
+    dateShipped: '07-22-21',
   });
 }
 
-dotenv.config();
-
-const { PORT, HOST, MONGO_URI, SECRET } = process.env;
-
 // connect to database
-// additional connection options
-const options = {
-  useUnifiedTopology: true,
-  useNewUrlParser: true,
-};
-// mongodb server
-const url = MONGO_URI;
-// connect using mongoose
-mongoose.connect(url, options, function (error) {
-  if (error) throw error;
-});
+db();
 
-
+// insert data to database collections
 User.insertMany(users);
 Order.insertMany(orders);
 Worker.insertMany(workers);

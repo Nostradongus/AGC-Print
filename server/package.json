@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon",
+    "data": "node ./src/data",
     "start": "node ./src/index",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -29,6 +30,7 @@
     "dotenv-safe": "^8.2.0",
     "express": "^4.17.1",
     "fireorm": "^0.22.0",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.12.14",
     "morgan": "^1.10.0",
     "reflect-metadata": "^0.1.13",

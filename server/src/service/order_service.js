@@ -8,7 +8,7 @@ const OrderService = {
   // this method retrieves and returns all orders of a specific user
   getUserOrders: async (username) => Order.find({ user: username }),
   // this method retrieves and returns a specific order data based on given order id
-  getOrder: async (id) => Order.findOne({ id }),
+  getOrder: async (data) => Order.findOne(data),
   // this method adds a new order data to the Order collection in the database
   addOrder: async (order) => {
     // create new Order data object

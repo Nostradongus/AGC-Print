@@ -14,7 +14,7 @@ router.get('/', orderController.getAllOrders);
 router.get('/:username', orderController.getUserOrders);
 
 // route for getting a specific order from the database
-router.get('/:id', orderController.getOrder);
+router.get('/order/:id', orderController.getOrder);
 
 // route for adding a new order to the database
 router.post('/add-order', orderController.addOrder);

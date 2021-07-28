@@ -1,5 +1,6 @@
 // get user service static object from service folder
 import UserService from '../service/user_service.js';
+import jwt from 'jsonwebtoken';
 
 // import bcrypt module for password hashing
 import bcrypt from 'bcrypt';
@@ -9,19 +10,19 @@ const saltRounds = 10;
 const indexController = {
   // index controller method to get to login page
   getLogin: (req, res) => {
-    res.send('LOGIN PAGE');
+    return res.json('LOGIN PAGE');
   },
   // index controller method to get to register page
   getRegister: (req, res) => {
-    res.send('REGISTER PAGE');
+    return res.json('REGISTER PAGE');
   },
   // index controller method to get to home page
   getHome: (req, res) => {
-    res.send('HOME PAGE');
+    return res.json('HOME PAGE');
   },
   // index controller method to logout user
   getLogout: (req, res) => {
-    res.send('LOGOUT');
+    return res.json('LOGOUT');
   },
   // index controller method to login user
   postLogin: async (req, res) => {
@@ -38,7 +39,7 @@ const indexController = {
             uName: uName,
           };
           // send back username to client
-          res.send(details);
+          return res.json(details);
         }
       });
     }
@@ -47,7 +48,7 @@ const indexController = {
     const details = {
       error: 'Incorrect username or password',
     };
-    res.send(details);
+    return res.json(details);
   },
   // index controller method to register (add) user to the database
   postRegister: async (req, res) => {
@@ -65,18 +66,18 @@ const indexController = {
       const details = {
         error: 'Username already exists',
       };
-      res.send(details);
+      return res.json(details);
     } else if (UserService.getUser({ email: user.email })) {
       const details = {
         error: 'E-mail already exists',
       };
-      res.send(details);
+      return res.json(details);
     } else {
       const user = user;
       bcrypt.hash(user.password, saltRounds, function (err, hash) {
         user.password = hash;
         const user = UserService.addUser(user);
-        res.send(user);
+        return res.json(user);
       });
     }
   },

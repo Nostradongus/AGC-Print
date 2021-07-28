@@ -7,7 +7,7 @@ import YAML from 'yamljs';
 import path from 'path';
 import cors from 'cors';
 import logger from './logger/index.js';
-import mongoose from 'mongoose';
+import connectDatabase from './config/connectDB.js';
 
 // routes
 import indexRoutes from './routes/index_routes.js';
@@ -15,22 +15,15 @@ import userRoutes from './routes/user_routes.js';
 import orderRoutes from './routes/order_routes.js';
 import workerRoutes from './routes/worker_routes.js';
 
+// get port and host values
 dotenv.config();
-const { PORT, HOST, MONGO_URI, SECRET } = process.env;
+const { PORT, HOST } = process.env;
 
-// connect to agc-print database
-const options = {
-  useUnifiedTopology: true,
-  useNewUrlParser: true,
-};
-// connect using mongoose
-mongoose.connect(MONGO_URI, options, function (error) {
-  if (error) {
-    logger.info(`Error: cannot connect to database`);
-  } else {
-    logger.info(`AGC Print database connected: ${MONGO_URI}`);
-  }
-});
+// token
+
+
+// connect to AGC Print database
+connectDatabase();
 
 const app = express();
 const __dirname = path.resolve();
