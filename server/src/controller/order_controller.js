@@ -48,6 +48,7 @@ const orderController = {
     try {
       // add new order to the database with the request data given
       const order = await OrderService.addOrder(req.body);
+
       // send order data back to the client to indicate success
       return res.json(order);
     } catch (err) {

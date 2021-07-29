@@ -8,8 +8,28 @@ const OrderSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  // username of user who ordered
-  user: {
+  // name of customer
+  name: {
+    type: String,
+    required: true,
+  },
+  // email of customer
+  email: {
+    type: String,
+    required: true,
+  },
+  // address of customer
+  address: {
+    type: String,
+    required: true,
+  },
+  // contact number of customer
+  contactNo: {
+    type: String,
+    required: true,
+  },
+  // payment method chosen by the customer
+  payMethod: {
     type: String,
     required: true,
   },
@@ -18,23 +38,40 @@ const OrderSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-  // details of the order
-  description: {
+  // type of the order
+  type: {
+    type: String,
+    required: true,
+  },
+  quantity: {
     type: String,
     required: true,
   },
   // price of the order
   price: {
     type: Number,
-    required: true,
+    required: false,
   },
   // current status of the order
   status: {
     type: String,
+    required: false,
+  },
+  // dimensions/size of the order (width)
+  width: {
+    type: String,
     required: true,
   },
-  // dimensions/size of the order
-  size: {
+  // dimensions/size of the order (width)
+  height: {
+    type: String,
+    required: true,
+  },
+  frameEdges: {
+    type: String,
+    required: true,
+  },
+  frameFinishing: {
     type: String,
     required: true,
   },

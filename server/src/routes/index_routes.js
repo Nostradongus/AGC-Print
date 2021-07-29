@@ -14,7 +14,7 @@ router.get('/', indexController.getLogin);
 router.get('/home', indexController.getHome);
 
 // route for logging in user to application
-router.get('/login', indexController.postLogin);
+router.post('/login', indexController.postLogin);
 
 // route for logging out user from application
 router.get('/logout', indexController.getLogout);
