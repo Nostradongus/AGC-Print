@@ -9,7 +9,7 @@ const orderController = {
       // retrieve all orders from the database
       const orders = await OrderService.getAllOrders();
       // send the array of orders back to the client
-      return res.json(orders);
+      return res.status(200).json(orders);
     } catch (err) {
       // if error has occurred, send server error status and message
       res.status(500).json({ message: 'Server Error' });
@@ -21,7 +21,7 @@ const orderController = {
     try {
       const orders = await OrderService.getUserOrders(req.params.username);
 
-      return res.json(orders);
+      return res.status(200).json(orders);
     } catch (err) {
       res.status(500).json({ message: 'Server Error' });
     }
@@ -34,10 +34,10 @@ const orderController = {
       const order = await OrderService.getOrder({ id: req.params.id });
       // if order exists in the database, send the data back to the client
       if (order != null) {
-        return res.json(order);
+        return res.status(200).json(order);
       }
       // if order does not exist, send error status and message
-      return res.json({ message: 'Order not found!' });
+      return res.status(404).json({ message: 'Order not found!' });
     } catch (err) {
       // if error has occurred, send server error status and message
       res.status(500).json({ message: 'Server Error' });
@@ -48,7 +48,7 @@ const orderController = {
   checkoutOrders: async (req, res) => {
     try {
       // return array of orders from the cart
-      return req.session.cart.generateArr();
+      return res.status(200).json(req.session.cart.generateArr());
     } catch (err) {
       // if error has occurred, send server error status and message
       res.status(500).json({ message: 'Server Error' });

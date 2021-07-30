@@ -9,7 +9,7 @@ const userController = {
       // retrieve all users from the database
       const users = await UserService.getUsers();
       // send the array of users back to the client
-      return res.json(users);
+      return res.status(200).json(users);
     } catch (err) {
       // if error has occurred, send server error status and message
       res.status(500).json({ message: 'Server Error' });
@@ -24,11 +24,11 @@ const userController = {
 
       // if user exists in the database, send the data back to the client
       if (user != null) {
-        return res.json(user);
+        return res.status(200).json(user);
       }
 
       // if user does not exist, send error status and message
-      return res.json({ message: 'User not found!' });
+      return res.status(404).json({ message: 'User not found!' });
     } catch (err) {
       // if error has occurred, send server error status and message
       res.status(500).json({ message: 'Server Error' });
@@ -41,7 +41,7 @@ const userController = {
       // add new user to the database with the request data given
       const user = await UserService.addUser(req.body);
       // send user data back to the client to indicate success
-      return res.json(user);
+      return res.status(201).json(user);
     } catch (err) {
       // if error has occurred, send server error status and message
       res.status(500).json({ message: 'Server Error' });

@@ -8,7 +8,7 @@ const workerController = {
       // retrieve all workers from the database
       const workers = await WorkerService.getWorkers();
       // send the array of workers back to the client
-      return res.json(workers);
+      return res.status(200).json(workers);
     } catch (err) {
       // if error has occurred, send server error status and message
       res.status(500).json({ message: 'Server Error' });
@@ -24,10 +24,10 @@ const workerController = {
       });
       // if worker exists in the database, send the data back to the client
       if (worker != null) {
-        return res.json(worker);
+        return res.status(200).json(worker);
       }
       // if worker does not exist, send error status and message
-      res.status(404).json({ message: 'User not found!' });
+      res.status(404).json({ message: 'Worker not found!' });
     } catch (err) {
       // if error has occurred, send server error status and message
       res.status(500).json({ message: 'Server Error' });
@@ -40,7 +40,7 @@ const workerController = {
       // add new worker to the database with the request data given
       const worker = await WorkerService.addWorker(req.body);
       // send worker data back to the client to indicate success
-      return res.json(worker);
+      return res.status(201).json(worker);
     } catch (err) {
       // if error has occurred, send server error status and message
       res.status(500).json({ message: 'Server Error' });

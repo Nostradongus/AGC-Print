@@ -20,7 +20,7 @@ const cartController = {
     req.session.cart = cart;
 
     // return the array of orders created by the user back to the client
-    return res.status(200).json(cart.generateArr());
+    return res.status(201).json(cart.generateArr());
   },
 
   // cart controller method to delete orders from cart
@@ -38,7 +38,7 @@ const cartController = {
     req.session.cart = cart;
 
     // return the array of orders created by the user back to the client
-    return res.status(200).json(cart.generateArr());
+    return res.status(202).json(cart.generateArr());
   },
 };
 

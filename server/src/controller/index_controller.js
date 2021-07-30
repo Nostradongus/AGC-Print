@@ -63,7 +63,7 @@ const indexController = {
         // const refreshToken = jwt.sign(user.username, process.env.)
         // send back username to client
         // refreshTokens.push(refreshToken);
-        return res.json({
+        return res.status(200).json({
           accessToken: accessToken,
           username: user.username,
         });
@@ -74,7 +74,7 @@ const indexController = {
     const details = {
       error: 'Incorrect username or password',
     };
-    return res.json(details);
+    return res.status(422).json(details);
   },
 
   // index controller method to register (add) user to the database
@@ -85,18 +85,24 @@ const indexController = {
     // check if email already exists in the database
     const emailData = await UserService.getUser({ email: req.body.email });
 
-    // if username already exists
-    if (userData != null) {
+    // if password and repeat (confirm) password do not match each other
+    if (req.body.pw !== req.body.repeatPw) {
+      const details = {
+        error: 'Password and Repeat Password does not match each other.',
+      };
+      return res.status(422).json(details);
+      // if username already exists
+    } else if (userData != null) {
       const details = {
         error: 'Username already exists',
       };
-      return res.json(details);
+      return res.status(422).json(details);
       // if email already exists
     } else if (emailData != null) {
       const details = {
         error: 'E-mail already exists',
       };
-      return res.json(details);
+      return res.status(422).json(details);
       // add new user to database
     } else {
       // create new user object
@@ -118,7 +124,7 @@ const indexController = {
       // generate jwt access token for session
       const accessToken = await token.generateAccessToken(result.username);
 
-      return res.json({
+      return res.status(201).json({
         accessToken: accessToken,
         username: result.username,
       });
