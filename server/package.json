@@ -7,12 +7,15 @@
   "scripts": {
     "dev": "nodemon",
     "data": "node ./src/data",
-    "start": "node ./src/index",
+    "start": "node ./src/server",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage"
   },
   "devDependencies": {
+    "@babel/core": "^7.14.8",
+    "@babel/preset-env": "^7.14.8",
+    "babel-jest": "^27.0.6",
     "eslint": "^7.31.0",
     "eslint-config-google": "^0.14.0",
     "eslint-config-node": "^4.1.0",
@@ -22,21 +25,25 @@
     "eslint-plugin-prettier": "^3.4.0",
     "jest": "^27.0.5",
     "nodemon": "^2.0.12",
-    "prettier": "^2.3.1"
+    "prettier": "^2.3.1",
+    "supertest": "^6.1.4"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "dotenv-safe": "^8.2.0",
     "express": "^4.17.1",
+    "express-session": "^1.17.2",
     "fireorm": "^0.22.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.12.14",
     "morgan": "^1.10.0",
     "multer": "^1.4.2",
     "reflect-metadata": "^0.1.13",
+    "supertest": "^6.1.4",
     "swagger-jsdoc": "^6.1.0",
     "swagger-ui-express": "^4.1.6",
+    "uniqid": "^5.3.0",
     "winston": "^3.3.3",
     "yamljs": "^0.3.0"
   }

@@ -10,30 +10,14 @@ const OrderService = {
   // this method retrieves and returns a specific order data based on given order id
   getOrder: async (data) => Order.findOne(data),
   // this method adds a new order data to the Order collection in the database
-  addOrder: async (order) => {
-    // get today's date
-    const date = new Date();
-    const formattedDate = `${date.getFullYear().toString()} - 
-                           ${(date.getMonth() + 1).toString().padStart(2, 0)} -
-                           ${date.getDate().toString().padStart(2, 0)}`;
-    // create new Order data object
-    const newOrder = new Order({
-      id: order.id,
-      type: order.type,
-      quantity: order.quantity,
-      size: order.size,
-      frameEdges: order.frameEdges,
-      frameFinishing: order.frameFinishing,
-      name: order.name,
-      email: order.email,
-      address: order.address,
-      contactNo: order.contactNo,
-      payMethod: order.payMethod,
-      dateRequested: formattedDate,
-    });
+  addOrders: async (orderArr) => {
+    // add new order/s data to the Order collection
+    for (let ctr = 0; ctr < orderArr.length; ctr++) {
+      orderArr[ctr].save();
+    }
 
-    // add new order data to the Order collection
-    return newOrder.save();
+    // return back array of orders to the client
+    return orderArr;
   },
 };
 

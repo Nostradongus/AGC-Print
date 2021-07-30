@@ -12,22 +12,32 @@ import token from '../middleware/token.js';
 const indexController = {
   // index controller method to get to login page
   getLogin: (req, res) => {
-    return res.json('LOGIN PAGE');
+    return res.status(200).json('LOGIN PAGE');
   },
+
   // index controller method to get to register page
   getRegister: (req, res) => {
-    return res.json('REGISTER PAGE');
+    return res.status(200).json('REGISTER PAGE');
   },
+
   // index controller method to get to home page
   getHome: (req, res) => {
-    return res.json('HOME PAGE');
+    return res.status(200).json('HOME PAGE');
   },
+
   // index controller method to logout user
   getLogout: (req, res) => {
     // refreshTokens = refreshTokens.filter(token => token != req.body.token);
     // res.sendStatus(204);
-    return res.json('LOGOUT');
+
+    // destroy user cart session
+    if (typeof req.session.cart !== 'undefined') {
+      req.session.destroy();
+    }
+
+    return res.status(204).json('LOGOUT');
   },
+
   // index controller method to login user
   postLogin: async (req, res) => {
     // temporary username and password values
@@ -49,7 +59,7 @@ const indexController = {
 
       // TEMPORARY
       if (pw === user.password) {
-        const accessToken = token.generateAccessToken(user.username);
+        const accessToken = await token.generateAccessToken(user.username);
         // const refreshToken = jwt.sign(user.username, process.env.)
         // send back username to client
         // refreshTokens.push(refreshToken);
@@ -69,36 +79,48 @@ const indexController = {
 
   // index controller method to register (add) user to the database
   postRegister: async (req, res) => {
-    // if username already exists in the database
+    // check if username already exists in the database
     const userData = await UserService.getUser({ username: req.body.username });
+
+    // check if email already exists in the database
     const emailData = await UserService.getUser({ email: req.body.email });
+
+    // if username already exists
     if (userData != null) {
       const details = {
         error: 'Username already exists',
       };
       return res.json(details);
+      // if email already exists
     } else if (emailData != null) {
       const details = {
         error: 'E-mail already exists',
       };
       return res.json(details);
+      // add new user to database
     } else {
-      bcrypt.hash(req.body.pw, saltRounds, function (err, hash) {
-        const user = {
-          username: req.body.username,
-          password: hash,
-          firstname: req.body.firstname,
-          lastname: req.body.lastname,
-          contactNo: req.body.contactNo,
-          email: req.body.email,
-        };
-        const result = UserService.addUser(user);
-        // const accessToken = token.generateAccessToken(result.username);
+      // create new user object
+      const user = {
+        username: req.body.username,
+        password: null,
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        contactNo: req.body.contactNo,
+        email: req.body.email,
+      };
 
-        return res.json({
-          // accessToken: accessToken,
-          username: result.username,
-        });
+      // hash password
+      user.password = await bcrypt.hash(req.body.pw, saltRounds);
+
+      // add user to database and get user data back
+      const result = await UserService.addUser(user);
+
+      // generate jwt access token for session
+      const accessToken = await token.generateAccessToken(result.username);
+
+      return res.json({
+        accessToken: accessToken,
+        username: result.username,
       });
     }
   },

@@ -1,6 +1,7 @@
 // get order service static object from service folder
 import OrderService from '../service/order_service.js';
 
+// order controller object for order controller methods
 const orderController = {
   // order controller method to retrieve and return all orders from the database
   getAllOrders: async (req, res) => {
@@ -43,14 +44,27 @@ const orderController = {
     }
   },
 
-  // order controller method to add a new order to the database
-  addOrder: async (req, res) => {
+  // order controller method for checking out orders from the cart
+  checkoutOrders: async (req, res) => {
     try {
-      // add new order to the database with the request data given
-      const order = await OrderService.addOrder(req.body);
+      // return array of orders from the cart
+      return req.session.cart.generateArr();
+    } catch (err) {
+      // if error has occurred, send server error status and message
+      res.status(500).json({ message: 'Server Error' });
+    }
+  },
+
+  // order controller method to add new orders to the database
+  addOrders: async (req, res) => {
+    try {
+      const orderArr = req.session.cart.generateArr();
+
+      // add new order/s from the cart to the database
+      const newOrders = await OrderService.addOrders(orderArr);
 
       // send order data back to the client to indicate success
-      return res.json(order);
+      return res.status(200).json(newOrders);
     } catch (err) {
       // if error has occurred, send server error status and message
       res.status(500).json({ message: 'Server Error' });

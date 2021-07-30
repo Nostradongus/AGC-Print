@@ -1,4 +1,5 @@
 // sample file to add dummy data
+// TODO: update this file for data population
 
 // import database module for database connection
 import connectDB from './config/connectDB.js';
@@ -21,7 +22,7 @@ const users = [];
 const orders = [];
 const workers = [];
 
-for (var ctr = 0; ctr < 10; ctr++) {
+for (const ctr = 0; ctr < 10; ctr++) {
   const fname = faker.name.firstName(ctr % 2);
   const lname = faker.name.lastName(ctr % 2);
   const uname = fname + lname;
@@ -33,7 +34,7 @@ for (var ctr = 0; ctr < 10; ctr++) {
     email: faker.internet.email(),
     contactNo: faker.phone.phoneNumber(),
   });
-  
+
   const wfname = faker.name.firstName(ctr % 2);
   const wlname = faker.name.lastName(ctr % 2);
   const wuname = wfname + wlname;
@@ -67,3 +68,6 @@ db();
 User.insertMany(users);
 Order.insertMany(orders);
 Worker.insertMany(workers);
+
+// disconnect to database afterwards
+mongoose.disconnect();

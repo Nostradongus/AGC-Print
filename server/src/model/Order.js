@@ -43,7 +43,13 @@ const OrderSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  // quantity of the order
   quantity: {
+    type: String,
+    required: true,
+  },
+  // image of the order
+  img: {
     type: String,
     required: true,
   },
@@ -55,7 +61,7 @@ const OrderSchema = new mongoose.Schema({
   // current status of the order
   status: {
     type: String,
-    required: false,
+    required: true,
   },
   // dimensions/size of the order (width)
   width: {
@@ -69,11 +75,11 @@ const OrderSchema = new mongoose.Schema({
   },
   frameEdges: {
     type: String,
-    required: true,
+    required: false,
   },
   frameFinishing: {
     type: String,
-    required: true,
+    required: false,
   },
   // when the order was requested
   dateRequested: {
