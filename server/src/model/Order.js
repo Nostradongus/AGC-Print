@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 const OrderSchema = new mongoose.Schema({
   // unique id of order
   id: {
-    type: Number,
+    type: String,
     required: true,
   },
   // name of customer
