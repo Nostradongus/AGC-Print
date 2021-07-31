@@ -1,7 +1,7 @@
 import request from 'supertest';
 import app from '../app.js';
 
-describe('Test Index Route', () => {
+describe('Test User Route', () => {
   it('should respond with 200 status code when requesting all users', async () => {
     const response = await request(app).get('/users/');
     expect(response.statusCode).toBe(200);
