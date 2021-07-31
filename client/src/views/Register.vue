@@ -12,6 +12,7 @@
               name="firstname"
               type="text"
               class="manrope-regular name-text-field"
+              v-model="state.firstname"
             />
             <label
               for="firstname"
@@ -31,6 +32,7 @@
               name="lastname"
               type="text"
               class="manrope-regular name-text-field"
+              v-model="state.lastname"
             />
             <label
               for="lastname"
@@ -56,6 +58,7 @@
             name="username"
             type="text"
             class="manrope-regular login-text-field"
+            v-model="state.username"
           />
           <label
             for="email"
@@ -78,6 +81,7 @@
             name="email"
             type="text"
             class="manrope-regular login-text-field"
+            v-model="state.email"
           />
           <label
             for="email"
@@ -100,6 +104,7 @@
             name="contactno"
             type="text"
             class="manrope-regular login-text-field"
+            v-model="state.contactNo"
           />
           <label
             for="contactno"
@@ -122,6 +127,7 @@
             name="password"
             type="password"
             class="manrope-regular login-text-field"
+            v-model="state.password"
           />
           <label
             for="password"
@@ -144,6 +150,7 @@
             name="confirmpassword"
             type="password"
             class="manrope-regular login-text-field"
+            v-model="state.confirmPassword"
           />
           <label
             for="confirmpassword"
@@ -160,23 +167,62 @@
             Error message
           </p>
         </div>
-        <input
-          class="manrope-bold login-btn mt-6"
+        <button
           type="submit"
-          value="Sign Up"
+          class="manrope-bold login-btn mt-6"
           id="login-btn"
-        />
+          @click="registerUser"
+        >
+          Sign Up
+        </button>
       </div>
-      <a class="manrope-bold text-primary-blue" href="/">
+      <router-link class="manrope-bold text-primary-blue" to="/">
         <span class="absolute bottom-10 right-16">Sign in instead</span>
-      </a>
+      </router-link>
     </div>
   </div>
 </template>
 
 <script>
+import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
+import { reactive } from 'vue';
+import * as api from '../api';
 export default {
   name: 'Register',
+  setup() {
+    const router = useRouter();
+    const store = useStore();
+    const state = reactive({
+      firstname: '',
+      lastname: '',
+      username: '',
+      email: '',
+      contactNo: '',
+      password: '',
+      confirmPassword: '',
+    });
+
+    async function registerUser() {
+      const data = {
+        firstname: state.firstname,
+        lastname: state.lastname,
+        username: state.username,
+        email: state.email,
+        contactNo: state.contactNo,
+        pw: state.password,
+        repeatPw: state.confirmPassword,
+      };
+      try {
+        const result = await api.signUp(data);
+        store.dispatch('registerUser', result.data);
+        router.push({ name: 'Order' });
+      } catch (err) {
+        console.log(err.response.data);
+      }
+    }
+    return { state, registerUser };
+  },
 };
 </script>
 

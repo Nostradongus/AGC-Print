@@ -4,8 +4,8 @@
       <img class="h-36 w-36 m-auto mt-4" src="../assets/logo.png" alt="logo" />
       <ul class="text-center mt-4" role="listbox">
         <li>
-          <a
-            href="/order"
+          <router-link
+            to="/order"
             class="
               sidebar-btn
               text-primary-blue
@@ -33,11 +33,11 @@
               />
             </svg>
             <span class="manrope-extrabold text-2xl">Order</span>
-          </a>
+          </router-link>
         </li>
         <li>
-          <a
-            href="/order-history"
+          <router-link
+            to="/order-history"
             class="
               sidebar-btn
               text-primary-blue
@@ -64,11 +64,11 @@
               />
             </svg>
             <span class="manrope-extrabold text-2xl">History</span>
-          </a>
+          </router-link>
         </li>
         <li>
-          <a
-            href=""
+          <router-link
+            to=""
             class="
               sidebar-btn
               text-primary-blue
@@ -95,7 +95,7 @@
               />
             </svg>
             <span class="manrope-extrabold text-2xl">Profile</span>
-          </a>
+          </router-link>
         </li>
       </ul>
     </div>
@@ -196,8 +196,7 @@
           duration-300
           ease-in-out
           text-center text-lg
-          hover:bg-link-water
-          hover:text-primary-blue
+          hover:bg-link-water hover:text-primary-blue
           w-32
           ml-8
           rounded-xl

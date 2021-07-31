@@ -13,47 +13,93 @@ const routes = [
     path: '/',
     name: 'Login',
     component: Login,
+    meta: {
+      hideForAuth: true,
+    },
   },
   {
     path: '/register',
     name: 'Register',
     component: Register,
+    meta: {
+      hideForAuth: true,
+    },
   },
   {
     path: '/order',
     name: 'Order',
     component: Order,
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: '/view-cart',
     name: 'ViewCart',
     component: ViewCart,
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: '/delivery-information',
     name: 'DeliveryInformation',
     component: DeliveryInformation,
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: '/view-order',
     name: 'ViewOrder',
     component: ViewOrder,
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: '/order-history',
     name: 'OrderHistory',
     component: OrderHistory,
+    meta: {
+      reguiresAuth: true,
+    },
   },
   {
     path: '/order-details',
     name: 'OrderDetails',
     component: OrderDetails,
+    meta: {
+      reguiresAuth: true,
+    },
   },
 ];
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
+  const hideForAuth = to.matched.some((record) => record.meta.hideForAuth);
+  const user = localStorage.getItem('user');
+  if (requiresAuth) {
+    console.log('test');
+    if (user != null) {
+      next();
+    } else {
+      next({ name: 'Login' });
+    }
+  } else if (hideForAuth) {
+    if (user != null) {
+      next({ name: 'Order' });
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
 });
 
 export default router;

@@ -6,19 +6,21 @@
         Sign in to your account
       </p>
       <p
-        class="manrope-bold error-msg-field text-center mb-8 invisible"
+        class="manrope-bold error-msg-field text-center mb-8"
         id="error-msg"
+        :class="{ invisible: state.error !== true }"
       >
         Invalid username or password
       </p>
       <div class="text-center">
-        <form href="/order">
+        <form @submit.prevent="loginUser">
           <div class="relative">
             <input
               id="username"
               name="username"
               type="text"
               class="manrope-regular login-text-field"
+              v-model="state.username"
             />
             <label
               for="email"
@@ -38,6 +40,7 @@
               name="password"
               type="password"
               class="manrope-regular login-text-field"
+              v-model="state.password"
             />
             <label
               for="password"
@@ -51,24 +54,52 @@
               >Password</label
             >
           </div>
-          <input
-            class="manrope-bold login-btn mt-10"
-            type="submit"
-            value="Sign in"
-            id="login-btn"
-          />
+          <button class="manrope-bold login-btn mt-10" id="login-btn">
+            Sign in
+          </button>
         </form>
       </div>
-      <a class="manrope-bold text-primary-blue" href="/register">
+      <router-link class="manrope-bold text-primary-blue" to="/register">
         <span class="absolute bottom-20 right-16">Don't have an account?</span>
-      </a>
+      </router-link>
     </div>
   </div>
 </template>
 
 <script>
+import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
+import { reactive } from 'vue';
+import * as api from '../api';
 export default {
   name: 'Login',
+  setup() {
+    const router = useRouter();
+    const store = useStore();
+    const state = reactive({
+      username: '',
+      password: '',
+      error: false,
+    });
+
+    async function loginUser() {
+      const data = {
+        username: state.username,
+        password: state.password,
+      };
+      try {
+        const result = await api.signIn(data);
+        console.log(result.data);
+        store.dispatch('loginUser', result.data);
+        router.push({ name: 'Order' });
+      } catch (err) {
+        console.log(err.response.data);
+        state.error = true;
+      }
+    }
+
+    return { state, loginUser };
+  },
 };
 </script>
 
