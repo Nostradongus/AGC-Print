@@ -123,15 +123,15 @@
             <div class="flex-1">
               <div class="ml-3 space-y-1 border-r-2 pr-3">
                 <div class="manrope-extrabold">TARPAULIN</div>
-                <div class="text-md">
+                <div class="text-md manrope-regular">
                   <span class="text-md manrope-bold">Complete name:</span>
                   Sonson Dela Cruz
                 </div>
-                <div class="text-md">
+                <div class="text-md manrope-regular">
                   <span class="text-md manrope-bold"> Delivery Address:</span>
                   123 Konda Village, Narukami Island, Inazuma
                 </div>
-                <div class="text-md">
+                <div class="text-md manrope-regular">
                   <span class="text-md manrope-bold">Date Ordered:</span>
                   January 1, 2021
                 </div>

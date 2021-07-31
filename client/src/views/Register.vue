@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-primary-blue flex">
     <div class="register-rectangle relative m-auto">
-      <p class="manrope-regular text-3xl text-center mt-16">
+      <p class="manrope-regular text-3xl text-center mt-10">
         Create an Account
       </p>
       <div class="text-center">
@@ -45,6 +45,10 @@
             >
           </div>
         </div>
+        <div class="flex flex-wrap justify-evenly">
+          <p class="text-red manrope-bold invisible text-sm">Error message</p>
+          <p class="text-red manrope-bold invisible text-sm">Error message</p>
+        </div>
 
         <div class="relative mt-6">
           <input
@@ -64,6 +68,9 @@
             "
             >Username</label
           >
+          <p class="text-red manrope-bold text-left ml-14 invisible text-sm">
+            Error message
+          </p>
         </div>
         <div class="relative mt-6">
           <input
@@ -83,6 +90,9 @@
             "
             >E-mail</label
           >
+          <p class="text-red manrope-bold text-left ml-14 invisible text-sm">
+            Error message
+          </p>
         </div>
         <div class="relative mt-6">
           <input
@@ -102,12 +112,15 @@
             "
             >Contact No.</label
           >
+          <p class="text-red manrope-bold text-left ml-14 invisible text-sm">
+            Error message
+          </p>
         </div>
         <div class="relative mt-6">
           <input
             id="password"
             name="password"
-            type="text"
+            type="password"
             class="manrope-regular login-text-field"
           />
           <label
@@ -121,12 +134,15 @@
             "
             >Password</label
           >
+          <p class="text-red manrope-bold text-left ml-14 invisible text-sm">
+            Error message
+          </p>
         </div>
         <div class="relative mt-6">
           <input
             id="confirmpassword"
             name="confirmpassword"
-            type="text"
+            type="password"
             class="manrope-regular login-text-field"
           />
           <label
@@ -140,16 +156,19 @@
             "
             >Confirm Password</label
           >
+          <p class="text-red manrope-bold text-left ml-14 invisible text-sm">
+            Error message
+          </p>
         </div>
         <input
-          class="manrope-bold login-btn mt-10"
+          class="manrope-bold login-btn mt-6"
           type="submit"
           value="Sign Up"
           id="login-btn"
         />
       </div>
       <a class="manrope-bold text-primary-blue" href="/">
-        <span class="absolute bottom-16 right-16">Sign in instead</span>
+        <span class="absolute bottom-10 right-16">Sign in instead</span>
       </a>
     </div>
   </div>
@@ -193,7 +212,7 @@ export default {
   border-width: 0 0 2px;
   border-bottom-color: #c4c4c4;
   width: 28rem;
-  height: 3rem;
+  height: 2.5rem;
 }
 
 .name-text-field {
