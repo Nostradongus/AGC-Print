@@ -8,6 +8,8 @@ const saltRounds = 10;
 // for jwtoken session management
 import token from '../middleware/token.js';
 
+import logger from '../logger/index.js';
+
 // index controller object for index controller methods
 const indexController = {
   // index controller method to get to login page
@@ -79,55 +81,61 @@ const indexController = {
 
   // index controller method to register (add) user to the database
   postRegister: async (req, res) => {
-    // check if username already exists in the database
-    const userData = await UserService.getUser({ username: req.body.username });
-
-    // check if email already exists in the database
-    const emailData = await UserService.getUser({ email: req.body.email });
-
-    // if password and repeat (confirm) password do not match each other
-    if (req.body.pw !== req.body.repeatPw) {
-      const details = {
-        error: 'Password and Repeat Password does not match each other.',
-      };
-      return res.status(422).json(details);
-      // if username already exists
-    } else if (userData != null) {
-      const details = {
-        error: 'Username already exists',
-      };
-      return res.status(422).json(details);
-      // if email already exists
-    } else if (emailData != null) {
-      const details = {
-        error: 'E-mail already exists',
-      };
-      return res.status(422).json(details);
-      // add new user to database
-    } else {
-      // create new user object
-      const user = {
+    try {
+      // check if username already exists in the database
+      const userData = await UserService.getUser({
         username: req.body.username,
-        password: null,
-        firstname: req.body.firstname,
-        lastname: req.body.lastname,
-        contactNo: req.body.contactNo,
-        email: req.body.email,
-      };
-
-      // hash password
-      user.password = await bcrypt.hash(req.body.pw, saltRounds);
-
-      // add user to database and get user data back
-      const result = await UserService.addUser(user);
-
-      // generate jwt access token for session
-      const accessToken = await token.generateAccessToken(result.username);
-
-      return res.status(201).json({
-        accessToken: accessToken,
-        username: result.username,
       });
+
+      // check if email already exists in the database
+      const emailData = await UserService.getUser({ email: req.body.email });
+
+      // Check for errors
+      const errors = [];
+      // if password and repeat (confirm) password do not match each other
+      if (req.body.pw !== req.body.repeatPw) {
+        // if username already exists
+        errors.push('Password and Repeat Password does not match each other.');
+      }
+      if (userData != null) {
+        // if email already exists
+        errors.push('Username already exists');
+      }
+      if (emailData != null) {
+        errors.push('E-mail already exists');
+      }
+
+      // add new user to database
+      if (errors.length) {
+        logger.info(errors);
+        return res.status(422).json({ errors });
+      } else {
+        // create new user object
+        const user = {
+          username: req.body.username,
+          password: null,
+          firstname: req.body.firstname,
+          lastname: req.body.lastname,
+          contactNo: req.body.contactNo,
+          email: req.body.email,
+        };
+
+        // hash password
+        user.password = await bcrypt.hash(req.body.pw, saltRounds);
+
+        // add user to database and get user data back
+        const result = await UserService.addUser(user);
+
+        // generate jwt access token for session
+        const accessToken = await token.generateAccessToken(result.username);
+
+        return res.status(201).json({
+          accessToken: accessToken,
+          username: result.username,
+        });
+      }
+    } catch (err) {
+      logger.info(err);
     }
   },
 };
