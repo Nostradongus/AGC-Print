@@ -13,6 +13,7 @@
               type="text"
               class="manrope-regular name-text-field"
               v-model="state.firstname"
+              :class="{ 'text-field-error': v.firstname.$error }"
             />
             <label
               for="firstname"
@@ -25,6 +26,15 @@
               "
               >First Name</label
             >
+            <p
+              v-if="v.firstname.$error"
+              class="text-red manrope-bold text-left text-sm"
+            >
+              {{ v.firstname.$errors[0].$message }}
+            </p>
+            <p v-else class="text-red manrope-bold text-left text-sm invisible">
+              placeholder
+            </p>
           </div>
           <div class="relative">
             <input
@@ -33,6 +43,7 @@
               type="text"
               class="manrope-regular name-text-field"
               v-model="state.lastname"
+              :class="{ 'text-field-error': v.lastname.$error }"
             />
             <label
               for="lastname"
@@ -45,11 +56,16 @@
               "
               >Last Name</label
             >
+            <p
+              class="text-red manrope-bold text-left text-sm"
+              v-if="v.lastname.$error"
+            >
+              {{ v.lastname.$errors[0].$message }}
+            </p>
+            <p v-else class="text-red manrope-bold text-left text-sm invisible">
+              placeholder
+            </p>
           </div>
-        </div>
-        <div class="flex flex-wrap justify-evenly">
-          <p class="text-red manrope-bold invisible text-sm">Error message</p>
-          <p class="text-red manrope-bold invisible text-sm">Error message</p>
         </div>
 
         <div class="relative mt-6">
@@ -59,6 +75,7 @@
             type="text"
             class="manrope-regular login-text-field"
             v-model="state.username"
+            :class="{ 'text-field-error': v.username.$error }"
           />
           <label
             for="email"
@@ -71,8 +88,17 @@
             "
             >Username</label
           >
-          <p class="text-red manrope-bold text-left ml-14 invisible text-sm">
-            Error message
+          <p
+            class="text-red manrope-bold text-left ml-14 text-sm"
+            v-if="v.username.$error"
+          >
+            {{ v.username.$errors[0].$message }}
+          </p>
+          <p
+            v-else
+            class="text-red manrope-bold text-left ml-14 text-sm invisible"
+          >
+            placeholder
           </p>
         </div>
         <div class="relative mt-6">
@@ -82,6 +108,7 @@
             type="text"
             class="manrope-regular login-text-field"
             v-model="state.email"
+            :class="{ 'text-field-error': v.email.$error }"
           />
           <label
             for="email"
@@ -94,8 +121,17 @@
             "
             >E-mail</label
           >
-          <p class="text-red manrope-bold text-left ml-14 invisible text-sm">
-            Error message
+          <p
+            class="text-red manrope-bold text-left ml-14 text-sm"
+            v-if="v.email.$error"
+          >
+            {{ v.email.$errors[0].$message }}
+          </p>
+          <p
+            v-else
+            class="text-red manrope-bold text-left ml-14 text-sm invisible"
+          >
+            placeholder
           </p>
         </div>
         <div class="relative mt-6">
@@ -105,6 +141,7 @@
             type="text"
             class="manrope-regular login-text-field"
             v-model="state.contactNo"
+            :class="{ 'text-field-error': v.contactNo.$error }"
           />
           <label
             for="contactno"
@@ -117,8 +154,17 @@
             "
             >Contact No.</label
           >
-          <p class="text-red manrope-bold text-left ml-14 invisible text-sm">
-            Error message
+          <p
+            class="text-red manrope-bold text-left ml-14 text-sm"
+            v-if="v.contactNo.$error"
+          >
+            {{ v.contactNo.$errors[0].$message }}
+          </p>
+          <p
+            v-else
+            class="text-red manrope-bold text-left ml-14 text-sm invisible"
+          >
+            placeholder
           </p>
         </div>
         <div class="relative mt-6">
@@ -128,6 +174,7 @@
             type="password"
             class="manrope-regular login-text-field"
             v-model="state.password"
+            :class="{ 'text-field-error': v.password.$error }"
           />
           <label
             for="password"
@@ -140,8 +187,17 @@
             "
             >Password</label
           >
-          <p class="text-red manrope-bold text-left ml-14 invisible text-sm">
-            Error message
+          <p
+            class="text-red manrope-bold text-left ml-14 text-sm"
+            v-if="v.password.$error"
+          >
+            {{ v.password.$errors[0].$message }}
+          </p>
+          <p
+            v-else
+            class="text-light-gray manrope-bold text-left ml-14 text-sm"
+          >
+            Password should contain at least 8 characters
           </p>
         </div>
         <div class="relative mt-6">
@@ -163,8 +219,17 @@
             "
             >Confirm Password</label
           >
-          <p class="text-red manrope-bold text-left ml-14 invisible text-sm">
-            Error message
+          <p
+            class="text-red manrope-bold text-left ml-14 text-sm"
+            v-if="!passwordConfirmed"
+          >
+            Passwords don't match
+          </p>
+          <p
+            v-else
+            class="text-red manrope-bold text-left ml-14 text-sm invisible"
+          >
+            placeholder
           </p>
         </div>
         <button
@@ -186,7 +251,15 @@
 <script>
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
-import { reactive } from 'vue';
+import { computed, reactive } from 'vue';
+import useVuelidate from '@vuelidate/core';
+import {
+  required,
+  numeric,
+  email,
+  minLength,
+  sameAs,
+} from '@vuelidate/validators';
 import * as api from '../api';
 export default {
   name: 'Register',
@@ -203,6 +276,22 @@ export default {
       confirmPassword: '',
     });
 
+    const rules = {
+      firstname: { required },
+      lastname: { required },
+      username: { required },
+      email: { required, email },
+      contactNo: { required, numeric },
+      password: { required, minLength: minLength(8) },
+      confirmPassword: { required },
+    };
+
+    const v = useVuelidate(rules, state);
+
+    const passwordConfirmed = computed(
+      () => state.password === state.confirmPassword
+    );
+
     async function registerUser() {
       const data = {
         firstname: state.firstname,
@@ -214,14 +303,18 @@ export default {
         repeatPw: state.confirmPassword,
       };
       try {
-        const result = await api.signUp(data);
-        store.dispatch('registerUser', result.data);
-        router.push({ name: 'Order' });
+        const validated = await v.value.$validate();
+
+        if (validated && passwordConfirmed.value) {
+          const result = await api.signUp(data);
+          store.dispatch('registerUser', result.data);
+          router.push({ name: 'Order' });
+        }
       } catch (err) {
-        console.log(err.response.data);
+        console.log(err);
       }
     }
-    return { state, registerUser };
+    return { state, registerUser, v, passwordConfirmed };
   },
 };
 </script>
@@ -267,6 +360,10 @@ export default {
   border-bottom-color: #c4c4c4;
   width: 12rem;
   height: 3rem;
+}
+
+.text-field-error {
+  border-bottom-color: red;
 }
 
 .login-btn {
