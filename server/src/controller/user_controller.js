@@ -1,4 +1,5 @@
 // get user service static object from service folder
+import logger from '../logger/index.js';
 import UserService from '../service/user_service.js';
 
 // user controller object containing all user controller methods
@@ -12,6 +13,7 @@ const userController = {
       return res.status(200).json(users);
     } catch (err) {
       // if error has occurred, send server error status and message
+      logger.info(err);
       res.status(500).json({ message: 'Server Error' });
     }
   },
@@ -31,6 +33,7 @@ const userController = {
       return res.status(404).json({ message: 'User not found!' });
     } catch (err) {
       // if error has occurred, send server error status and message
+      logger.info(err);
       res.status(500).json({ message: 'Server Error' });
     }
   },
@@ -44,7 +47,19 @@ const userController = {
       return res.status(201).json(user);
     } catch (err) {
       // if error has occurred, send server error status and message
+      logger.info(err);
       res.status(500).json({ message: 'Server Error' });
+    }
+  },
+
+  updateUser: async (req, res) => {
+    try {
+      await UserService.updateUser(req);
+      // Note status 204 does not return any response body
+      return res.status(204).send();
+    } catch (err) {
+      logger.info(err);
+      res.status(404).json({ message: 'User not found!' });
     }
   },
 };

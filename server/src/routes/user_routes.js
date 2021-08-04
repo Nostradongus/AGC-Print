@@ -13,5 +13,8 @@ router.get('/', userController.getUsers);
 // route for retrieving a specific user data from the database
 router.get('/:username', userController.getUser);
 
+// route for updating a specific user data from the database
+router.patch('/:username', userController.updateUser);
+
 // export user routes
 export default router;
