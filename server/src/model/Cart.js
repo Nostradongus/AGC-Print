@@ -19,37 +19,44 @@ function Cart(sessionCart) {
   this.addOrder = function (orderData) {
     // get today's date
     const date = new Date();
-    const formattedDate = `${date.getFullYear().toString()} - 
-                           ${(date.getMonth() + 1).toString().padStart(2, 0)} -
-                           ${date.getDate().toString().padStart(2, 0)}`;
+    const year = date.getFullYear().toString();
+    const month = (date.getMonth() + 1).toString().padStart(2, 0);
+    const day = date.getDate().toString().padStart(2, 0);
+    const formattedDate = `${year}-${month}-${day}`;
 
     // generate unique order id
     const uniqueId = uniqid();
 
-    // rename uploaded image file
-    const ext = orderData.image.filename.split('.');
-    const imgPath = `/public/order-images/order-${uniqueId}.${ext[1]}`;
-    fs.renameSync(
-      `./public/order-images/${orderData.image.filename}.${ext[1]}`,
-      `.${imgPath}`
-    );
+    // TODO: to be updated soon, in front-end phase
+    // // rename uploaded image file
+    // const ext = orderData.image.filename.split('.');
+    // const imgPath = `/public/order-images/order-${uniqueId}.${ext[1]}`;
+    // fs.renameSync(
+    //   `./public/order-images/${orderData.image.filename}.${ext[1]}`,
+    //   `.${imgPath}`
+    // );
 
     // create new Order object using deep copy
     const newOrder = new Order({
       id: uniqueId,
-      type: JSON.parse(JSON.stringify(orderData.order.type)),
-      quantity: JSON.parse(JSON.stringify(orderData.order.quantity)),
-      size: JSON.parse(JSON.stringify(orderData.order.size)),
-      img: imgPath,
-      frameEdges: null,
-      frameFinishing: null,
-      status: 'Processing',
+      user: orderData.user.username,
       name: JSON.parse(JSON.stringify(orderData.order.name)),
       email: JSON.parse(JSON.stringify(orderData.order.email)),
       address: JSON.parse(JSON.stringify(orderData.order.address)),
       contactNo: JSON.parse(JSON.stringify(orderData.order.contactNo)),
       payMethod: JSON.parse(JSON.stringify(orderData.order.payMethod)),
+      workerInCharge: null,
+      type: JSON.parse(JSON.stringify(orderData.order.type)),
+      quantity: JSON.parse(JSON.stringify(orderData.order.quantity)),
+      img: null, // TODO: to be updated and given an url path, in front-end phase
+      price: null,
+      status: 'Processing', // always at processing status at the creation of the order
+      width: JSON.parse(JSON.stringify(orderData.order.width)),
+      height: JSON.parse(JSON.stringify(orderData.order.height)),
+      frameEdges: null,
+      frameFinishing: null,
       dateRequested: formattedDate,
+      dateShipped: null,
     });
 
     // if frame edges were specified in the order
@@ -72,13 +79,14 @@ function Cart(sessionCart) {
 
   // removes an order from the cart
   this.deleteOrder = function (id) {
-    // delete uploaded image order first
-    fs.unlink(`.${this.orders[id].imgPath}`, function (err) {
-      if (err) {
-        // if error has occurred, send server error status and message
-        res.status(500).json({ message: 'Server Error' });
-      }
-    });
+    // TODO: to be updated soon, in front-end phase
+    // // delete uploaded image order first
+    // fs.unlink(`.${this.orders[id].imgPath}`, function (err) {
+    //   if (err) {
+    //     // if error has occurred, send server error status and message
+    //     res.status(500).json({ message: 'Server Error' });
+    //   }
+    // });
 
     // delete order object
     delete this.orders[id];

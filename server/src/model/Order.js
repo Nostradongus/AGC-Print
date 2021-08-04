@@ -8,6 +8,11 @@ const OrderSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  // user who made the order
+  user: {
+    type: String,
+    required: true,
+  },
   // name of customer
   name: {
     type: String,
@@ -45,13 +50,13 @@ const OrderSchema = new mongoose.Schema({
   },
   // quantity of the order
   quantity: {
-    type: String,
+    type: Number,
     required: true,
   },
-  // image of the order
+  // file path of the image of the order
   img: {
     type: String,
-    required: true,
+    required: false, // TODO: to be updated and set to true, in front-end phase
   },
   // price of the order
   price: {
@@ -73,10 +78,12 @@ const OrderSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  // frame edges of a specific order
   frameEdges: {
     type: String,
     required: false,
   },
+  // frame finishing of a specific order
   frameFinishing: {
     type: String,
     required: false,
@@ -84,7 +91,7 @@ const OrderSchema = new mongoose.Schema({
   // when the order was requested
   dateRequested: {
     type: String,
-    required: false,
+    required: true,
   },
   // when the order was shipped
   dateShipped: {

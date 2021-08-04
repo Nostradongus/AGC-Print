@@ -17,7 +17,6 @@ const UserService = {
       lastname: user.lastname,
       email: user.email,
       contactNo: user.contactNo,
-      orders: [],
     });
 
     // add new user account data to the User collection
