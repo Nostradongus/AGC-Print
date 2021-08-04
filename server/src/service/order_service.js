@@ -12,9 +12,7 @@ const OrderService = {
   // this method adds a new order data to the Order collection in the database
   addOrders: async (orderArr) => {
     // add new order/s data to the Order collection
-    for (let ctr = 0; ctr < orderArr.length; ctr++) {
-      orderArr[ctr].save();
-    }
+    Order.insertMany(orderArr);
 
     // return back array of orders to the client
     return orderArr;

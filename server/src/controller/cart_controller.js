@@ -10,7 +10,9 @@ const cartController = {
 
     const orderData = {
       order: req.body,
-      image: req.file,
+      user: req.user,
+      // TODO: to be updated soon, in front-end phase
+      // image: req.file,
     };
 
     // add new order to cart
@@ -26,7 +28,7 @@ const cartController = {
   // cart controller method to delete orders from cart
   deleteFromCart: (req, res) => {
     // get passed order id
-    const id = req.query.id;
+    const id = req.params.id; // unique id of order
 
     // create new cart object with session cart
     const cart = new Cart(req.session.cart ? req.session.cart : {});

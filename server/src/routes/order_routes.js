@@ -10,6 +10,9 @@ import orderController from '../controller/order_controller.js';
 // import cart controller object for cart controller methods
 import cartController from '../controller/cart_controller.js';
 
+// import jwt token middleware for user authentication
+import token from '../middleware/token.js';
+
 // get express router
 const router = express.Router();
 
@@ -28,29 +31,47 @@ const orderImageStorage = multer.diskStorage({
 const orderImageUpload = multer({ storage: orderImageStorage });
 
 // route for getting all orders from the database
-router.get('/', orderController.getAllOrders);
+router.get('/', token.authenticateToken, orderController.getAllOrders);
 
 // route for getting all orders of a user from the database
-router.get('/:username', orderController.getUserOrders);
+router.get(
+  '/:username',
+  token.authenticateToken,
+  orderController.getUserOrders
+);
 
 // route for getting a specific order from the database
-router.get('/details/:id', orderController.getOrder);
+router.get('/details/:id', token.authenticateToken, orderController.getOrder);
 
 // route for deleting an order from cart
-router.get('/delete-from-cart/:id', cartController.deleteFromCart);
+router.get(
+  '/cart/delete/:id',
+  token.authenticateToken,
+  cartController.deleteFromCart
+);
 
 // route for checkout orders
-router.get('/checkout', orderController.checkoutOrders);
+router.get(
+  '/cart/checkout',
+  token.authenticateToken,
+  orderController.checkoutOrders
+);
 
 // route for adding new order to cart
 router.post(
-  '/add-to-cart',
-  orderImageUpload.single('order-image'), // upload order image
+  '/cart/add',
+  token.authenticateToken,
+  // TODO: to be updated soon, in front-end phase
+  // orderImageUpload.single('order-image'), // upload order image
   cartController.addToCart
 );
 
 // route for adding new order/s to the database after checkout
-router.post('/add-orders', orderController.addOrders);
+router.post(
+  '/cart/confirm',
+  token.authenticateToken,
+  orderController.addOrders
+);
 
 // export order routes
 export default router;
