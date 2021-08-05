@@ -109,7 +109,12 @@
         <label for="product" class="manrope-regular text-xl mr-4 mt-2"
           >Choose a product:</label
         >
-        <select name="product" id="product" class="dropdown-field">
+        <select
+          name="product"
+          id="product"
+          v-model="selected"
+          class="dropdown-field"
+        >
           <option value="placeholder" disabled selected hidden>
             Select one
           </option>
@@ -119,7 +124,8 @@
           <option value="sticker">Sticker</option>
         </select>
 
-        <form class="mt-12 hidden" id="tarpaulin-form">
+        <!-- start tarpaulin form -->
+        <form class="mt-12" id="tarpaulin-form">
           <div class="relative">
             <input
               id="quantity"
@@ -224,7 +230,9 @@
           </div>
           <input class="hidden" type="submit" id="next-btn" />
         </form>
+        <!-- end tarpaulin form -->
 
+        <!-- start wallpaper form -->
         <form class="mt-12 hidden" id="wallpaper-form">
           <div class="relative">
             <input
@@ -310,7 +318,9 @@
           </div>
           <input class="hidden" type="submit" id="next-btn" />
         </form>
+        <!-- end wallpaper form -->
 
+        <!-- start canvas print form -->
         <form class="mt-12 hidden" id="canvas-print-form">
           <div class="relative">
             <input
@@ -470,7 +480,9 @@
           </div>
           <input class="hidden" type="submit" id="next-btn" />
         </form>
+        <!-- end canvas print form -->
 
+        <!-- start sticker form -->
         <form class="mt-12 hidden" id="sticker-form">
           <div class="relative">
             <input
@@ -580,7 +592,9 @@
 
           <input class="hidden" type="submit" id="next-btn" />
         </form>
+        <!-- end sticker form -->
       </div>
+
       <label
         for="next-btn"
         class="
