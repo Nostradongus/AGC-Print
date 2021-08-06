@@ -47,8 +47,6 @@ const indexController = {
           };
           const accessToken = token.generateAccessToken(userPayload);
 
-          req.session.token = accessToken;
-
           // return access token and needed user data
           return res.status(200).json({
             accessToken: accessToken,

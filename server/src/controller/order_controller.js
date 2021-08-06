@@ -30,6 +30,41 @@ const orderController = {
     }
   },
 
+  // order controller method to retrieve and return all past orders of a user from the database
+  getUserPastOrders: async (req, res) => {
+    try {
+      const orders = await OrderService.getUserPastOrders(req.params.username);
+
+      return res.status(200).json(orders);
+    } catch (err) {
+      res.status(500).json({ message: 'Server Error' });
+    }
+  },
+
+  // order controller method to retrieve and return all past orders of a user from the database
+  getUserCurrentOrders: async (req, res) => {
+    try {
+      const orders = await OrderService.getUserCurrentOrders(
+        req.params.username
+      );
+
+      return res.status(200).json(orders);
+    } catch (err) {
+      res.status(500).json({ message: 'Server Error' });
+    }
+  },
+
+  // order controller method to retrieve and return all active orders of users from the database
+  getAllActiveOrders: async (req, res) => {
+    try {
+      const orders = await OrderService.getAllActiveOrders(req.params.username);
+
+      return res.status(200).json(orders);
+    } catch (err) {
+      res.status(500).json({ message: 'Server Error' });
+    }
+  },
+
   // order controller method to retrieve and return a specific order from the database
   getOrder: async (req, res) => {
     try {

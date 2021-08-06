@@ -57,6 +57,27 @@ router.get(
   orderController.checkoutOrders
 );
 
+// TODO: optimize past orders and current orders route to one route (merge)
+// route for user's past orders
+router.get(
+  '/:username/pastOrders',
+  token.authenticateToken,
+  orderController.getUserPastOrders
+);
+
+// route for user's current orders
+router.get(
+  '/:username/currentOrders',
+  token.authenticateToken,
+  orderController.getUserCurrentOrders
+);
+
+router.get(
+  '/:username/activeOrders',
+  token.authenticateToken,
+  orderController.getAllActiveOrders
+);
+
 // route for adding new order to cart
 router.post(
   '/cart/add',

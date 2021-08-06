@@ -105,71 +105,50 @@
           My Order History
         </p>
       </div>
-      <div class="p-8">
-        <div
-          class="
-            bg-white
-            mx-auto
-            border-gray-500 border
-            text-gray-700
-            mb-0.5
-            h-30
-          "
-        >
-          <div class="flex p-3 border-l-8">
-            <div class="my-auto border-r-2 pr-3">
-              <span class="text-lg manrope-regular">Order #00000001</span>
-            </div>
-            <div class="flex-1">
-              <div class="ml-3 space-y-1 border-r-2 pr-3">
-                <div class="manrope-extrabold">TARPAULIN</div>
-                <div class="text-md manrope-regular">
-                  <span class="text-md manrope-bold">Complete name:</span>
-                  Sonson Dela Cruz
-                </div>
-                <div class="text-md manrope-regular">
-                  <span class="text-md manrope-bold"> Delivery Address:</span>
-                  123 Konda Village, Narukami Island, Inazuma
-                </div>
-                <div class="text-md manrope-regular">
-                  <span class="text-md manrope-bold">Date Ordered:</span>
-                  January 1, 2021
-                </div>
-              </div>
-            </div>
-            <div>
-              <div class="ml-3 my-8 p-1 w-20 mr-12">
-                <div class="text-md manrope-bold text-center">Status</div>
-              </div>
-            </div>
-            <div>
-              <router-link to="/order-details">
-                <button
-                  class="
-                    text-primary-blue
-                    manrope-regular
-                    rounded-sm
-                    my-10
-                    mr-4
-                    ml-2
-                    focus:outline-none
-                    bg-gray-500
-                  "
-                >
-                  View Details >
-                </button>
-              </router-link>
-            </div>
-          </div>
-        </div>
-      </div>
+
+      <!-- display all orders of user -->
+      <OrderCard v-for="order in state.orders" :key="order.id" :order="order"/>
+      
     </div>
   </div>
 </template>
 
 <script>
+import OrderCard from '../components/OrderCard.vue';
+import { reactive, onMounted } from 'vue';
+import { useStore } from 'vuex';
+import * as api from '../api';
+
 export default {
   name: 'Order',
+  components: {
+    OrderCard,
+  },
+  setup() {
+    const store = useStore();
+    const state = reactive({
+      orders: null,
+    });
+
+    async function getUserPastOrders() {
+      try {
+        const data = store.state.user.user.username;
+        const result = await api.getUserPastOrders(data);
+        state.orders = result.data;
+      } catch (err) {
+        console.log(err.response.data);
+      }
+    }
+
+    onMounted(() => {
+      // populate user order history page with previous ('Completed') orders
+      if (store.state.user.user != null) {
+        getUserPastOrders();
+      }
+    });
+
+    return { state, getUserPastOrders };
+  },
 };
 </script>
 

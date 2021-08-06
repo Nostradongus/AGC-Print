@@ -62,7 +62,7 @@ const routes = [
     name: 'OrderHistory',
     component: OrderHistory,
     meta: {
-      reguiresAuth: true,
+      requiresAuth: true,
     },
   },
   {
@@ -70,7 +70,7 @@ const routes = [
     name: 'OrderDetails',
     component: OrderDetails,
     meta: {
-      reguiresAuth: true,
+      requiresAuth: true,
     },
   },
 ];

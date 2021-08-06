@@ -6,12 +6,12 @@ export default {
   getters: {},
   mutations: {
     INIT_STATE(state) {
-      state.user = localStorage.getItem('user');
+      state.user = JSON.parse(localStorage.getItem('user'));
       state.token = localStorage.getItem('token');
     },
     LOGIN_USER(state, payload) {
-      state.user = payload.username;
-      localStorage.setItem('user', state.user);
+      state.user = payload.data;
+      localStorage.setItem('user', JSON.stringify({...state.user}));
       state.token = payload.accessToken;
       localStorage.setItem('token', state.token);
     },

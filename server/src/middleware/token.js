@@ -11,22 +11,14 @@ dotenv.config();
 const token = {
   // checks if token is valid then returns the current user data payload
   authenticateToken: (req, res, next) => {
-    // // get token
-    // const authHeader = req.headers['authorization'];
-    // const token = authHeader && authHeader.split(' ')[1];
-
     // get token
-    const token = req.session.token;
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
 
     // if token does not exist, current user is not logged in
     if (token == null || typeof token === 'undefined') {
       return res.status(401).json({ message: 'Not Logged In!' });
     }
-
-    // // if token that is stored in the request does not exist, user is not logged in
-    // if (req.token == null || typeof req.token === 'undefined') {
-    //   return res.status(401).json({ message: 'Not Logged In!' });
-    // }
 
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
       // if token is not verified, thus not a valid token
@@ -48,7 +40,9 @@ const token = {
   // create token for the current user
   generateAccessToken: (data) => {
     // generate access token given the data
-    const accessToken = jwt.sign(data, process.env.ACCESS_TOKEN_SECRET);
+    const accessToken = jwt.sign(data, process.env.ACCESS_TOKEN_SECRET, {
+      expiresIn: '1h',
+    });
 
     // return the generated access token
     return accessToken;

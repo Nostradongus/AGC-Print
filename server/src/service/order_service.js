@@ -5,6 +5,28 @@ import Order from '../model/Order.js';
 const OrderService = {
   // this method retrieves and returns all order data in the database
   getAllOrders: async () => Order.find({}),
+  // this method returns all past orders of the users
+  getUserPastOrders: async (username) =>
+    Order.find({ user: username, status: 'Complete' }),
+  // this method returns all current orders of the users
+  getUserCurrentOrders: async (username, status) =>
+    Order.find({
+      $and: [
+        { user: username },
+        {
+          status: {
+            $in: ['Processing', 'Printing', 'Finishing', 'Ready for Delivery'],
+          },
+        },
+      ],
+    }),
+  // this method returns all active orders for the worker to process
+  getAllActiveOrders: async () =>
+    Order.find({
+      status: {
+        $in: ['Processing', 'Printing', 'Finishing', 'Ready for Delivery'],
+      },
+    }),
   // this method retrieves and returns all orders of a specific user
   getUserOrders: async (username) => Order.find({ user: username }),
   // this method retrieves and returns a specific order data based on given order id

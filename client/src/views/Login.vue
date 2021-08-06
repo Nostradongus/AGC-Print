@@ -89,6 +89,8 @@ export default {
       };
       try {
         const result = await api.signIn(data);
+        console.log(result.data);
+        
         store.dispatch('loginUser', result.data);
         router.push({ name: 'Order' });
       } catch (err) {
