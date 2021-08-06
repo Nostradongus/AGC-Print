@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen min-w-full">
+  <div>
     <side-bar />
     <page-header title="Create a Product">
       <div class="p-8">
@@ -34,6 +34,7 @@ import CanvasPrintForm from '../components/OrderForms/CanvasPrintForm.vue';
 import StickerForm from '../components/OrderForms/StickerForm.vue';
 import SideBar from '../components/SideBar.vue';
 import PageHeader from '../components/PageHeader.vue';
+
 export default {
   components: {
     TarpaulinForm,
