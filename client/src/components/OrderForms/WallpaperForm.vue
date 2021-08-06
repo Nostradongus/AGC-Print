@@ -1,6 +1,6 @@
 <template>
   <!-- start wallpaper form -->
-  <form class="mt-12" id="wallpaper-form">
+  <form class="mt-12" id="wallpaper-form" enctype="multi-part/form-data">
     <div class="relative">
       <input
         id="quantity"

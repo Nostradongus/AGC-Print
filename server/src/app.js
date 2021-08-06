@@ -35,7 +35,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 
 // for static public folder, containing the uploaded order images
-app.use('/public', express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/src/public/order_images'));
 
 // get .env file config values
 dotenv.config();

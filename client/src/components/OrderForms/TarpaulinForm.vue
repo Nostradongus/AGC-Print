@@ -1,6 +1,6 @@
 <template>
   <!-- start tarpaulin form -->
-  <form class="mt-12" id="tarpaulin-form">
+  <form class="mt-12" id="tarpaulin-form" enctype="multi-part/form-data">
     <div class="relative">
       <input
         id="quantity"

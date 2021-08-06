@@ -1,6 +1,6 @@
 <template>
   <!-- start sticker form -->
-  <form class="mt-12" id="sticker-form">
+  <form class="mt-12" id="sticker-form" enctype="multi-part/form-data">
     <div class="relative">
       <input
         id="quantity"
