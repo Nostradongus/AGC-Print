@@ -27,8 +27,8 @@
         <label
           for="width"
           class="absolute manrope-regular left-0 -top-3.5 text-gray-600 text-md"
-          >Width (in inches)</label
-        >
+          >Width (in inches)
+        </label>
       </div>
       <div class="relative mt-12 ml-4">
         <input
@@ -46,7 +46,12 @@
       </div>
     </div>
     <div class="relative mt-20">
-      <select name="frame" id="frame" class="dropdown-field w-72">
+      <select
+        name="frame"
+        id="frame"
+        class="dropdown-field w-72"
+        v-model="state.frameOption"
+      >
         <option value="placeholder" disabled selected hidden>Select one</option>
         <option value="3/4inches">3/4 inches</option>
         <option value="1.5inches">1.5 inches</option>
@@ -61,7 +66,14 @@
         >Frame</label
       >
     </div>
-    <div class="relative mt-20 hidden">
+    <div
+      class="relative mt-20"
+      v-if="
+        state.frameOption !== '3/4inches' &&
+        state.frameOption !== '1.5inches' &&
+        state.frameOption !== 'placeholder'
+      "
+    >
       <select
         name="framefinishing"
         id="framefinishing"
@@ -79,16 +91,21 @@
         >Frame Finishing</label
       >
     </div>
-    <div class="relative mt-20 hidden">
+    <div
+      class="relative mt-20"
+      v-if="
+        state.frameOption === '3/4inches' || state.frameOption === '1.5inches'
+      "
+    >
       <select name="frameedges" id="frameedges" class="dropdown-field w-48">
         <option value="placeholder" disabled selected hidden>Select one</option>
-        <option value="yes">Yes</option>
-        <option value="no">No</option>
+        <option value="whiteEdges">White Edges</option>
+        <option value="blackEdges">Printed Edges</option>
       </select>
       <label
         for="frameedges"
         class="absolute manrope-regular left-0 -top-8 text-gray-600 text-md"
-        >Stretcher Frame Edges?</label
+        >Stretcher Frame Edges</label
       >
     </div>
     <div class="relative mt-20">
@@ -129,8 +146,15 @@
 </template>
 
 <script>
+import { reactive } from 'vue';
 export default {
   name: 'CanvasPrintForm',
+  setup() {
+    const state = reactive({
+      frameOption: 'placeholder',
+    });
+    return { state };
+  },
 };
 </script>
 

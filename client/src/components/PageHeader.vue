@@ -1,5 +1,8 @@
 <template>
-  <div class="h-full relative w-5/6 float-right" id="right">
+  <div
+    class="h-full relative sm:w-2/3 md:w-3/4 lg:w-5/6 float-right"
+    id="right"
+  >
     <div class="h-24 bg-primary-blue">
       <p class="absolute manrope-extrabold text-5xl text-white ml-4 mt-8">
         {{ title }}
