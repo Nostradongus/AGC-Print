@@ -105,6 +105,8 @@ const indexController = {
       // hash password
       user.password = await bcrypt.hash(req.body.password, saltRounds);
 
+      const result = await OrderService.addUser(user);
+
       // return user data back as indicator of successful registration
       return res.status(201).json(result);
     }
