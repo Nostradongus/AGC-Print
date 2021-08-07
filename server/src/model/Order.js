@@ -16,27 +16,27 @@ const OrderSchema = new mongoose.Schema({
   // name of customer
   name: {
     type: String,
-    required: true,
+    required: false,
   },
   // email of customer
   email: {
     type: String,
-    required: true,
+    required: false,
   },
   // address of customer
   address: {
     type: String,
-    required: true,
+    required: false,
   },
   // contact number of customer
   contactNo: {
     type: String,
-    required: true,
+    required: false,
   },
   // payment method chosen by the customer
   payMethod: {
     type: String,
-    required: true,
+    required: false,
   },
   // worker / staff in charged of the order
   workerInCharge: {
@@ -53,10 +53,15 @@ const OrderSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  // file path of the image of the order
+  // filename of the order's image
   img: {
     type: String,
-    required: false, // TODO: to be updated and set to true, in front-end phase
+    required: false,
+  },
+  // file path of the order's image
+  imgPath: {
+    type: String,
+    required: false,
   },
   // price of the order
   price: {
@@ -66,32 +71,52 @@ const OrderSchema = new mongoose.Schema({
   // current status of the order
   status: {
     type: String,
-    required: true,
+    required: false,
   },
-  // dimensions/size of the order (width)
+  // dimensions/size of the order (width) in inches
   width: {
     type: String,
     required: true,
   },
-  // dimensions/size of the order (width)
+  // dimensions/size of the order (width) in inches
   height: {
     type: String,
     required: true,
   },
-  // frame edges of a specific order
+  // frame option of the order (Canvas Print only)
+  frameOption: {
+    type: String,
+    required: false,
+  },
+  // frame edges of a specific order (Canvas Print only)
   frameEdges: {
     type: String,
     required: false,
   },
-  // frame finishing of a specific order
+  // frame finishing of a specific order (Canvas Print only)
   frameFinishing: {
+    type: String,
+    required: false,
+  },
+  // eyelets of the order (Tarpaulin only)
+  eyelets: {
+    type: Number,
+    required: false,
+  },
+  // diecut of order (Sticker only)
+  diecut: {
+    type: String,
+    required: false,
+  },
+  // other details (remarks) of the order
+  remarks: {
     type: String,
     required: false,
   },
   // when the order was requested
   dateRequested: {
     type: String,
-    required: true,
+    required: false,
   },
   // when the order was shipped
   dateShipped: {

@@ -20,7 +20,7 @@ const router = express.Router();
 const orderImageStorage = multer.diskStorage({
   // where the order image files will be uploaded
   destination: function (req, file, cb) {
-    cb(null, './public/order_images');
+    cb(null, './src/public/order_images');
   },
 
   // filename format for order images
@@ -44,20 +44,13 @@ router.get(
 router.get('/details/:id', token.authenticateToken, orderController.getOrder);
 
 // route for deleting an order from cart
-router.get(
-  '/cart/delete/:id',
+router.delete(
+  '/cart/delete',
   token.authenticateToken,
-  cartController.deleteFromCart
+  orderController.deleteFromCart
 );
 
-// route for checkout orders
-router.get(
-  '/cart/checkout',
-  token.authenticateToken,
-  orderController.checkoutOrders
-);
-
-// TODO: optimize past orders and current orders route to one route (merge)
+// TODO: optimize past orders, current orders, and active orders route to one route (merge)
 // route for user's past orders
 router.get(
   '/:username/pastOrders',
@@ -82,9 +75,8 @@ router.get(
 router.post(
   '/cart/add',
   token.authenticateToken,
-  // TODO: to be updated soon, in front-end phase
-  // orderImageUpload.single('order-image'), // upload order image
-  cartController.addToCart
+  orderImageUpload.single('order-image'),
+  orderController.addToCart
 );
 
 // route for adding new order/s to the database after checkout

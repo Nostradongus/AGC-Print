@@ -125,8 +125,25 @@
 </template>
 
 <script>
+import { useRouter } from 'vue-router';
+import { ref, reactive, watchEffect } from 'vue';
+import { useStore } from 'vuex';
+import * as api from '../api';
+import axios from 'axios';
+
 export default {
   name: 'OrderDetails',
+  setup() {
+    const router = useRouter();
+    const store = useStore();
+    let state = reactive({});
+
+    async function onSubmit() {
+      // store all confirmed order data in FormData
+      
+      // TODO: Order addOrder here
+    }
+  }
 };
 </script>
 

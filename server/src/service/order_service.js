@@ -33,8 +33,9 @@ const OrderService = {
   getOrder: async (data) => Order.findOne(data),
   // this method adds a new order data to the Order collection in the database
   addOrders: async (orderArr) => {
-    // add new order/s data to the Order collection
-    Order.insertMany(orderArr);
+    for (let ctr = 0; ctr < orderArr.length; ctr++) {
+      Order.create(new Order(orderArr[ctr]));
+    }
 
     // return back array of orders to the client
     return orderArr;

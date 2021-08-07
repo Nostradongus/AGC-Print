@@ -1,6 +1,6 @@
 <template>
   <!-- start canvas print form -->
-  <form class="mt-12" id="canvas-print-form">
+  <form @submit.prevent="addToCart" class="mt-12" id="canvas-print-form" enctype="multipart/form-data">
     <div class="relative">
       <input
         id="quantity"
@@ -8,6 +8,7 @@
         type="number"
         class="manrope-regular input-text-field w-48"
         min="1"
+        v-model="state.quantity"
       />
       <label
         for="quantity"
@@ -23,6 +24,7 @@
           type="number"
           class="manrope-regular input-text-field w-48"
           min="1"
+          v-model="state.width"
         />
         <label
           for="width"
@@ -37,6 +39,7 @@
           type="number"
           class="manrope-regular input-text-field w-48"
           min="1"
+          v-model="state.height"
         />
         <label
           for="height"
@@ -53,12 +56,12 @@
         v-model="state.frameOption"
       >
         <option value="placeholder" disabled selected hidden>Select one</option>
-        <option value="3/4inches">3/4 inches</option>
-        <option value="1.5inches">1.5 inches</option>
-        <option value="shadowbox">Shadow Box</option>
-        <option value="glassless">Glassless Frame</option>
-        <option value="floating">Floating Frame</option>
-        <option value="print">Print only</option>
+        <option value="3/4 Inches">3/4 Inches</option>
+        <option value="1.5 Inches">1.5 Inches</option>
+        <option value="Shadow Box">Shadow Box</option>
+        <option value="Glassless Frame">Glassless Frame</option>
+        <option value="Floating Frame">Floating Frame</option>
+        <option value="Print Only">Print Only</option>
       </select>
       <label
         for="frame"
@@ -78,12 +81,13 @@
         name="framefinishing"
         id="framefinishing"
         class="dropdown-field w-72"
+        v-model="state.frameFinishing"
       >
         <option value="placeholder" disabled selected hidden>Select one</option>
-        <option value="black">Black</option>
-        <option value="white">White</option>
-        <option value="matte">Matte</option>
-        <option value="glossy">Glossy</option>
+        <option value="Black">Black</option>
+        <option value="White">White</option>
+        <option value="Matte">Matte</option>
+        <option value="Glossy">Glossy</option>
       </select>
       <label
         for="frame"
@@ -97,10 +101,15 @@
         state.frameOption === '3/4inches' || state.frameOption === '1.5inches'
       "
     >
-      <select name="frameedges" id="frameedges" class="dropdown-field w-48">
+      <select 
+        name="frameedges" 
+        id="frameedges" 
+        class="dropdown-field w-48"
+        v-model="state.frameEdges"
+      >
         <option value="placeholder" disabled selected hidden>Select one</option>
-        <option value="whiteEdges">White Edges</option>
-        <option value="blackEdges">Printed Edges</option>
+        <option value="White Edges">White Edges</option>
+        <option value="Black Edges">Printed Edges</option>
       </select>
       <label
         for="frameedges"
@@ -110,18 +119,37 @@
     </div>
     <div class="relative mt-20">
       <input
-        id="file"
-        name="file"
+        id="order-image"
+        name="order-image"
         type="file"
+        ref="file"
         class="manrope-regular w-72"
         min="0"
+        @change="onSelect"
       />
       <label
-        for="file"
+        for="order-image"
         class="absolute manrope-regular left-0 -top-8 text-gray-600 text-md"
-        >File Upload</label
+        >Upload Image</label
       >
     </div>
+
+    <div class="relative mt-20">
+      <textarea
+        id="other-details"
+        name="other-details"
+        type="text"
+        class="manrope-regular input-text-field w-1/4"
+        min="0"
+        v-model="state.remarks"
+      ></textarea>
+      <label
+        for="other-details"
+        class="absolute manrope-regular left-0 -top-8 text-gray-600 text-md"
+        >Other Details</label
+      >
+    </div>
+
     <button
       class="
         manrope-regular
@@ -146,14 +174,57 @@
 </template>
 
 <script>
-import { reactive } from 'vue';
+import { useRouter } from 'vue-router';
+import { ref, reactive } from 'vue';
+import { useStore } from 'vuex';
+import * as api from '../../api';
+
 export default {
   name: 'CanvasPrintForm',
   setup() {
-    const state = reactive({
+    const file = ref(null);
+    const router = useRouter();
+    const store = useStore();
+    let state = reactive({
+      quantity: 1,
+      width: '',
+      height: '',
+      type: 'Canvas Print',
       frameOption: 'placeholder',
+      frameFinishing: 'placeholder',
+      frameEdges: 'placeholder',
+      remarks: '',
     });
-    return { state };
+
+    function onSelect() {
+      state.imageFile = file.value.files[0];
+    }
+
+    async function addToCart() {
+      // create FormData to store order data
+      const formData = new FormData();
+      formData.append('quantity', state.quantity);
+      formData.append('width', state.width);
+      formData.append('height', state.height);
+      formData.append('type', state.type);
+      formData.append('frameOption', state.frameOption);
+      formData.append('frameFinishing', state.frameFinishing);
+      formData.append('frameEdges', state.frameEdges);
+      formData.append('remarks', state.remarks);
+      formData.append('order-image', state.imageFile);
+      formData.append('user', store.state.user.user.username);
+
+      // add order data to cart and get generated order id
+      const res = await api.addToCart(formData);
+
+      // store generated order id to vue local storage
+      store.dispatch('setOrder', res.data); 
+
+      // go to delivery information page
+      router.push({name: 'ViewCart'});
+    }
+
+    return { file, state, onSelect, addToCart };
   },
 };
 </script>

@@ -1,6 +1,6 @@
 <template>
   <!-- start wallpaper form -->
-  <form class="mt-12" id="wallpaper-form" enctype="multi-part/form-data">
+  <form @submit.prevent="addToCart" class="mt-12" id="wallpaper-form" enctype="multi-part/form-data">
     <div class="relative">
       <input
         id="quantity"
@@ -8,6 +8,7 @@
         type="number"
         class="manrope-regular input-text-field w-48"
         min="1"
+        v-model="state.quantity"
       />
       <label
         for="quantity"
@@ -23,6 +24,7 @@
           type="number"
           class="manrope-regular input-text-field w-48"
           min="1"
+          v-model="state.width"
         />
         <label
           for="width"
@@ -37,6 +39,7 @@
           type="number"
           class="manrope-regular input-text-field w-48"
           min="1"
+          v-model="state.height"
         />
         <label
           for="height"
@@ -47,18 +50,36 @@
     </div>
     <div class="relative mt-20">
       <input
-        id="file"
-        name="file"
+        id="order-image"
+        ref="file"
         type="file"
         class="manrope-regular w-72"
         min="0"
+        @change="onSelect"
       />
       <label
-        for="file"
+        for="order-image"
         class="absolute manrope-regular left-0 -top-8 text-gray-600 text-md"
         >File Upload</label
       >
     </div>
+
+    <div class="relative mt-20">
+      <textarea
+        id="other-details"
+        name="other-details"
+        type="text"
+        class="manrope-regular input-text-field w-1/4"
+        min="0"
+        v-model="state.remarks"
+      ></textarea>
+      <label
+        for="other-details"
+        class="absolute manrope-regular left-0 -top-8 text-gray-600 text-md"
+        >Other Details</label
+      >
+    </div>
+
     <button
       class="
         manrope-regular
@@ -83,8 +104,53 @@
 </template>
 
 <script>
+import { reactive, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
+import * as api from '../../api';
+
 export default {
   name: 'WallpaperForm',
+  setup(){
+    const file = ref(null);
+    const router = useRouter();
+    const store = useStore();
+    const state = reactive({
+      quantity: 1,
+      width: '',
+      height: '',
+      type: 'Wallpaper',
+      imageFile: null,
+      remarks: '',
+    });
+
+    function onSelect(){
+      state.imageFile = file.value.files[0];
+    }
+
+    async function addToCart(){
+      // create FormData to store order data
+      const formData = new FormData();
+      formData.append('quantity', state.quantity);
+      formData.append('width', state.width);
+      formData.append('height', state.height);
+      formData.append('type', state.type);
+      formData.append('remarks', state.remarks);
+      formData.append('order-image', state.imageFile);
+      formData.append('user', store.state.user.user.username);
+
+      // add order data to cart and get generated order id
+      const res = await api.addToCart(formData);
+      console.log(res);
+      // store generated order id to vue local storage
+      store.dispatch('setOrder', res.data); 
+
+      // go to delivery information page
+      router.push({ name: 'ViewCart' });
+    }
+
+    return { file, state, onSelect, addToCart };
+  }
 };
 </script>
 

@@ -4,7 +4,7 @@
 import { check } from 'express-validator';
 
 // server-side (backend) data validation object
-export const validator = {
+const validator = {
   // to validate input in the login process
   validateLogin: () => {
     // check username and password input text fields if they are not empty
@@ -20,8 +20,8 @@ export const validator = {
   },
 
   // to validate input in the registration process
-  validateForm: () => {
-    // check all input fields in the registration form
+  validateUserForm: () => {
+    // check all input fields in the registration and edit account details form
     // store the results in the array afterwards
     const validation = [
       // checks username input field
@@ -55,9 +55,11 @@ export const validator = {
       // checks repeat password input field
       check('repeatPassword')
         .notEmpty()
-        .withMessage('Please confirm your password.')
+        .withMessage('Please confirm your password.'),
     ];
 
     return validation;
   },
 };
+
+export default validator;

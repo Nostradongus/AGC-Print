@@ -1,183 +1,80 @@
 <template>
-  <div class="min-h-screen min-w-full">
-    <div class="bg-light-blue h-full w-1/6 fixed text-center" id="sidebar">
-      <img class="h-36 w-36 m-auto mt-4" src="../assets/logo.png" alt="logo" />
-      <ul class="text-center mt-4" role="listbox">
-        <li>
-          <router-link
+  <div>
+    <side-bar/>
+    <page-header title="View Cart">
+      <cart-item v-for="order in state.orders" :key="order.id" :order="order" />
+      <div class="flex justify-end px-8 pt-8">
+        <router-link
+          class="        
+            manrope-regular
+            text-primary-blue
+            inline-block
+            transition
+            duration-300
+            ease-in-out
+            text-center text-md
+            hover:bg-primary-blue hover:text-white
+            p-2
+            mb-8
+            mt-8
+            mr-8
+            rounded-xl
+            bg-link-water"
             to="/order"
-            class="
-              sidebar-btn
-              text-primary-blue
-              transition
-              duration-300
-              ease-in-out
-              bg-light-blue
-              hover:bg-link-water
-              inline-flex
-              items-center
-              px-6
-            "
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-10 w-10 mr-6"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-              <path
-                fill-rule="evenodd"
-                d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
-                clip-rule="evenodd"
-              />
-            </svg>
-            <span class="manrope-extrabold text-2xl">Order</span>
-          </router-link>
-        </li>
-        <li>
-          <router-link
-            to="/order-history"
-            class="
-              sidebar-btn
-              text-primary-blue
-              transition
-              duration-300
-              ease-in-out
-              bg-light-blue
-              hover:bg-link-water
-              inline-flex
-              items-center
-              px-6
-            "
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-10 w-10 mr-6"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
-                clip-rule="evenodd"
-              />
-            </svg>
-            <span class="manrope-extrabold text-2xl">History</span>
-          </router-link>
-        </li>
-        <li>
-          <router-link
-            to=""
-            class="
-              sidebar-btn
-              text-primary-blue
-              transition
-              duration-300
-              ease-in-out
-              bg-light-blue
-              hover:bg-link-water
-              inline-flex
-              items-center
-              px-6
-            "
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-10 w-10 mr-6"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
-                clip-rule="evenodd"
-              />
-            </svg>
-            <span class="manrope-extrabold text-2xl">Profile</span>
-          </router-link>
-        </li>
-      </ul>
-    </div>
-    <div class="h-full relative w-5/6 float-right" id="right">
-      <div class="h-24 bg-primary-blue">
-        <p class="absolute manrope-extrabold text-5xl text-white ml-4 mt-8">
-          View Cart
-        </p>
+            >Add another item</router-link>
+        <router-link
+          class="        
+            manrope-regular
+            text-white
+            inline-block
+            transition
+            duration-300
+            ease-in-out
+            text-center text-md
+            hover:bg-link-water hover:text-primary-blue
+            p-2
+            mb-8
+            mt-8
+            rounded-xl
+            bg-primary-blue"
+            to="/delivery-information">Confirm Order</router-link>
       </div>
-      <div class="content-box p-8">
-        <div class="overflow-y-auto w-full h-full manrope-regular text-xl">
-          Product name 1 here <br />
-          Quantity 1 here<br />
-          Dimensions 1 here (in inches) <br />
-          With or without diecut 1 here<br /><br />
-          Product name 2 here <br />
-          Quantity 2 here<br />
-          Dimensions 2 here (in inches) <br /><br />
-          Product name 3 here <br />
-          Quantity 3 here<br />
-          Dimensions 3 here (in inches) <br />
-          Eyelet count 3 here<br />
-        </div>
-      </div>
-      <div>
-        <a href="/order">
-          <button
-            class="
-              manrope-regular
-              text-primary-blue
-              inline-block
-              transition
-              duration-300
-              ease-in-out
-              text-center text-2xl
-              hover:bg-primary-blue hover:text-white
-              w-96
-              h-12
-              m-0
-              ml-8
-              mb-8
-              rounded-2xl
-              bg-white
-              shadow-md
-              border-2
-            "
-          >
-            <span class="mt-10">Add Another</span>
-          </button>
-        </a>
-        <a href="/delivery-information">
-          <button
-            class="
-              manrope-regular
-              text-white
-              inline-block
-              transition
-              duration-300
-              ease-in-out
-              text-center text-2xl
-              hover:bg-link-water hover:text-primary-blue
-              w-48
-              h-12
-              m-0
-              ml-8
-              mb-8
-              rounded-2xl
-              shadow-md
-              bg-primary-blue
-            "
-          >
-            <span class="mt-10">Next</span>
-          </button>
-        </a>
-      </div>
-    </div>
+    </page-header>
   </div>
 </template>
 
 <script>
+import SideBar from '../components/SideBar.vue';
+import PageHeader from '../components/PageHeader.vue';
+import CartItem from '../components/CartItem.vue'
+import { reactive, onMounted } from 'vue';
+import { useStore } from 'vuex';
+import * as api from '../api';
+
 export default {
   name: 'ViewCart',
+  components: {
+    CartItem,
+    SideBar, 
+    PageHeader, 
+  },
+  setup() {
+    const store = useStore();
+    const state = reactive({
+      orders: null,
+    });
+
+    async function getOrdersFromCart() {
+      state.orders = store.state.order.orders;
+    }
+
+    onMounted(() => {
+      console.log('Mounted');
+      getOrdersFromCart();
+    });
+
+    return { state, getOrdersFromCart };
+  },
 };
 </script>
 

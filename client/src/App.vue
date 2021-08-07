@@ -9,8 +9,11 @@ import { useStore } from 'vuex';
 export default {
   beforeCreate() {
     const store = useStore();
-    const data = async () => await store.dispatch('initState');
-    data();
+    const loadData = async () => {
+      await store.dispatch('initState');
+      await store.dispatch('getOrder');
+    };
+    loadData();
   },
 };
 </script>

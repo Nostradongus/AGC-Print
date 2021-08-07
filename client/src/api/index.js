@@ -4,11 +4,13 @@ const API = axios.create({ baseURL: 'http://localhost:5000' });
 
 // for user access token
 API.interceptors.request.use((req) => {
+  req.withCredentials = true;
   if (localStorage.getItem("user")) {
     req.headers.Authorization = `Bearer ${
       localStorage.getItem("token")
     }`;
   }
+  console.log(req);
   return req;
 });
 
@@ -23,8 +25,7 @@ export const getUserOrders = (username) => API.get(`/order/${username}`);
 export const getOrder = (id) => API.get(`/order/details/${id}`);
 export const getUserPastOrders = (username) => API.get(`/order/${username}/pastOrders`);
 export const getUserCurrentOrders = (username) => API.get(`/order/${username}/currentOrders`);
-export const deleteFromCart = (id) => API.get(`order/cart/delete/${id}`);
-export const checkoutOrders = () => API.get('/order/cart/checkout');
+export const deleteFromCart = (imgPath) => API.delete('order/cart/delete', { imgPath });
 export const addToCart = (orderData) => API.post('/order/cart/add', orderData);
 export const addOrders = () => API.post('/order/cart/confirm');
 

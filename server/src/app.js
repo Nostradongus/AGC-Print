@@ -1,9 +1,7 @@
 // modules
 import express from 'express';
-import dotenv from 'dotenv-safe';
 import morgan from 'morgan';
 import swaggerUi from 'swagger-ui-express';
-import session from 'express-session';
 import YAML from 'yamljs';
 import path from 'path';
 import cors from 'cors';
@@ -31,25 +29,16 @@ const pathName = path.join(
 const specs = YAML.load(pathName);
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cors());
+app.use(express.urlencoded({ extended: true }));
+app.use(
+  cors({
+    origin: ['http://localhost:3000', 'https://localhost:3000'],
+    credentials: true,
+  }
+));
 
 // for static public folder, containing the uploaded order images
 app.use(express.static(__dirname + '/src/public/order_images'));
-
-// get .env file config values
-dotenv.config();
-
-const { SECRET } = process.env;
-
-// setup session to be used for user order local cart
-app.use(
-  session({
-    secret: SECRET,
-    resave: false,
-    saveUninitialized: false,
-  })
-);
 
 app.use(
   morgan(process.env.NODE_ENV === 'development' ? 'dev' : 'combined', {
