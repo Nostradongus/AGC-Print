@@ -13,7 +13,12 @@ export default {
       if(orders != null){
         state.orders = JSON.parse(localStorage.getItem('order'));
       }
-    }
+    },
+    RESET_ORDER(state) {
+      state.orders = [];
+      localStorage.setItem('order', JSON.stringify(state.orders));
+      localStorage.removeItem('order');
+    },
   },
   actions:{
     setOrder({commit}, data){
@@ -21,6 +26,9 @@ export default {
     },
     getOrder({commit}){
       commit('GET_ORDER');
-    }
+    },
+    resetOrder({commit}) {
+      commit('RESET_ORDER');
+    },
   },
 }

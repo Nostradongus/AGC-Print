@@ -37,7 +37,7 @@
         </div>
       </div>
       <div>
-        <router-link to="/order-details">
+        <router-link :to="`/order-details/${order.id}`">
           <button
             class="
               text-primary-blue

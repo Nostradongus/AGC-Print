@@ -92,7 +92,7 @@ const orderController = {
   addOrders: async (req, res) => {
     try {
       // add new order/s from the cart to the database
-      const newOrders = await OrderService.addOrders(req.body.orders);
+      const newOrders = await OrderService.addOrders(req.body);
 
       // send order data back to the client to indicate success
       return res.status(200).json(newOrders);

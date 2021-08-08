@@ -7,6 +7,7 @@ import ViewOrder from '../views/ViewOrder.vue';
 import DeliveryInformation from '../views/DeliveryInformation.vue';
 import ViewCart from '../views/ViewCart.vue';
 import OrderHistory from '../views/OrderHistory.vue';
+import OrderConfirmed from '../views/OrderConfirmed.vue';
 
 const routes = [
   {
@@ -50,6 +51,14 @@ const routes = [
     },
   },
   {
+    path: '/order-confirmed',
+    name: 'OrderConfirmed',
+    component: OrderConfirmed,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
     path: '/view-order',
     name: 'ViewOrder',
     component: ViewOrder,
@@ -66,7 +75,7 @@ const routes = [
     },
   },
   {
-    path: '/order-details',
+    path: '/order-details/:id',
     name: 'OrderDetails',
     component: OrderDetails,
     meta: {

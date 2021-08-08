@@ -27,7 +27,7 @@ export const getUserPastOrders = (username) => API.get(`/order/${username}/pastO
 export const getUserCurrentOrders = (username) => API.get(`/order/${username}/currentOrders`);
 export const deleteFromCart = (imgPath) => API.delete('order/cart/delete', { imgPath });
 export const addToCart = (orderData) => API.post('/order/cart/add', orderData);
-export const addOrders = () => API.post('/order/cart/confirm');
+export const addOrders = (orders) => API.post('/order/cart/confirm', orders);
 
 // user data api methods
 export const getUsers = () => API.get('/users');

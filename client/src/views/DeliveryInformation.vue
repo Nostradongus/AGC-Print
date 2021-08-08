@@ -101,7 +101,7 @@
               bg-primary-blue
             "
           >
-            <button @click="addToCart">Next</button>
+            <button @click="confirmOrdersFromCart">Place Orders</button>
         </label>
         </form>
       </div>
@@ -136,18 +136,25 @@ export default {
       address: '',
     });
 
-    async function updateOrderFromCart() {
-      // get order id
-      const data = store.dispatch('getOrder'); 
+    async function confirmOrdersFromCart(e) {
+      e.preventDefault();
 
-      // update specified order with delivery information
-      const result = await api.updateOrderFromCart(data.id, state);
+      // update each order with the given delivery information
+      for (let ctr = 0; ctr < store.state.order.orders.length; ctr++) {
+        store.state.order.orders[ctr].name = state.name;
+        store.state.order.orders[ctr].email = state.email;
+        store.state.order.orders[ctr].contactNo = state.contactNo;
+        store.state.order.orders[ctr].address = state.address;
+      }
+
+      // confirm add orders to the database
+      const res = await api.addOrders(store.state.order.orders);
 
       // go to order details page
-      router.push({ name: 'OrderDetails' });
+      router.push({ name: 'OrderConfirmed' });
     }
 
-    return { state, updateOrderFromCart };
+    return { state, confirmOrdersFromCart };
   }
 };
 </script>

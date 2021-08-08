@@ -17,7 +17,7 @@ import { useStore } from 'vuex';
 import * as api from '../api';
 
 export default {
-  name: 'Order',
+  name: 'OrderHistory',
   components: {
     OrderCard,
     SideBar,

@@ -1,149 +1,88 @@
 <template>
-  <div class="min-h-screen min-w-full">
-    <div class="bg-light-blue h-full w-1/6 fixed text-center" id="sidebar">
-      <img class="h-36 w-36 m-auto mt-4" src="../assets/logo.png" alt="logo" />
-      <ul class="text-center mt-4" role="listbox">
-        <li>
-          <router-link
-            to="/order"
-            class="
-              sidebar-btn
-              text-primary-blue
-              transition
-              duration-300
-              ease-in-out
-              bg-light-blue
-              hover:bg-link-water
-              inline-flex
-              items-center
-              px-6
-            "
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-10 w-10 mr-6"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-              <path
-                fill-rule="evenodd"
-                d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
-                clip-rule="evenodd"
-              />
-            </svg>
-            <span class="manrope-extrabold text-2xl">Order</span>
-          </router-link>
-        </li>
-        <li>
-          <router-link
-            to="/order-history"
-            class="
-              sidebar-btn
-              text-primary-blue
-              transition
-              duration-300
-              ease-in-out
-              bg-light-blue
-              hover:bg-link-water
-              inline-flex
-              items-center
-              px-6
-            "
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-10 w-10 mr-6"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
-                clip-rule="evenodd"
-              />
-            </svg>
-            <span class="manrope-extrabold text-2xl">History</span>
-          </router-link>
-        </li>
-        <li>
-          <router-link
-            to=""
-            class="
-              sidebar-btn
-              text-primary-blue
-              transition
-              duration-300
-              ease-in-out
-              bg-light-blue
-              hover:bg-link-water
-              inline-flex
-              items-center
-              px-6
-            "
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-10 w-10 mr-6"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
-                clip-rule="evenodd"
-              />
-            </svg>
-            <span class="manrope-extrabold text-2xl">Profile</span>
-          </router-link>
-        </li>
-      </ul>
-    </div>
-    <div class="h-full relative w-5/6 float-right" id="right">
-      <div class="h-24 bg-primary-blue">
-        <p class="absolute manrope-extrabold text-5xl text-white ml-4 mt-8">
-          Order Details
-        </p>
-      </div>
-      <div class="content-box p-8">
-        <p class="manrope-bold text-3xl">Order #00000001</p>
+  <div>
+    <side-bar/>
+    <page-header title="Order Details">
+      <div class="p-8" v-if="state.order">
+        <p class="manrope-bold text-3xl">Order #{{state.order.id}}</p>
         <div class="overflow-y-auto w-full h-full manrope-regular text-xl mt-2">
-          <a href="https://imgbb.com/"
-            ><img
-              src="https://i.ibb.co/DrPNHqX/image-2021-07-31-020059.png"
-              alt="image-2021-07-31-020059"
-              border="0"
-          /></a>
-          Product name 1 here <br />
-          Quantity 1 here<br />
-          Dimensions 1 here (in inches) <br />
-          Eyelet count here<br /><br />
+          <img
+            :src="`http://localhost:5000/${state.order.img}`"
+            :alt="state.order.img"
+            border="0"
+          />
+          <p>Type: {{state.order.type}}</p>
+          <p>Quantity: {{state.order.quantity}}</p>
+          <p>Dimensions: {{state.order.width}} in. x {{state.order.height}} in.</p>
+          <p v-if="state.order.eyelets != null">Eyelets: {{state.order.eyelets}}</p>
+          <p v-if="state.order.diecut != null">Diecut: {{state.order.diecut}}</p>
+          <p v-if="state.order.frameOption !== 'placeholder' && state.order.frameOption != null">Frame Option: {{state.order.frameOption}}</p>
+          <p v-if="state.order.frameFinishing !== 'placeholder' && state.order.frameFinishing != null">Frame Finishing: {{state.order.frameFinishing}}</p>
+          <p v-if="state.order.frameEdges !== 'placeholder' && state.order.frameEdges != null">Frame Edges: {{state.order.frameEdges}}</p>
+          <p v-if="state.order.remarks !== ''">Remarks: {{state.order.remarks}}</p>
         </div>
       </div>
-    </div>
+      <router-link 
+        class="              
+          manrope-regular
+          text-white
+          inline-block
+          transition
+          duration-300
+          ease-in-out
+          text-center text-lg
+          hover:bg-link-water hover:text-primary-blue
+          w-32
+          mx-8
+          rounded-xl
+          bg-primary-blue"
+        to="/order-history">Back</router-link>
+    </page-header>
   </div>
 </template>
 
 <script>
-import { useRouter } from 'vue-router';
-import { ref, reactive, watchEffect } from 'vue';
+import SideBar from '../components/SideBar.vue';
+import PageHeader from '../components/PageHeader.vue';
+import { useRouter, useRoute } from 'vue-router';
+import { ref, reactive, watchEffect, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import * as api from '../api';
 import axios from 'axios';
 
 export default {
   name: 'OrderDetails',
+  components: { SideBar, PageHeader },
+  props: {
+    order:{
+      type: Object,
+    }
+  },
   setup() {
     const router = useRouter();
+    const route = useRoute();
     const store = useStore();
-    let state = reactive({});
+    const state = reactive({
+      order: null,
+    });
 
-    async function onSubmit() {
-      // store all confirmed order data in FormData
-      
-      // TODO: Order addOrder here
+    onMounted(() =>{
+      console.log('test');
+      loadOrder();
+    })
+
+
+    async function loadOrder() {
+      try{
+        const res = await api.getOrder(route.params.id);
+        state.order = res.data;
+        console.log(state.order);
+      }catch(err){
+        console.log(err);
+      }
     }
+    return { state };
   }
+
 };
 </script>
 

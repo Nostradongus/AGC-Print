@@ -137,14 +137,14 @@
         <div class="relative mt-6">
           <input
             id="contactno"
-            name="contactno"
+            name="contactNo"
             type="text"
             class="manrope-regular login-text-field"
             v-model="state.contactNo"
             :class="{ 'text-field-error': v.contactNo.$error }"
           />
           <label
-            for="contactno"
+            for="contactNo"
             class="
               absolute
               manrope-regular
@@ -299,8 +299,8 @@ export default {
         username: state.username,
         email: state.email,
         contactNo: state.contactNo,
-        pw: state.password,
-        repeatPw: state.confirmPassword,
+        password: state.password,
+        confirmPassword: state.confirmPassword,
       };
       try {
         const validated = await v.value.$validate();
@@ -314,6 +314,7 @@ export default {
         console.log(err);
       }
     }
+
     return { state, registerUser, v, passwordConfirmed };
   },
 };

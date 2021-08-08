@@ -48,12 +48,10 @@ const validator = {
       check('contactNo')
         .notEmpty()
         .withMessage('Please input your contact number.')
-        .custom((val) => {
-          val[0] + val[1] === '63' ? true : false;
-        })
-        .withMessage('Phone number must start with "63".'),
+        .isLength({ min: 12, max: 12 })
+        .withMessage('Contact number must be 12 characters.'),
       // checks repeat password input field
-      check('repeatPassword')
+      check('confirmPassword')
         .notEmpty()
         .withMessage('Please confirm your password.'),
     ];

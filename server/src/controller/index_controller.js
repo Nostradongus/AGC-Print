@@ -76,12 +76,12 @@ const indexController = {
   // index controller method to register (add) user to the database
   postRegister: async (req, res) => {
     // check if there are validation errors
-    const validationErr = validationResult(req);
+    const validationError = validationResult(req);
 
     // if validation errors occur
-    if (!validationErr.isEmpty()) {
+    if (!validationError.isEmpty()) {
       // return with bad request and error message
-      return res.json(400).json({ message: 'Incorrect inputs.' });
+      return res.status(400).json({ message: 'Incorrect inputs.' });
     } else {
       // check if username already exists in the database
       const userData = await UserService.getUser({
@@ -91,10 +91,30 @@ const indexController = {
       // check if email already exists in the database
       const emailData = await UserService.getUser({ email: req.body.email });
 
-      // if password and repeat (confirm) password do not match each other
-      if (req.body.password !== req.body.repeatPw) {
+      // contact number and email format check
+      const validContactNo = req.body.contactNo[0] + req.body.contactNo[1];
+      const validEmailAt = req.body.email.split('@');
+      const validEmailDot = req.body.email.split('.');
+
+      // if contact number inputted does not match the valid format (starts with "63")
+      if (validContactNo !== '63') {
         const details = {
-          error: 'Password and Repeat Password fields do not match each other.',
+          error: 'Contact number must start with "63".',
+        };
+        return res.status(400).json(details);
+
+        // if email does not follow valid format
+      } else if (validEmailAt.length < 2 || validEmailDot.length < 2) {
+        const details = {
+          error: 'Email does not follow valid format.',
+        };
+        return res.status(400).json(details);
+
+        // if password and repeat (confirm) password do not match each other
+      } else if (req.body.password !== req.body.confirmPassword) {
+        const details = {
+          error:
+            'Password and Confirm Password fields do not match each other.',
         };
         return res.status(400).json(details);
         // if username already exists
