@@ -31,7 +31,7 @@ const indexController = {
         .json({ message: 'Incorrect username or password.' });
     } else {
       // temporary username and password values
-      const username = req.body.username;
+      const username = req.body.username.toLowerCase();
       const password = req.body.password;
 
       // if user data exist in the database
@@ -85,7 +85,7 @@ const indexController = {
     } else {
       // check if username already exists in the database
       const userData = await UserService.getUser({
-        username: req.body.username,
+        username: req.body.username.toLowerCase(),
       });
 
       // check if email already exists in the database
@@ -96,44 +96,51 @@ const indexController = {
       const validEmailAt = req.body.email.split('@');
       const validEmailDot = req.body.email.split('.');
 
-      // if contact number inputted does not match the valid format (starts with "63")
-      if (validContactNo !== '63') {
-        const details = {
-          error: 'Contact number must start with "63".',
-        };
-        return res.status(400).json(details);
-
-        // if email does not follow valid format
-      } else if (validEmailAt.length < 2 || validEmailDot.length < 2) {
-        const details = {
-          error: 'Email does not follow valid format.',
-        };
-        return res.status(400).json(details);
-
-        // if password and repeat (confirm) password do not match each other
-      } else if (req.body.password !== req.body.confirmPassword) {
-        const details = {
-          error:
-            'Password and Confirm Password fields do not match each other.',
-        };
-        return res.status(400).json(details);
-        // if username already exists
-      } else if (userData != null) {
+      // if user already exists in the database
+      if (userData != null) {
         const details = {
           error: 'Username already exists',
+          usernameError: true,
         };
         return res.status(400).json(details);
         // if email already exists
       } else if (emailData != null) {
         const details = {
           error: 'E-mail already exists',
+          emailError: true,
         };
         return res.status(400).json(details);
+
+        // email does not follow valid format
+      } else if (validEmailAt.length < 2 || validEmailDot.length < 2) {
+        const details = {
+          error: 'Email does not follow valid format.',
+          emailError: true,
+        };
+        return res.status(400).json(details);
+      }
+      // if contact number inputted does not match the valid format (starts with "63")
+      else if (validContactNo !== '63') {
+        const details = {
+          error: 'Contact number must start with "63".',
+          contactNoError: true,
+        };
+        return res.status(400).json(details);
+
+        // if password and confirm password fields do not match each other
+      } else if (req.body.password !== req.body.confirmPassword) {
+        const details = {
+          error:
+            'Password and Confirm Password fields do not match each other.',
+          passwordError: true,
+        };
+        return res.status(400).json(details);
+
         // add new user to database
       } else {
         // create new user object
         const user = {
-          username: req.body.username,
+          username: req.body.username.toLowerCase(),
           password: null,
           firstname: req.body.firstname,
           lastname: req.body.lastname,

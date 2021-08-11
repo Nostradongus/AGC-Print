@@ -96,11 +96,18 @@ router.delete(
   orderController.deleteOrder
 );
 
-// route for delete an order set from the database
+// route for deleting an order set from the database
 router.delete(
   '/delete/orderSet/:id',
   token.authenticateToken,
   orderController.deleteOrderSet
+);
+
+// route for updating the status of an order set from the database
+router.patch(
+  '/update/orderSet/:id',
+  token.authenticateToken,
+  orderController.updateOrderSetStatus
 );
 
 // export order routes

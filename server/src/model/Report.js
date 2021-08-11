@@ -8,8 +8,18 @@ const ReportSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  // id of order being referred by the report
-  orderId: {
+  // id of order set being referred by the report
+  orderSetId: {
+    type: String,
+    required: true,
+  },
+  // title of the report
+  title: {
+    type: String,
+    required: true,
+  },
+  // type of report
+  type: {
     type: String,
     required: true,
   },
@@ -18,8 +28,31 @@ const ReportSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  // text content of the report
-  text: {
+  // description (text content) of the report
+  description: {
+    type: String,
+    required: true,
+  },
+  // filename of the report's image
+  img: {
+    type: String,
+    required: false,
+    default: null,
+  },
+  // file path of the report's image
+  imgPath: {
+    type: String,
+    required: false,
+    default: null,
+  },
+  // status of report (Resolved or Not Yet Resolved)
+  status: {
+    type: String,
+    required: true,
+    default: 'Not Yet Resolved',
+  },
+  // date when the report was created
+  dateRequested: {
     type: String,
     required: true,
   },

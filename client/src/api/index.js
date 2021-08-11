@@ -32,7 +32,16 @@ export const addToCart = (orderData) => API.post('/order/cart/add', orderData);
 export const addOrderSet = (orders) => API.post('/order/cart/confirm', orders);
 export const deleteOrder = (id) => API.delete(`/order/delete/${id}`);
 export const deleteOrderSet = (id) => API.delete(`/order/delete/orderSet/${id}`);
+export const updateOrderSetStatus = (id, status) => API.patch(`/order/update/orderSet/${id}`, status);
 
 // user data api methods
 export const getUsers = () => API.get('/users');
 export const getUser = (username) => API.get(`/users/${username}`);
+
+// report data api methods
+export const getAllReports = () => API.get('/report');
+export const getUserReports = (username) => API.get(`/report/${username}`);
+export const getReport = (id) => API.get(`/report/details/${id}`);
+export const addReport = (report) => API.post('/report/add/new', report);
+export const deleteReport = (id) => API.delete(`/report/delete/${id}`);
+export const updateReportStatus = (id) => API.patch(`/report/update/${id}`);

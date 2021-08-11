@@ -13,6 +13,7 @@ import indexRoutes from './routes/index_routes.js';
 import userRoutes from './routes/user_routes.js';
 import orderRoutes from './routes/order_routes.js';
 import workerRoutes from './routes/worker_routes.js';
+import reportRoutes from './routes/report_routes.js';
 
 // connect to AGC Print database
 connectDatabase();
@@ -34,8 +35,8 @@ app.use(
   cors({
     origin: ['http://localhost:3000', 'https://localhost:3000'],
     credentials: true,
-  }
-));
+  })
+);
 
 // for static public folder, containing the uploaded order images
 app.use(express.static(__dirname + '/src/public/order_images'));
@@ -58,6 +59,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 app.use('/', indexRoutes);
 app.use('/users', userRoutes);
 app.use('/order', orderRoutes);
+app.use('/report', reportRoutes);
 app.use('/workers', workerRoutes);
 
 export default app;

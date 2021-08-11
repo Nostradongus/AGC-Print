@@ -248,7 +248,22 @@ const orderController = {
     }
   },
 
-  // TODO: create order controller methods for updating
+  // order controller method to update the status of an order set from the database
+  updateOrderSetStatus: async (req, res) => {
+    try {
+      // update an order set from the database
+      const result = await OrderService.updateOrderSetStatus({
+        id: req.params.id,
+        status: req.body.status,
+      });
+
+      // send result back to the client to indicate success
+      return res.status(204).json(result);
+    } catch (err) {
+      // if error has occurred, send server error status and message
+      res.status(500).json({ message: 'Server Error' });
+    }
+  },
 };
 
 // export order controller object for routing

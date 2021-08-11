@@ -68,6 +68,10 @@ const OrderService = {
 
   // this method deletes an order set from the database
   deleteOrderSet: async (id) => OrderSet.deleteOne(id),
+
+  // this method updates an order set's status from the database
+  updateOrderSetStatus: async (data) =>
+    OrderSet.updateOne({ id: data.id }, { status: data.status }),
 };
 
 // export order service object for order data creation and manipulation
