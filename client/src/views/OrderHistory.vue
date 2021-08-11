@@ -1,9 +1,42 @@
 <template>
   <div>
-    <side-bar/>
+    <side-bar />
     <page-header title="Order History">
       <!-- display all orders of user -->
-      <OrderCard v-for="order in state.orders" :key="order.id" :order="order"/>
+      <div v-if="state.empty" class="h-full w-full">
+        <div class="mx-8 mt-8 text-2xl relative">
+          You currently don't have any orders.
+        </div>
+        <router-link
+          class="
+            m-8
+            manrope-regular
+            text-white
+            inline-block
+            transition
+            duration-300
+            ease-in-out
+            text-center text-lg
+            hover:bg-link-water hover:text-primary-blue
+            w-32
+            mb-8
+            mt-8
+            rounded-xl
+            bg-primary-blue
+            p-2
+          "
+          to="/order"
+        >
+          Add Order
+        </router-link>
+      </div>
+      <div v-else>
+        <OrderCard
+          v-for="order in state.orders"
+          :key="order.id"
+          :order="order"
+        />
+      </div>
     </page-header>
   </div>
 </template>
@@ -27,6 +60,7 @@ export default {
     const store = useStore();
     const state = reactive({
       orders: null,
+      empty: true,
     });
 
     async function getUserPastOrders() {
@@ -34,6 +68,9 @@ export default {
         const data = store.state.user.user.username;
         const result = await api.getUserPastOrders(data);
         state.orders = result.data;
+        if (state.orders.length !== 0) {
+          state.empty = false;
+        }
       } catch (err) {
         console.log(err.response.data);
       }

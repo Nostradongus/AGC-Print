@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen bg-primary-blue flex">
-    <div class="register-rectangle relative m-auto">
+    <div class="register-rectangle relative m-auto mt-8 mb-8">
       <p class="manrope-regular text-3xl text-center mt-10">
         Create an Account
       </p>
@@ -75,7 +75,9 @@
             type="text"
             class="manrope-regular login-text-field"
             v-model="state.username"
-            :class="{ 'text-field-error': v.username.$error }"
+            :class="{
+              'text-field-error': v.username.$error,
+            }"
           />
           <label
             for="email"
@@ -94,6 +96,14 @@
           >
             {{ v.username.$errors[0].$message }}
           </p>
+          <div v-else-if="state.error">
+            <p
+              class="text-red manrope-bold text-left ml-14 text-sm"
+              v-if="state.error.usernameError"
+            >
+              {{ state.error.error }}
+            </p>
+          </div>
           <p
             v-else
             class="text-red manrope-bold text-left ml-14 text-sm invisible"
@@ -127,6 +137,14 @@
           >
             {{ v.email.$errors[0].$message }}
           </p>
+          <div v-else-if="state.error">
+            <p
+              class="text-red manrope-bold text-left ml-14 text-sm"
+              v-if="state.error.emailError"
+            >
+              {{ state.error.error }}
+            </p>
+          </div>
           <p
             v-else
             class="text-red manrope-bold text-left ml-14 text-sm invisible"
@@ -135,14 +153,18 @@
           </p>
         </div>
         <div class="relative mt-6">
-          <input
-            id="contactno"
-            name="contactNo"
-            type="text"
-            class="manrope-regular login-text-field"
-            v-model="state.contactNo"
-            :class="{ 'text-field-error': v.contactNo.$error }"
-          />
+          <div class="flex flex-row items-center justify-center">
+            <p class="absolute left-14 text-lg">+63</p>
+            <input
+              id="contactno"
+              name="contactNo"
+              type="text"
+              class="manrope-regular login-text-field pl-10 text-md"
+              v-model="state.contactNo"
+              :class="{ 'text-field-error': v.contactNo.$error }"
+            />
+          </div>
+
           <label
             for="contactNo"
             class="
@@ -160,6 +182,14 @@
           >
             {{ v.contactNo.$errors[0].$message }}
           </p>
+          <div v-else-if="state.error">
+            <p
+              class="text-red manrope-bold text-left ml-14 text-sm"
+              v-if="state.error.contactNoError"
+            >
+              {{ state.error.error }}
+            </p>
+          </div>
           <p
             v-else
             class="text-red manrope-bold text-left ml-14 text-sm invisible"
@@ -207,6 +237,7 @@
             type="password"
             class="manrope-regular login-text-field"
             v-model="state.confirmPassword"
+            :class="{ 'text-field-error': v.confirmPassword.$error }"
           />
           <label
             for="confirmpassword"
@@ -226,10 +257,10 @@
             Passwords don't match
           </p>
           <p
-            v-else
-            class="text-red manrope-bold text-left ml-14 text-sm invisible"
+            v-else-if="v.confirmPassword.$error"
+            class="text-red manrope-bold text-left ml-14 text-sm"
           >
-            placeholder
+            {{ v.confirmPassword.$errors[0].$message }}
           </p>
         </div>
         <button
@@ -274,6 +305,7 @@ export default {
       contactNo: '',
       password: '',
       confirmPassword: '',
+      error: null,
     });
 
     const rules = {
@@ -298,20 +330,22 @@ export default {
         lastname: state.lastname,
         username: state.username,
         email: state.email,
-        contactNo: state.contactNo,
+        contactNo: `63${state.contactNo}`,
         password: state.password,
         confirmPassword: state.confirmPassword,
       };
       try {
         const validated = await v.value.$validate();
+        console.log(v.value);
 
         if (validated && passwordConfirmed.value) {
           const result = await api.signUp(data);
-          store.dispatch('registerUser', result.data);
-          router.push({ name: 'Order' });
+          store.dispatch('loginUser', result.data);
+          router.push({ name: 'MyOrders' });
         }
       } catch (err) {
-        console.log(err);
+        console.log(err.response.data);
+        state.error = err.response.data;
       }
     }
 
@@ -326,9 +360,8 @@ export default {
   height: 48rem;
 
   background: #ffffff;
-  border: 2px solid #c4c4c4;
   box-sizing: border-box;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.5);
+  box-shadow: 0px 12px 12px rgba(0, 0, 0, 0.25);
   border-radius: 20px;
 }
 

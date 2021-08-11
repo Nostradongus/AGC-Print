@@ -47,9 +47,7 @@ const validator = {
       // checks contact number input field
       check('contactNo')
         .notEmpty()
-        .withMessage('Please input your contact number.')
-        .isLength({ min: 12, max: 12 })
-        .withMessage('Contact number must be 12 characters.'),
+        .withMessage('Please input your contact number.'),
       // checks repeat password input field
       check('confirmPassword')
         .notEmpty()

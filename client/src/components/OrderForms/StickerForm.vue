@@ -1,6 +1,11 @@
 <template>
   <!-- start sticker form -->
-  <form @submit.prevent="addToCart" class="mt-12" id="sticker-form" enctype="multi-part/form-data">
+  <form
+    @submit.prevent="addToCart"
+    class="mt-12"
+    id="sticker-form"
+    enctype="multi-part/form-data"
+  >
     <div class="relative">
       <input
         id="quantity"
@@ -50,7 +55,12 @@
     </div>
     <div class="flex justify-start">
       <div class="relative mt-20">
-        <select name="diecut" id="diecut" class="dropdown-field w-32" v-model="state.diecut">
+        <select
+          name="diecut"
+          id="diecut"
+          class="dropdown-field w-32"
+          v-model="state.diecut"
+        >
           <option value="Yes">Yes</option>
           <option value="No">No</option>
         </select>
@@ -68,7 +78,7 @@
           ref="file"
           type="file"
           class="manrope-regular w-72"
-          min="0" 
+          min="0"
           @change="onSelect"
         />
         <label
@@ -110,6 +120,7 @@
         mt-8
         rounded-xl
         bg-primary-blue
+        p-2
       "
     >
       Next
@@ -126,7 +137,7 @@ import * as api from '../../api';
 
 export default {
   name: 'StickerForm',
-  setup(){
+  setup() {
     const file = ref(null);
     const router = useRouter();
     const store = useStore();
@@ -140,7 +151,7 @@ export default {
       remarks: '',
     });
 
-    function onSelect(){
+    function onSelect() {
       state.imageFile = file.value.files[0];
     }
 
@@ -160,14 +171,14 @@ export default {
       const res = await api.addToCart(formData);
 
       // store generated order id to vue local storage
-      store.dispatch('setOrder', res.data); 
+      store.dispatch('setOrder', res.data);
 
       // go to delivery information page
-      router.push({name: 'ViewCart'});
+      router.push({ name: 'ViewCart' });
     }
 
     return { file, state, onSelect, addToCart };
-  }
+  },
 };
 </script>
 

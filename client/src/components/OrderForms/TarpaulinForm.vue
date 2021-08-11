@@ -1,6 +1,11 @@
 <template>
   <!-- start tarpaulin form -->
-  <form @submit.prevent="addToCart" class="mt-12" id="tarpaulin-form" enctype="multi-part/form-data">
+  <form
+    @submit.prevent="addToCart"
+    class="mt-12"
+    id="tarpaulin-form"
+    enctype="multi-part/form-data"
+  >
     <div class="relative">
       <input
         id="quantity"
@@ -79,7 +84,7 @@
         >File Upload</label
       >
     </div>
-        <div class="relative mt-20">
+    <div class="relative mt-20">
       <textarea
         id="other-details"
         name="other-details"
@@ -109,6 +114,7 @@
         mt-8
         rounded-xl
         bg-primary-blue
+        p-2
       "
     >
       Next
@@ -159,10 +165,10 @@ export default {
       const res = await api.addToCart(formData);
 
       // store generated order id to vue local storage
-      store.dispatch('setOrder', res.data); 
+      store.dispatch('setOrder', res.data);
 
       // go to delivery information page
-      router.push({name: 'ViewCart'});
+      router.push({ name: 'ViewCart' });
     }
 
     return { file, state, onSelect, addToCart };

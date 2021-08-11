@@ -1,6 +1,11 @@
 <template>
   <!-- start canvas print form -->
-  <form @submit.prevent="addToCart" class="mt-12" id="canvas-print-form" enctype="multipart/form-data">
+  <form
+    @submit.prevent="addToCart"
+    class="mt-12"
+    id="canvas-print-form"
+    enctype="multipart/form-data"
+  >
     <div class="relative">
       <input
         id="quantity"
@@ -72,9 +77,10 @@
     <div
       class="relative mt-20"
       v-if="
-        state.frameOption !== '3/4inches' &&
-        state.frameOption !== '1.5inches' &&
-        state.frameOption !== 'placeholder'
+        state.frameOption !== '3/4 Inches' &&
+        state.frameOption !== '1.5 Inches' &&
+        state.frameOption !== 'placeholder' &&
+        state.frameOption !== 'Print Only'
       "
     >
       <select
@@ -98,12 +104,12 @@
     <div
       class="relative mt-20"
       v-if="
-        state.frameOption === '3/4inches' || state.frameOption === '1.5inches'
+        state.frameOption === '3/4 Inches' || state.frameOption === '1.5 Inches'
       "
     >
-      <select 
-        name="frameedges" 
-        id="frameedges" 
+      <select
+        name="frameedges"
+        id="frameedges"
         class="dropdown-field w-48"
         v-model="state.frameEdges"
       >
@@ -165,6 +171,7 @@
         mt-8
         rounded-xl
         bg-primary-blue
+        p-2
       "
     >
       Next
@@ -218,10 +225,10 @@ export default {
       const res = await api.addToCart(formData);
 
       // store generated order id to vue local storage
-      store.dispatch('setOrder', res.data); 
+      store.dispatch('setOrder', res.data);
 
       // go to delivery information page
-      router.push({name: 'ViewCart'});
+      router.push({ name: 'ViewCart' });
     }
 
     return { file, state, onSelect, addToCart };

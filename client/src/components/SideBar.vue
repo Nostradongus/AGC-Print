@@ -30,7 +30,10 @@
           font-semibold
           text-gray-900
           rounded-lg
-          hover:bg-light-gray
+          hover:bg-link-water
+          transition
+          duration-500
+          ease-in-out
         "
         to="/order"
       >
@@ -47,7 +50,7 @@
             clip-rule="evenodd"
           />
         </svg>
-        Order</router-link
+        New Order</router-link
       >
       <router-link
         class="
@@ -62,9 +65,12 @@
           font-semibold
           text-gray-900
           rounded-lg
-          hover:bg-light-gray
+          hover:bg-link-water
+          transition
+          duration-500
+          ease-in-out
         "
-        to="/order-history"
+        to="/my-orders"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -77,7 +83,7 @@
             d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
             clip-rule="evenodd"
           /></svg
-        >History</router-link
+        >My Orders</router-link
       >
       <router-link
         class="
@@ -92,7 +98,10 @@
           font-semibold
           text-gray-900
           rounded-lg
-          hover:bg-light-gray
+          hover:bg-link-water
+          transition
+          duration-500
+          ease-in-out
         "
         to=""
       >
@@ -122,11 +131,22 @@
           font-semibold
           text-gray-900
           rounded-lg
-          hover:bg-light-gray
+          hover:bg-link-water
+          transition
+          duration-500
+          ease-in-out
         "
-        to="/view-cart">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 pr-3" viewBox="0 0 20 20" fill="currentColor">
-          <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+        to="/view-cart"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-10 w-10 pr-3"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"
+          />
         </svg>
         Cart
       </router-link>
@@ -138,6 +158,7 @@
           flex flex-row
           justify-items-center
           items-center
+          w-full
           px-4
           py-2
           mt-2
@@ -145,7 +166,10 @@
           font-semibold
           text-gray-900
           rounded-lg
-          hover:bg-light-gray
+          hover:bg-link-water
+          transition
+          duration-500
+          ease-in-out
         "
         @click="logoutUser"
       >
@@ -160,8 +184,8 @@
             d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z"
             clip-rule="evenodd"
           /></svg
-        >Logout</button
-      >
+        >Logout
+      </button>
     </div>
   </nav>
 </template>
@@ -183,13 +207,13 @@ export default {
     async function logoutUser() {
       try {
         const result = await api.signOut();
-        store.dispatch('logoutUser')
-        router.push({ name: 'Login' })
+        store.dispatch('logoutUser');
+        router.push({ name: 'Login' });
       } catch (err) {
         state.error = true;
       }
     }
-    
+
     return { state, logoutUser };
   },
 };

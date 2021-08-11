@@ -1,8 +1,8 @@
 <template>
-<div>
-  <side-bar/>
-  <page-header title="Delivery Information">
-        <div class="p-8 mt-8">
+  <div>
+    <side-bar />
+    <page-header title="Delivery Information">
+      <div class="p-8 mt-8">
         <form>
           <div class="relative">
             <input
@@ -10,6 +10,7 @@
               name="completename"
               type="text"
               class="manrope-regular input-text-field"
+              :class="{ 'border-red': v.name.$error }"
               v-model="state.name"
             />
             <label
@@ -23,6 +24,12 @@
               "
               >Complete Name</label
             >
+            <p
+              class="text-red manrope-bold text-left text-sm"
+              v-if="v.name.$error"
+            >
+              {{ v.name.$errors[0].$message }}
+            </p>
           </div>
           <div class="relative mt-12">
             <input
@@ -30,6 +37,7 @@
               name="email"
               type="text"
               class="manrope-regular input-text-field"
+              :class="{ 'border-red': v.email.$error }"
               v-model="state.email"
             />
             <label
@@ -43,6 +51,12 @@
               "
               >E-mail Address</label
             >
+            <p
+              class="text-red manrope-bold text-left text-sm"
+              v-if="v.email.$error"
+            >
+              {{ v.email.$errors[0].$message }}
+            </p>
           </div>
           <div class="relative mt-12">
             <input
@@ -50,6 +64,7 @@
               name="contactno"
               type="text"
               class="manrope-regular input-text-field"
+              :class="{ 'border-red': v.contactNo.$error }"
               v-model="state.contactNo"
             />
             <label
@@ -63,6 +78,12 @@
               "
               >Contact Number</label
             >
+            <p
+              class="text-red manrope-bold text-left text-sm"
+              v-if="v.contactNo.$error"
+            >
+              {{ v.contactNo.$errors[0].$message }}
+            </p>
           </div>
           <div class="relative mt-12">
             <input
@@ -70,6 +91,7 @@
               name="billingaddress"
               type="text"
               class="manrope-regular input-text-field"
+              :class="{ 'border-red': v.address.$error }"
               v-model="state.address"
             />
             <label
@@ -81,8 +103,14 @@
                 -top-3.5
                 text-gray-600 text-md
               "
-              >Billing Address</label
+              >Delivery Address</label
             >
+            <p
+              class="text-red manrope-bold text-left text-sm"
+              v-if="v.address.$error"
+            >
+              {{ v.address.$errors[0].$message }}
+            </p>
           </div>
           <label
             for="next-btn"
@@ -94,22 +122,20 @@
               duration-300
               ease-in-out
               text-center text-lg
-              hover:bg-link-water hover:text-primary-blue
+              hover:bg-light-blue hover:text-primary-blue
               w-32
               mt-12
               rounded-xl
               bg-primary-blue
+              p-3
             "
           >
-            <button @click="confirmOrdersFromCart">Place Orders</button>
-        </label>
+            <button @click="confirmOrdersFromCart">Place Order</button>
+          </label>
         </form>
       </div>
-
-  </page-header>
-
-</div>
-
+    </page-header>
+  </div>
 </template>
 
 <script>
@@ -118,44 +144,58 @@ import PageHeader from '../components/PageHeader.vue';
 import { useRouter } from 'vue-router';
 import { reactive } from 'vue';
 import { useStore } from 'vuex';
+import useVuelidate from '@vuelidate/core';
+import { required, numeric, email } from '@vuelidate/validators';
 import * as api from '../api';
 
 export default {
   name: 'DeliveryInformation',
   components: {
-    SideBar, 
+    SideBar,
     PageHeader,
   },
   setup() {
     const router = useRouter();
     const store = useStore();
-    let state = reactive({
+    const state = reactive({
       name: '',
       email: '',
       contactNo: '',
       address: '',
     });
 
+    const rules = {
+      name: { required },
+      email: { required, email },
+      contactNo: { required, numeric },
+      address: { required },
+    };
+
+    const v = useVuelidate(rules, state);
+
     async function confirmOrdersFromCart(e) {
       e.preventDefault();
+      const validated = await v.value.$validate();
 
-      // update each order with the given delivery information
-      for (let ctr = 0; ctr < store.state.order.orders.length; ctr++) {
-        store.state.order.orders[ctr].name = state.name;
-        store.state.order.orders[ctr].email = state.email;
-        store.state.order.orders[ctr].contactNo = state.contactNo;
-        store.state.order.orders[ctr].address = state.address;
+      if (validated) {
+        // update each order with the given delivery information
+        for (let ctr = 0; ctr < store.state.order.orders.length; ctr++) {
+          store.state.order.orders[ctr].name = state.name;
+          store.state.order.orders[ctr].email = state.email;
+          store.state.order.orders[ctr].contactNo = state.contactNo;
+          store.state.order.orders[ctr].address = state.address;
+        }
+
+        // confirm add orders to the database
+        const res = await api.addOrders(store.state.order.orders);
+
+        // go to order details page
+        router.push({ name: 'OrderConfirmed' });
       }
-
-      // confirm add orders to the database
-      const res = await api.addOrders(store.state.order.orders);
-
-      // go to order details page
-      router.push({ name: 'OrderConfirmed' });
     }
 
-    return { state, confirmOrdersFromCart };
-  }
+    return { state, confirmOrdersFromCart, v };
+  },
 };
 </script>
 
@@ -194,20 +234,5 @@ export default {
   width: 10rem;
   height: 5rem;
   border-radius: 20px;
-}
-
-.manrope-regular {
-  font-family: 'Manrope', sans-serif;
-  font-weight: 400;
-}
-
-.manrope-bold {
-  font-family: 'Manrope', sans-serif;
-  font-weight: 600;
-}
-
-.manrope-extrabold {
-  font-family: 'Manrope', sans-serif;
-  font-weight: 800;
 }
 </style>

@@ -1,6 +1,11 @@
 <template>
   <!-- start wallpaper form -->
-  <form @submit.prevent="addToCart" class="mt-12" id="wallpaper-form" enctype="multi-part/form-data">
+  <form
+    @submit.prevent="addToCart"
+    class="mt-12"
+    id="wallpaper-form"
+    enctype="multi-part/form-data"
+  >
     <div class="relative">
       <input
         id="quantity"
@@ -95,6 +100,7 @@
         mt-8
         rounded-xl
         bg-primary-blue
+        p-2
       "
     >
       Next
@@ -111,7 +117,7 @@ import * as api from '../../api';
 
 export default {
   name: 'WallpaperForm',
-  setup(){
+  setup() {
     const file = ref(null);
     const router = useRouter();
     const store = useStore();
@@ -124,11 +130,11 @@ export default {
       remarks: '',
     });
 
-    function onSelect(){
+    function onSelect() {
       state.imageFile = file.value.files[0];
     }
 
-    async function addToCart(){
+    async function addToCart() {
       // create FormData to store order data
       const formData = new FormData();
       formData.append('quantity', state.quantity);
@@ -143,14 +149,14 @@ export default {
       const res = await api.addToCart(formData);
       console.log(res);
       // store generated order id to vue local storage
-      store.dispatch('setOrder', res.data); 
+      store.dispatch('setOrder', res.data);
 
       // go to delivery information page
       router.push({ name: 'ViewCart' });
     }
 
     return { file, state, onSelect, addToCart };
-  }
+  },
 };
 </script>
 

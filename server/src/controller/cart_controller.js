@@ -15,7 +15,6 @@ const cartController = {
     };
     const id = cart.addOrder(orderData);
     req.session.cart = cart;
-    console.log(req.session);
 
     req.session.save();
 
