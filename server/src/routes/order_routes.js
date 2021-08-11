@@ -7,9 +7,6 @@ import multer from 'multer';
 // import order controller object for order controller methods
 import orderController from '../controller/order_controller.js';
 
-// import cart controller object for cart controller methods
-import cartController from '../controller/cart_controller.js';
-
 // import jwt token middleware for user authentication
 import token from '../middleware/token.js';
 
@@ -31,44 +28,43 @@ const orderImageStorage = multer.diskStorage({
 const orderImageUpload = multer({ storage: orderImageStorage });
 
 // route for getting all orders from the database
-router.get('/', token.authenticateToken, orderController.getAllOrders);
+router.get('/', token.authenticateToken, orderController.getAllOrderSets);
 
 // route for getting all orders of a user from the database
 router.get(
   '/:username',
   token.authenticateToken,
-  orderController.getUserOrders
+  orderController.getUserOrderSets
 );
 
-// route for getting a specific order from the database
-router.get('/details/:id', token.authenticateToken, orderController.getOrder);
-
-// route for deleting an order from cart
-router.delete(
-  '/cart/delete',
-  token.authenticateToken,
-  orderController.deleteFromCart
-);
-
-// TODO: optimize past orders, current orders, and active orders route to one route (merge)
 // route for user's past orders
 router.get(
   '/:username/pastOrders',
   token.authenticateToken,
-  orderController.getUserPastOrders
+  orderController.getUserPastOrderSets
 );
 
 // route for user's current orders
 router.get(
   '/:username/currentOrders',
   token.authenticateToken,
-  orderController.getUserCurrentOrders
+  orderController.getUserCurrentOrderSets
 );
 
 router.get(
   '/:username/activeOrders',
   token.authenticateToken,
-  orderController.getAllActiveOrders
+  orderController.getAllActiveOrderSets
+);
+
+// route for getting a specific order from the database
+router.get('/details/:id', token.authenticateToken, orderController.getOrder);
+
+// route for getting a specific order set from the database
+router.get(
+  '/details/orderSet/:id',
+  token.authenticateToken,
+  orderController.getOrderSet
 );
 
 // route for adding new order to cart
@@ -83,7 +79,28 @@ router.post(
 router.post(
   '/cart/confirm',
   token.authenticateToken,
-  orderController.addOrders
+  orderController.addOrderSet
+);
+
+// route for deleting an order from cart
+router.delete(
+  '/cart/delete',
+  token.authenticateToken,
+  orderController.deleteFromCart
+);
+
+// route for deleting an order from the database
+router.delete(
+  '/delete/:id',
+  token.authenticateToken,
+  orderController.deleteOrder
+);
+
+// route for delete an order set from the database
+router.delete(
+  '/delete/orderSet/:id',
+  token.authenticateToken,
+  orderController.deleteOrderSet
 );
 
 // export order routes

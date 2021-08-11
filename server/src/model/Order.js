@@ -1,10 +1,15 @@
 // import mongoose module for schema modeling
 import mongoose from 'mongoose';
 
-// order schema for user orders in the application
+// order schema for orders in the application
 const OrderSchema = new mongoose.Schema({
   // unique id of order
   id: {
+    type: String,
+    required: true,
+  },
+  // unique id of the order set where the order is contained
+  orderSetId: {
     type: String,
     required: true,
   },
@@ -12,36 +17,6 @@ const OrderSchema = new mongoose.Schema({
   user: {
     type: String,
     required: true,
-  },
-  // name of customer
-  name: {
-    type: String,
-    required: false,
-  },
-  // email of customer
-  email: {
-    type: String,
-    required: false,
-  },
-  // address of customer
-  address: {
-    type: String,
-    required: false,
-  },
-  // contact number of customer
-  contactNo: {
-    type: String,
-    required: false,
-  },
-  // payment method chosen by the customer
-  payMethod: {
-    type: String,
-    required: false,
-  },
-  // worker / staff in charged of the order
-  workerInCharge: {
-    type: String,
-    required: false,
   },
   // type of the order
   type: {
@@ -67,11 +42,7 @@ const OrderSchema = new mongoose.Schema({
   price: {
     type: Number,
     required: false,
-  },
-  // current status of the order
-  status: {
-    type: String,
-    required: false,
+    default: -1,
   },
   // dimensions/size of the order (width) in inches
   width: {
@@ -110,16 +81,6 @@ const OrderSchema = new mongoose.Schema({
   },
   // other details (remarks) of the order
   remarks: {
-    type: String,
-    required: false,
-  },
-  // when the order was requested
-  dateRequested: {
-    type: String,
-    required: false,
-  },
-  // when the order was shipped
-  dateShipped: {
     type: String,
     required: false,
   },
