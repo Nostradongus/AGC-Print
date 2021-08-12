@@ -61,3 +61,5 @@ router.patch(
   token.authenticateToken,
   reportController.updateReportStatus
 );
+
+export default router;

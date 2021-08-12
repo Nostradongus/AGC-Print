@@ -25,7 +25,7 @@ const OrderService = {
       },
     }),
 
-  // this method returns all active orders for the worker to process
+  // this method returns all active orders of users for the worker to process
   getAllActiveOrderSets: async () =>
     OrderSet.find({
       status: {
