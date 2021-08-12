@@ -88,7 +88,7 @@ const routes = [
     name: 'ActiveOrders',
     component: ActiveOrders,
     meta: {
-      requiresAuth: true,
+      hideForAuth: true,
     },
   },
 ];
