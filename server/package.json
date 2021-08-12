@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon",
-    "data": "node ./src/data",
+    "data": "node ./src/workerdata",
     "start": "node ./src/server",
     "test": "jest",
     "test:watch": "jest --watch",

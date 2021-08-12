@@ -100,9 +100,7 @@ const indexController = {
         });
       } else {
         // username does not exist in the database
-        return res
-          .status(400)
-          .json({ usernameError: 'User not found!' });
+        return res.status(400).json({ usernameError: 'User not found!' });
       }
     }
   },
