@@ -52,7 +52,7 @@ router.get(
 );
 
 router.get(
-  '/:username/activeOrders',
+  '/orders/active',
   token.authenticateToken,
   orderController.getAllActiveOrderSets
 );

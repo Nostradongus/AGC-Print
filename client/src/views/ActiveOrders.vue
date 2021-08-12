@@ -1,38 +1,39 @@
 <template>
   <div>
     <side-bar/>
-    <page-header title="Order History">
-      <!-- display all orders of user -->
+    <page-header title="Active Orders">
+      <!-- display all active orders of user -->
       <OrderCard v-for="order in state.orders" :key="order.id" :order="order"/>
     </page-header>
   </div>
 </template>
 
 <script>
-import SideBar from '../components/SideBar.vue';
-import PageHeader from '../components/PageHeader.vue';
-import OrderCard from '../components/OrderCard.vue';
 import { reactive, onMounted } from 'vue';
 import { useStore } from 'vuex';
+import OrderCard from '../components/OrderCard.vue';
+import SideBar from '../components/SideBar.vue';
+import PageHeader from '../components/PageHeader.vue';
 import * as api from '../api';
 
 export default {
-  name: 'OrderHistory',
+  name: 'ActiveOrders',
   components: {
     OrderCard,
     SideBar,
     PageHeader,
-  },
+    },
+    name: 'Order',
   setup() {
     const store = useStore();
     const state = reactive({
-      orders: null,
+      orders:null,
     });
 
-    async function getUserOrdersSets() {
+    async function getAllActiveOrderSets() {
       try {
-        const data = store.state.user.user.username;
-        const result = await api.getUserOrdersSets(data);
+        const data = store.state.worker.worker.username;
+        const result = await api.getAllActiveOrderSets(data);
         state.orders = result.data;
       } catch (err) {
         console.log(err.response.data);
@@ -40,13 +41,13 @@ export default {
     }
 
     onMounted(() => {
-      // populate user order history page with previous ('Completed') orders
-      if (store.state.user.user != null) {
-        getUserOrdersSets();
+      // populate staff active orders page with active ('Processing') orders of clients
+      if (store.state.worker.worker != null) {
+        getAllActiveOrderSets();
       }
     });
 
-    return { state, getUserOrdersSets };
+    return { state, getAllActiveOrderSets };
   },
 };
 </script>
