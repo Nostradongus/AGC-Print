@@ -158,7 +158,7 @@
             <input
               id="contactno"
               name="contactNo"
-              type="text"
+              type="number"
               class="manrope-regular login-text-field pl-10 text-md"
               v-model="state.contactNo"
               :class="{ 'text-field-error': v.contactNo.$error }"
@@ -355,6 +355,19 @@ export default {
 </script>
 
 <style>
+/* Hide arrow buttons in number input type */
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
 .register-rectangle {
   width: 35rem;
   height: 48rem;

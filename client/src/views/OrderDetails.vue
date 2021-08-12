@@ -84,11 +84,6 @@ import * as api from '../api';
 export default {
   name: 'OrderDetails',
   components: { SideBar, PageHeader },
-  props: {
-    order: {
-      type: Object,
-    },
-  },
   setup() {
     const router = useRouter();
     const route = useRoute();
@@ -104,7 +99,7 @@ export default {
 
     async function loadOrder() {
       try {
-        const res = await api.getOrder(route.params.id);
+        const res = await api.getOrderSet(route.params.id);
         state.order = res.data;
         console.log(state.order);
       } catch (err) {

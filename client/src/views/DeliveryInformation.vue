@@ -59,14 +59,17 @@
             </p>
           </div>
           <div class="relative mt-12">
-            <input
-              id="contactno"
-              name="contactno"
-              type="text"
-              class="manrope-regular input-text-field"
-              :class="{ 'border-red': v.contactNo.$error }"
-              v-model="state.contactNo"
-            />
+            <div class="flex flex-row items-center">
+              <p class="absolute text-md text-gray-600">+63</p>
+              <input
+                id="contactno"
+                name="contactno"
+                type="text"
+                class="manrope-regular input-text-field pl-10 pt-0.5 text-md"
+                :class="{ 'border-red': v.contactNo.$error }"
+                v-model="state.contactNo"
+              />
+            </div>
             <label
               for="contactno"
               class="
@@ -178,16 +181,19 @@ export default {
       const validated = await v.value.$validate();
 
       if (validated) {
-        // update each order with the given delivery information
-        for (let ctr = 0; ctr < store.state.order.orders.length; ctr++) {
-          store.state.order.orders[ctr].name = state.name;
-          store.state.order.orders[ctr].email = state.email;
-          store.state.order.orders[ctr].contactNo = state.contactNo;
-          store.state.order.orders[ctr].address = state.address;
+        // get delivery information data together with the orders made
+        const data = {
+          orders: store.state.order.orders,
+          name: state.name,
+          email: state.email,
+          contactNo: `63${state.contactNo}`,
+          address: state.address,
         }
 
-        // confirm add orders to the database
-        const res = await api.addOrders(store.state.order.orders);
+        // confirm and add orders to the database
+        const res = await api.addOrderSet(data);
+
+        store.dispatch('setOrderSet', res.data);
 
         // go to order details page
         router.push({ name: 'OrderConfirmed' });

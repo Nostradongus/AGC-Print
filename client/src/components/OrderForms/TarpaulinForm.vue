@@ -12,6 +12,7 @@
         name="quantity"
         type="number"
         class="manrope-regular input-text-field w-48"
+        :class="{ 'border-red': v.quantity.$error }"
         min="1"
         v-model="state.quantity"
       />
@@ -20,6 +21,12 @@
         class="absolute manrope-regular left-0 -top-3.5 text-gray-600 text-md"
         >Quantity</label
       >
+      <p
+        v-if="v.quantity.$error"
+        class="text-red manrope-bold text-left text-sm"
+      >
+        {{ v.quantity.$errors[0].$message }}
+      </p>
     </div>
     <div class="flex">
       <div class="relative mt-12">
@@ -28,6 +35,7 @@
           name="width"
           type="number"
           class="manrope-regular input-text-field w-48"
+          :class="{ 'border-red': v.width.$error }"
           min="1"
           v-model="state.width"
         />
@@ -36,6 +44,12 @@
           class="absolute manrope-regular left-0 -top-3.5 text-gray-600 text-md"
           >Width (in inches)</label
         >
+        <p
+          v-if="v.width.$error"
+          class="text-red manrope-bold text-left text-sm"
+        >
+          {{ v.width.$errors[0].$message }}
+        </p>
       </div>
       <div class="relative mt-12 ml-4">
         <input
@@ -43,6 +57,7 @@
           name="height"
           type="number"
           class="manrope-regular input-text-field w-48"
+          :class="{ 'border-red': v.height.$error }"
           min="1"
           v-model="state.height"
         />
@@ -51,6 +66,12 @@
           class="absolute manrope-regular left-0 -top-3.5 text-gray-600 text-md"
           >Height (in inches)</label
         >
+        <p
+          v-if="v.height.$error"
+          class="text-red manrope-bold text-left text-sm"
+        >
+          {{ v.height.$errors[0].$message }}
+        </p>
       </div>
     </div>
     <div class="relative mt-12">
@@ -59,6 +80,7 @@
         name="numeyelets"
         type="number"
         class="manrope-regular input-text-field w-48"
+        :class="{ 'border-red': v.eyelets.$error }"
         min="0"
         v-model="state.eyelets"
       />
@@ -67,6 +89,12 @@
         class="absolute manrope-regular left-0 -top-3.5 text-gray-600 text-md"
         >Number of Eyelets (0 if none)</label
       >
+      <p
+        v-if="v.eyelets.$error"
+        class="text-red manrope-bold text-left text-sm"
+      >
+        {{ v.eyelets.$errors[0].$message }}
+      </p>
     </div>
     <div class="relative mt-20">
       <input
@@ -83,6 +111,12 @@
         class="absolute manrope-regular left-0 -top-8 text-gray-600 text-md"
         >File Upload</label
       >
+      <p
+        v-if="state.fileValidation != null && !state.fileValidation"
+        class="text-red manrope-bold text-left text-sm"
+      >
+        No File Uploaded Yet.
+      </p>
     </div>
     <div class="relative mt-20">
       <textarea
@@ -127,6 +161,11 @@
 import { reactive, ref } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
+import useVuelidate from '@vuelidate/core';
+import {
+  required,
+  numeric,
+} from '@vuelidate/validators';
 import * as api from '../../api';
 
 export default {
@@ -143,35 +182,51 @@ export default {
       eyelets: 0,
       imageFile: null,
       remarks: '',
+      fileValidation: null,
     });
 
+    const rules = {
+      quantity: {required, numeric},
+      width: {required, numeric},
+      height: {required, numeric},
+      eyelets: { required }
+    };
+
+    const v = useVuelidate(rules,state);
+
     function onSelect() {
+      state.fileValidation = file.value.files.length == 0 ? false : true;
       state.imageFile = file.value.files[0];
     }
 
     async function addToCart() {
-      // create FormData to store order data
-      const formData = new FormData();
-      formData.append('quantity', state.quantity);
-      formData.append('width', state.width);
-      formData.append('height', state.height);
-      formData.append('type', state.type);
-      formData.append('eyelets', state.eyelets);
-      formData.append('remarks', state.remarks);
-      formData.append('order-image', state.imageFile);
-      formData.append('user', store.state.user.user.username);
+      const validated = await v.value.$validate();
 
-      // add order data to cart and get generated order id
-      const res = await api.addToCart(formData);
+      state.fileValidation = file.value.files.length == 0 ? false : true;
 
-      // store generated order id to vue local storage
-      store.dispatch('setOrder', res.data);
+      if(validated && state.fileValidation){
+        // create FormData to store order data
+        const formData = new FormData();
+        formData.append('quantity', state.quantity);
+        formData.append('width', state.width);
+        formData.append('height', state.height);
+        formData.append('type', state.type);
+        formData.append('eyelets', state.eyelets);
+        formData.append('remarks', state.remarks);
+        formData.append('order-image', state.imageFile);
+        formData.append('user', store.state.user.user.username);
 
-      // go to delivery information page
-      router.push({ name: 'ViewCart' });
+        // add order data to cart and get generated order id
+        const res = await api.addToCart(formData);
+
+        // store generated order id to vue local storage
+        store.dispatch('setOrder', res.data);
+
+        // go to delivery information page
+        router.push({ name: 'ViewCart' });
+      }
     }
-
-    return { file, state, onSelect, addToCart };
+    return { file, state, onSelect, addToCart, v };
   },
 };
 </script>

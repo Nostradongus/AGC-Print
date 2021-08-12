@@ -3,7 +3,14 @@
     <side-bar />
     <page-header title="Order History">
       <!-- display all orders of user -->
-      <div v-if="state.empty" class="h-full w-full">
+      <div v-if="!state.empty" class="h-full w-full">
+        <OrderSetCard
+          v-for="order in state.orders"
+          :key="order.id"
+          :order="order"
+        />
+      </div>
+      <div v-else>
         <div class="mx-8 mt-8 text-2xl relative">
           You currently don't have any orders.
         </div>
@@ -30,13 +37,6 @@
           Add Order
         </router-link>
       </div>
-      <div v-else>
-        <OrderCard
-          v-for="order in state.orders"
-          :key="order.id"
-          :order="order"
-        />
-      </div>
     </page-header>
   </div>
 </template>
@@ -44,15 +44,15 @@
 <script>
 import SideBar from '../components/SideBar.vue';
 import PageHeader from '../components/PageHeader.vue';
-import OrderCard from '../components/OrderCard.vue';
-import { reactive, onMounted } from 'vue';
+import OrderSetCard from '../components/OrderSetCard.vue';
+import { reactive, onMounted, onBeforeMount } from 'vue';
 import { useStore } from 'vuex';
 import * as api from '../api';
 
 export default {
   name: 'OrderHistory',
   components: {
-    OrderCard,
+    OrderSetCard,
     SideBar,
     PageHeader,
   },
@@ -63,11 +63,12 @@ export default {
       empty: true,
     });
 
-    async function getUserPastOrders() {
+    async function getUserOrders() {
       try {
         const data = store.state.user.user.username;
-        const result = await api.getUserPastOrders(data);
+        const result = await api.getUserOrderSets(data);
         state.orders = result.data;
+        console.log(state.orders);
         if (state.orders.length !== 0) {
           state.empty = false;
         }
@@ -76,14 +77,14 @@ export default {
       }
     }
 
-    onMounted(() => {
+    onBeforeMount(() => {
       // populate user order history page with previous ('Completed') orders
       if (store.state.user.user != null) {
-        getUserPastOrders();
+        getUserOrders();
       }
     });
 
-    return { state, getUserPastOrders };
+    return { state, getUserOrders };
   },
 };
 </script>

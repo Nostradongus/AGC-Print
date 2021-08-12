@@ -3,10 +3,20 @@
     <div class="bg-light-blue rounded-xl p-4 mx-auto mb-0.5 h-30 cart-card">
       <div class="flex p-3">
         <div class="flex items-center w-1/3">
-          <div class="manrope-extrabold">{{ order.type }}</div>
+          <!-- TODO: replace alt attribute with 'No Preview' asset image -->
+          <img
+            :src="`http://localhost:5000/${order.img}`"
+            alt="Order Image" 
+            class="order-img"
+            border="0"
+          />
         </div>
-        <div class="w-1/3">
+        <div class="w-1/3 flex flex-col justify-center items-center">
           <div class="ml-3 space-y-1 pr-3">
+            <div class="text-md manrope-regular">
+              <span class="text-md manrope-bold"> Type:</span>
+              {{ order.type }}
+            </div>
             <div class="text-md manrope-regular">
               <span class="text-md manrope-bold"> Dimensions:</span>
               {{ order.width }} x {{ order.height }}
@@ -16,7 +26,7 @@
               {{ order.eyelets }}
             </div>
             <div
-              v-if="order.frameOption != null"
+              v-if="order.frameOption != null && order.frameOption !== 'placeholder'"
               class="text-md manrope-regular"
             >
               <span class="text-md manrope-bold">Frame:</span>
@@ -33,7 +43,7 @@
               {{ order.frameEdges }}
             </div>
             <div
-              v-if="order.frameFinishing != null"
+              v-if="order.frameFinishing != null && order.frameFinishing !== 'placeholder'"
               class="text-md manrope-regular"
             >
               <span class="text-md manrope-bold">Frame Finishing:</span>
@@ -44,7 +54,7 @@
               {{ order.diecut }}
             </div>
             <div class="text-md manrope-regular">
-              <span class="text-md manrope-bold">Remarks:</span>
+              <span v-if="order.remarks !== ''" class="text-md manrope-bold">Remarks:</span>
               {{ order.remarks }}
             </div>
           </div>
@@ -79,5 +89,10 @@ export default {
 .cart-card:hover {
   transition: 1500ms;
   box-shadow: 5px 1px 11px 0px rgba(0, 0, 0, 0.26);
+}
+
+.order-img {
+  max-width: 75%;
+  max-height: 75%;
 }
 </style>
