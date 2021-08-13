@@ -81,7 +81,9 @@
           id="diecut"
           class="dropdown-field w-32"
           v-model="state.diecut"
+          @change="onSelectDiecut"
         >
+          <option value="placeholder" disabled selected hidden>Select one</option>
           <option value="Yes">Yes</option>
           <option value="No">No</option>
         </select>
@@ -90,6 +92,12 @@
           class="absolute manrope-regular left-0 -top-8 text-gray-600 text-md"
           >With die-cut?</label
         >
+        <p
+          v-if="state.diecutValidation != null && !state.diecutValidation"
+          class="text-red manrope-bold text-left text-sm"
+        >
+          Please select Yes or No.
+        </p>
       </div>
 
       <div class="relative mt-20 ml-8">
@@ -100,7 +108,7 @@
           type="file"
           class="manrope-regular w-72"
           min="0"
-          @change="onSelect"
+          @change="onSelectFile"
         />
         <label
           for="order-image"
@@ -178,10 +186,11 @@ export default {
       width: '',
       height: '',
       type: 'Sticker',
-      diecut: '',
+      diecut: 'placeholder',
       imageFile: null,
       remarks: '',
       fileValidation: null,
+      diecutValidation: null,
     });
 
     const rules = {
@@ -192,9 +201,13 @@ export default {
 
     const v = useVuelidate(rules,state);
 
-    function onSelect() {
+    function onSelectFile() {
       state.fileValidation = file.value.files.length == 0 ? false : true;
       state.imageFile = file.value.files[0];
+    }
+
+    function onSelectDiecut() {
+      state.diecutValidation = state.diecut === 'placeholder' ? false : true;
     }
 
     async function addToCart() {
@@ -202,7 +215,11 @@ export default {
 
       state.fileValidation = file.value.files.length == 0 ? false : true;
 
-      if(validated && state.fileValidation){
+      if (state.diecutValidation == null) {
+        state.diecutValidation = false;
+      }
+
+      if(validated && state.fileValidation && state.diecutValidation){
         // create FormData to store order data
         const formData = new FormData();
         formData.append('quantity', state.quantity);
@@ -225,7 +242,7 @@ export default {
       }
     }
 
-    return { file, state, onSelect, addToCart, v };
+    return { file, state, onSelectFile, onSelectDiecut, addToCart, v };
   },
 };
 </script>

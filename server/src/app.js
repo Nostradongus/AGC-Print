@@ -34,8 +34,8 @@ app.use(
   cors({
     origin: ['http://localhost:3000', 'https://localhost:3000'],
     credentials: true,
-  }
-));
+  })
+);
 
 // for static public folder, containing the uploaded order images
 app.use(express.static(__dirname + '/src/public/order_images'));
