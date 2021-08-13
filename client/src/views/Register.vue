@@ -289,6 +289,7 @@ import {
   numeric,
   email,
   minLength,
+  maxLength,
   sameAs,
 } from '@vuelidate/validators';
 import * as api from '../api';
@@ -313,7 +314,7 @@ export default {
       lastname: { required },
       username: { required },
       email: { required, email },
-      contactNo: { required, numeric },
+      contactNo: { required, numeric, minLength: minLength(10), maxLength: maxLength(10) },
       password: { required, minLength: minLength(8) },
       confirmPassword: { required },
     };

@@ -148,7 +148,7 @@ import { useRouter } from 'vue-router';
 import { reactive } from 'vue';
 import { useStore } from 'vuex';
 import useVuelidate from '@vuelidate/core';
-import { required, numeric, email } from '@vuelidate/validators';
+import { required, numeric, email, minLength, maxLength } from '@vuelidate/validators';
 import * as api from '../api';
 
 export default {
@@ -170,7 +170,7 @@ export default {
     const rules = {
       name: { required },
       email: { required, email },
-      contactNo: { required, numeric },
+      contactNo: { required, numeric, minLength: minLength(10), maxLength: maxLength(10) },
       address: { required },
     };
 
