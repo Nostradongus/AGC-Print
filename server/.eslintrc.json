@@ -5,17 +5,14 @@
     "node": true,
     "jest": true
   },
-  "extends": [
-    "google",
-    "prettier",
-    "plugin:node/recommended"
-  ],
-  "plugins": [
-    "prettier"
-  ],
+  "extends": ["google", "prettier", "plugin:node/recommended"],
+  "plugins": ["prettier"],
+  "parser": "babel-eslint",
   "parserOptions": {
     "ecmaVersion": 12,
-    "sourceType": "module"
+    "sourceType": "module",
+    "allowImportExportEverywhere": false,
+    "codeFrame": true
   },
   "rules": {
     "prettier/prettier": "error",
@@ -29,13 +26,7 @@
     "object-shorthand": "off",
     "class-methods-use-this": "off",
     "consistent-return": "off",
-    "new-cap": [
-      "error",
-      {
-        "capIsNewExceptionPattern": "^express\\.."
-      }
-    ],
-    "node/no-unsupported-features/es-syntax": "off",
-    "node/no-unpublished-import": "off"
+    "new-cap": ["error", { "capIsNewExceptionPattern": "^express\\.." }],
+    "node/no-unsupported-features/es-syntax": "off"
   }
 }

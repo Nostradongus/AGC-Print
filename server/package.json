@@ -13,9 +13,7 @@
     "test:coverage": "jest --coverage"
   },
   "devDependencies": {
-    "@babel/core": "^7.14.8",
-    "@babel/preset-env": "^7.14.8",
-    "babel-jest": "^27.0.6",
+    "babel-eslint": "^10.1.0",
     "eslint": "^7.31.0",
     "eslint-config-google": "^0.14.0",
     "eslint-config-node": "^4.1.0",
