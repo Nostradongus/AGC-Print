@@ -206,8 +206,9 @@ export default {
 
     async function logoutUser() {
       try {
-        const result = await api.signOut();
+        await api.signOut();
         store.dispatch('logoutUser');
+        store.dispatch('resetOrder');
         router.push({ name: 'Login' });
       } catch (err) {
         state.error = true;

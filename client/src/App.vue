@@ -11,7 +11,6 @@ export default {
     const store = useStore();
     const loadData = async () => {
       await store.dispatch('initState');
-      await store.dispatch('getOrder');
     };
     loadData();
   },

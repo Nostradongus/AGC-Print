@@ -82,7 +82,16 @@ export default {
     });
 
     async function getOrdersFromCart() {
-      state.orders = store.state.order.orders;
+      try {
+        console.log('test');
+        await store.dispatch('getOrder');
+        if (store.state.order.orders != null) {
+          state.orders = store.state.order.orders;
+        }
+        console.log(state.orders);
+      } catch (err) {
+        console.log(err);
+      }
     }
 
     onMounted(() => {
