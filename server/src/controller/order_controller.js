@@ -54,11 +54,11 @@ const orderController = {
         req.params.username
       );
 
-      if (orders != null) {
-        return res.status(200).json(orders);
+      if (orders == null) {
+        orders = 'You have no past orders.';
       }
 
-      return res.status(200).json({ message: 'No Orders Yet!' });
+      return res.status(200).json(orders);
     } catch (err) {
       res.status(500).json({ message: 'Server Error' });
     }
@@ -71,6 +71,10 @@ const orderController = {
         req.params.username
       );
 
+      if (orders == null) {
+        orders = 'You have no current orders.';
+      }
+
       return res.status(200).json(orders);
     } catch (err) {
       res.status(500).json({ message: 'Server Error' });
@@ -82,6 +86,9 @@ const orderController = {
     try {
       const orders = await OrderService.getAllActiveOrderSets();
 
+      if (orders == null) {
+        orders = 'There are no active orders.';
+      }
       return res.status(200).json(orders);
     } catch (err) {
       res.status(500).json({ message: 'Server Error' });

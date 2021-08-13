@@ -8,6 +8,7 @@ import DeliveryInformation from '../views/DeliveryInformation.vue';
 import ViewCart from '../views/ViewCart.vue';
 import OrderHistory from '../views/OrderHistory.vue';
 import OrderConfirmed from '../views/OrderConfirmed.vue';
+import ActiveOrders from '../views/ActiveOrders.vue';
 
 const routes = [
   {
@@ -80,6 +81,14 @@ const routes = [
     component: OrderDetails,
     meta: {
       requiresAuth: true,
+    },
+  },
+  {
+    path: '/active-orders',
+    name: 'ActiveOrders',
+    component: ActiveOrders,
+    meta: {
+      hideForAuth: true,
     },
   },
 ];

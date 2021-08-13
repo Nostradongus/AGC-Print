@@ -26,7 +26,7 @@ export const getOrder = (id) => API.get(`/order/details/${id}`);
 export const getOrderSet = (id) => API.get(`/order/details/orderSet/${id}`);
 export const getUserPastOrderSets = (username) => API.get(`/order/${username}/pastOrders`);
 export const getUserCurrentOrderSets = (username) => API.get(`/order/${username}/currentOrders`);
-export const getAllActiveOrderSets = (username) => API.get(`/order/${username}/activeOrders`);
+export const getAllActiveOrderSets = () => API.get(`/order/active`);
 export const deleteFromCart = (imgPath) => API.delete('/order/cart/delete', { imgPath });
 export const addToCart = (orderData) => API.post('/order/cart/add', orderData);
 export const addOrderSet = (orders) => API.post('/order/cart/confirm', orders);

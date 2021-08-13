@@ -1,6 +1,9 @@
 // get user service static object from service folder
 import UserService from '../service/user_service.js';
 
+// get worker service static object from service folder
+import WorkerService from '../service/worker_service.js';
+
 // import bcrypt module for password hashing
 import bcrypt from 'bcrypt';
 const saltRounds = 10;
@@ -36,6 +39,7 @@ const indexController = {
 
       // if user data exist in the database
       const user = await UserService.getUser({ username: username });
+      const worker = await WorkerService.getWorker({ username: username });
       if (user != null) {
         // compare user's stored and hashed password with the inputted password
         bcrypt.compare(password, user.password, function (err, result) {
@@ -55,6 +59,36 @@ const indexController = {
               accessToken: accessToken,
               data: userPayload,
               message: 'Successfully Logged In!',
+              flag: 0,
+            });
+          } else {
+            // incorrect password was inputted
+            return res.status(400).json({
+              username: req.body.username,
+              passwordError: 'Incorrect password!',
+            });
+          }
+        });
+      } else if (worker != null) {
+        // compare worker's stored and hashed password with the inputted password
+        bcrypt.compare(password, worker.password, function (err, result) {
+          // if inputted password matches the stored and hashed password
+          if (result) {
+            // generate access token with expected payload data for user authentication purposes
+            const workerPayload = {
+              username: worker.username,
+              firstname: worker.firstname,
+              lastname: worker.lastname,
+              email: worker.email,
+            };
+            const accessToken = token.generateAccessToken(workerPayload);
+
+            // return access token and needed worker data
+            return res.status(200).json({
+              accessToken: accessToken,
+              data: workerPayload,
+              message: 'Successfully Logged In!',
+              flag: 1,
             });
           } else {
             // incorrect password was inputted
@@ -66,9 +100,7 @@ const indexController = {
         });
       } else {
         // username does not exist in the database
-        return res
-          .status(400)
-          .json({ usernameError: 'Username does not exist!' });
+        return res.status(400).json({ usernameError: 'User not found!' });
       }
     }
   },

@@ -91,8 +91,17 @@ export default {
         const result = await api.signIn(data);
         console.log(result.data);
 
-        store.dispatch('loginUser', result.data);
-        router.push({ name: 'MyOrders' });
+        if (result.data.flag == 0)
+        {
+          store.dispatch('loginUser', result.data);
+          router.push({ name: 'Order' });
+        }
+        else if (result.data.flag == 1)
+        {
+          store.dispatch('loginWorker', result.data);
+          router.push({ name: `ActiveOrders` });
+        }
+        // else router.push({ name: `Error` }); 
       } catch (err) {
         console.log(err.response.data);
         state.error = true;
