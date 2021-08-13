@@ -313,8 +313,10 @@ export default {
           state.frameFinishingValidation = false;
         }
       } else {
-        state.frameValidation = false;
-        state.frameOptionValidation = false;
+        if (state.frameOption !== 'Print Only') {
+          state.frameOptionValidation = false;
+        } 
+        state.frameValidation = state.frameOptionValidation;
       }
 
       if(validated && state.fileValidation && state.frameValidation){

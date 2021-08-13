@@ -34,8 +34,8 @@
             </div>
             <div
               v-if="
-                order.frameOption === '3/4inches' ||
-                order.frameOption === '1.5inches'
+                order.frameOption === '3/4 Inches' ||
+                order.frameOption === '1.5 Inches'
               "
               class="text-md manrope-regular"
             >
