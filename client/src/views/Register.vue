@@ -314,7 +314,7 @@ export default {
       lastname: { required },
       username: { required },
       email: { required, email },
-      contactNo: { required, numeric, minLength: minLength(10), maxLength: maxLength(10) },
+      contactNo: { required, numeric, minLength: minLength(9), maxLength: maxLength(10) },
       password: { required, minLength: minLength(8) },
       confirmPassword: { required },
     };
@@ -340,7 +340,12 @@ export default {
         console.log(v.value);
 
         if (validated && passwordConfirmed.value) {
-          const result = await api.signUp(data);
+          await api.signUp(data);
+          const loginData = {
+            username: state.username,
+            password: state.password,
+          };
+          const result = await api.signIn(loginData);
           store.dispatch('loginUser', result.data);
           router.push({ name: 'MyOrders' });
         }
