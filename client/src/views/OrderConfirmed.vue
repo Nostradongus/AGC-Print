@@ -12,7 +12,50 @@
           pt-8
           px-8
         "
-        >Thank you for ordering! Here are the details of your order:</h1
+        >Thank you for ordering! Here are the details of your orders:</h1
+      >
+
+      <!-- delivery information details -->
+      <h1
+        class="
+          manrope-bold
+          left-0
+          -top-3.5
+          text-gray-600 text-md
+          pt-8
+          px-8
+        "
+        >Name: {{ state.orderSet.name }} </h1
+      >
+      <h1
+        class="
+          manrope-bold
+          left-0
+          text-gray-600 text-md
+          pt-2
+          px-8
+        "
+        >E-mail Address: {{ state.orderSet.email }} </h1
+      >
+      <h1
+        class="
+          manrope-bold
+          left-0
+          text-gray-600 text-md
+          pt-2
+          px-8
+        "
+        >Contact Number: {{ state.orderSet.contactNo }} </h1
+      >
+      <h1
+        class="
+          manrope-bold
+          left-0
+          text-gray-600 text-md
+          pt-2
+          px-8
+        "
+        >Delivery Address: {{ state.orderSet.address }} </h1
       >
 
       <!-- display all recently placed orders of user -->
@@ -45,7 +88,7 @@
 import SideBar from '../components/SideBar.vue';
 import PageHeader from '../components/PageHeader.vue';
 import OrderCard from '../components/OrderCard.vue';
-import { reactive, onMounted } from 'vue';
+import { reactive, onMounted, onBeforeMount } from 'vue';
 import { useStore } from 'vuex';
 
 export default {
@@ -59,17 +102,21 @@ export default {
     const store = useStore();
     const state = reactive({
       orders: null,
+      orderSet: null,
     });
 
     async function getPlacedOrders() {
       // get recently placed orders
-      state.orders = store.state.order.orders;
+      state.orders = store.state.order.orderSet.orders;
+
+      // get delivery information details from order set
+      state.orderSet = store.state.order.orderSet;
       
       // reset or empty cart after getting the data for display
       store.dispatch('resetOrder');
     }
 
-    onMounted(() => {
+    onBeforeMount(() => {
       // to get placed orders to be rendered and displayed in the page
       getPlacedOrders();
     });

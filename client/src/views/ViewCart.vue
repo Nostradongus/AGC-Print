@@ -1,11 +1,22 @@
 <template>
-  <div>
-    <side-bar/>
-    <page-header title="View Cart">
-      <cart-item v-for="order in state.orders" :key="order.id" :order="order" />
+  <div v-if="state.orders">
+    <side-bar />
+    <page-header title="Cart">
+      <div v-if="state.orders.length !== 0">
+        <cart-item
+          v-for="order in state.orders"
+          :key="order.id"
+          :order="order"
+        />
+      </div>
+      <div v-else>
+        <div class="mx-8 mt-8 text-2xl relative">
+          You currently don't have any orders.
+        </div>
+      </div>
       <div class="flex justify-end px-8 pt-8">
         <router-link
-          class="        
+          class="
             manrope-regular
             text-primary-blue
             inline-block
@@ -14,16 +25,19 @@
             ease-in-out
             text-center text-md
             hover:bg-primary-blue hover:text-white
-            p-2
+            p-3
             mb-8
             mt-8
             mr-8
             rounded-xl
-            bg-link-water"
-            to="/order"
-            >Add another item</router-link>
+            bg-light-blue
+          "
+          to="/order"
+          >Add item</router-link
+        >
         <router-link
-          class="        
+          v-if="state.orders.length !== 0"
+          class="
             manrope-regular
             text-white
             inline-block
@@ -32,12 +46,15 @@
             ease-in-out
             text-center text-md
             hover:bg-link-water hover:text-primary-blue
-            p-2
+            p-3
             mb-8
             mt-8
             rounded-xl
-            bg-primary-blue"
-            to="/delivery-information">Confirm Order</router-link>
+            bg-primary-blue
+          "
+          to="/delivery-information"
+          >Confirm Order</router-link
+        >
       </div>
     </page-header>
   </div>
@@ -46,7 +63,7 @@
 <script>
 import SideBar from '../components/SideBar.vue';
 import PageHeader from '../components/PageHeader.vue';
-import CartItem from '../components/CartItem.vue'
+import CartItem from '../components/CartItem.vue';
 import { reactive, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import * as api from '../api';
@@ -55,8 +72,8 @@ export default {
   name: 'ViewCart',
   components: {
     CartItem,
-    SideBar, 
-    PageHeader, 
+    SideBar,
+    PageHeader,
   },
   setup() {
     const store = useStore();
@@ -65,11 +82,19 @@ export default {
     });
 
     async function getOrdersFromCart() {
-      state.orders = store.state.order.orders;
+      try {
+        console.log('test');
+        await store.dispatch('getOrder');
+        if (store.state.order.orders != null) {
+          state.orders = store.state.order.orders;
+        }
+        console.log(state.orders);
+      } catch (err) {
+        console.log(err);
+      }
     }
 
     onMounted(() => {
-      console.log('Mounted');
       getOrdersFromCart();
     });
 

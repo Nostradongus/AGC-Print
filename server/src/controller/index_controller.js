@@ -59,7 +59,7 @@ const indexController = {
           } else {
             // incorrect password was inputted
             return res.status(400).json({
-              username: req.body.user,
+              username: req.body.username,
               passwordError: 'Incorrect password!',
             });
           }

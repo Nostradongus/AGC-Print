@@ -1,28 +1,58 @@
 <template>
   <div>
-    <side-bar/>
+    <side-bar />
     <page-header title="Order Details">
       <div class="p-8" v-if="state.order">
-        <p class="manrope-bold text-3xl">Order #{{state.order.id}}</p>
+        <p class="manrope-bold text-3xl">Order #{{ state.order.id }}</p>
         <div class="overflow-y-auto w-full h-full manrope-regular text-xl mt-2">
           <img
             :src="`http://localhost:5000/${state.order.img}`"
             :alt="state.order.img"
             border="0"
           />
-          <p>Type: {{state.order.type}}</p>
-          <p>Quantity: {{state.order.quantity}}</p>
-          <p>Dimensions: {{state.order.width}} in. x {{state.order.height}} in.</p>
-          <p v-if="state.order.eyelets != null">Eyelets: {{state.order.eyelets}}</p>
-          <p v-if="state.order.diecut != null">Diecut: {{state.order.diecut}}</p>
-          <p v-if="state.order.frameOption !== 'placeholder' && state.order.frameOption != null">Frame Option: {{state.order.frameOption}}</p>
-          <p v-if="state.order.frameFinishing !== 'placeholder' && state.order.frameFinishing != null">Frame Finishing: {{state.order.frameFinishing}}</p>
-          <p v-if="state.order.frameEdges !== 'placeholder' && state.order.frameEdges != null">Frame Edges: {{state.order.frameEdges}}</p>
-          <p v-if="state.order.remarks !== ''">Remarks: {{state.order.remarks}}</p>
+          <p>Type: {{ state.order.type }}</p>
+          <p>Quantity: {{ state.order.quantity }}</p>
+          <p>
+            Dimensions: {{ state.order.width }} in. x
+            {{ state.order.height }} in.
+          </p>
+          <p v-if="state.order.eyelets != null">
+            Eyelets: {{ state.order.eyelets }}
+          </p>
+          <p v-if="state.order.diecut != null">
+            Diecut: {{ state.order.diecut }}
+          </p>
+          <p
+            v-if="
+              state.order.frameOption !== 'placeholder' &&
+              state.order.frameOption != null
+            "
+          >
+            Frame Option: {{ state.order.frameOption }}
+          </p>
+          <p
+            v-if="
+              state.order.frameFinishing !== 'placeholder' &&
+              state.order.frameFinishing != null
+            "
+          >
+            Frame Finishing: {{ state.order.frameFinishing }}
+          </p>
+          <p
+            v-if="
+              state.order.frameEdges !== 'placeholder' &&
+              state.order.frameEdges != null
+            "
+          >
+            Frame Edges: {{ state.order.frameEdges }}
+          </p>
+          <p v-if="state.order.remarks !== ''">
+            Remarks: {{ state.order.remarks }}
+          </p>
         </div>
       </div>
-      <router-link 
-        class="              
+      <router-link
+        class="
           manrope-regular
           text-white
           inline-block
@@ -34,8 +64,11 @@
           w-32
           mx-8
           rounded-xl
-          bg-primary-blue"
-        to="/order-history">Back</router-link>
+          bg-primary-blue
+        "
+        to="/my-orders"
+        >Back</router-link
+      >
     </page-header>
   </div>
 </template>
@@ -47,16 +80,10 @@ import { useRouter, useRoute } from 'vue-router';
 import { ref, reactive, watchEffect, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import * as api from '../api';
-import axios from 'axios';
 
 export default {
   name: 'OrderDetails',
   components: { SideBar, PageHeader },
-  props: {
-    order:{
-      type: Object,
-    }
-  },
   setup() {
     const router = useRouter();
     const route = useRoute();
@@ -65,24 +92,22 @@ export default {
       order: null,
     });
 
-    onMounted(() =>{
+    onMounted(() => {
       console.log('test');
       loadOrder();
-    })
-
+    });
 
     async function loadOrder() {
-      try{
-        const res = await api.getOrder(route.params.id);
+      try {
+        const res = await api.getOrderSet(route.params.id);
         state.order = res.data;
         console.log(state.order);
-      }catch(err){
+      } catch (err) {
         console.log(err);
       }
     }
     return { state };
-  }
-
+  },
 };
 </script>
 

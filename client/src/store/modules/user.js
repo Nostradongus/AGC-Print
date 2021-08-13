@@ -18,6 +18,7 @@ export default {
     LOGOUT_USER(state) {
       localStorage.removeItem('user');
       localStorage.removeItem('token');
+      localStorage.removeItem('order');
     },
   },
   actions: {

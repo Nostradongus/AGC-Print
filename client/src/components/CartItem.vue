@@ -1,22 +1,22 @@
 <template>
   <div class="px-8 pt-8">
-    <div
-      class="
-        bg-white
-        mx-auto
-        border-gray-500 border
-        text-gray-700
-        mb-0.5
-        h-30
-      "
-    >
-      <div class="flex p-3 border-l-8">
+    <div class="bg-light-blue rounded-xl p-4 mx-auto mb-0.5 h-30 cart-card">
+      <div class="flex p-3">
         <div class="flex items-center w-1/3">
-          <div class="manrope-extrabold">{{ order.type }}
-          </div>
+          <!-- TODO: replace alt attribute with 'No Preview' asset image -->
+          <img
+            :src="`http://localhost:5000/${order.img}`"
+            alt="Order Image" 
+            class="order-img"
+            border="0"
+          />
         </div>
-        <div class="w-1/3">
-          <div class="ml-3 space-y-1 border-r-2 pr-3">
+        <div class="w-1/3 flex flex-col justify-center items-center">
+          <div class="ml-3 space-y-1 pr-3">
+            <div class="text-md manrope-regular">
+              <span class="text-md manrope-bold"> Type:</span>
+              {{ order.type }}
+            </div>
             <div class="text-md manrope-regular">
               <span class="text-md manrope-bold"> Dimensions:</span>
               {{ order.width }} x {{ order.height }}
@@ -25,15 +25,27 @@
               <span class="text-md manrope-bold">Number of Eyelets:</span>
               {{ order.eyelets }}
             </div>
-            <div v-if="order.frameOption != null" class="text-md manrope-regular">
+            <div
+              v-if="order.frameOption != null && order.frameOption !== 'placeholder'"
+              class="text-md manrope-regular"
+            >
               <span class="text-md manrope-bold">Frame:</span>
               {{ order.frameOption }}
             </div>
-            <div v-if="order.frameOption === '3/4inches' || order.frameOption === '1.5inches'" class="text-md manrope-regular">
+            <div
+              v-if="
+                order.frameOption === '3/4inches' ||
+                order.frameOption === '1.5inches'
+              "
+              class="text-md manrope-regular"
+            >
               <span class="text-md manrope-bold">Frame Edges:</span>
               {{ order.frameEdges }}
             </div>
-            <div v-if="order.frameFinishing != null" class="text-md manrope-regular">
+            <div
+              v-if="order.frameFinishing != null && order.frameFinishing !== 'placeholder'"
+              class="text-md manrope-regular"
+            >
               <span class="text-md manrope-bold">Frame Finishing:</span>
               {{ order.frameFinishing }}
             </div>
@@ -42,14 +54,16 @@
               {{ order.diecut }}
             </div>
             <div class="text-md manrope-regular">
-              <span class="text-md manrope-bold">Remarks:</span>
+              <span v-if="order.remarks !== ''" class="text-md manrope-bold">Remarks:</span>
               {{ order.remarks }}
             </div>
           </div>
         </div>
-        <div class="w-1/3 flex flex-col justify-center text-center items-center">
+        <div
+          class="w-1/3 flex flex-col justify-center text-center items-center"
+        >
           <label for="quantity" class="text-md manrope-bold">Quantity</label>
-          <input id="quantity" class="text-center border-2 w-24" type="text" :value="order.quantity" />
+          <p>{{ order.quantity }}</p>
         </div>
       </div>
     </div>
@@ -59,14 +73,26 @@
 <script>
 export default {
   name: 'CartItem',
-  props:{
-    order:{
+  props: {
+    order: {
       type: Object,
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style>
+.cart-card {
+  transition: 1500ms;
+}
 
+.cart-card:hover {
+  transition: 1500ms;
+  box-shadow: 5px 1px 11px 0px rgba(0, 0, 0, 0.26);
+}
+
+.order-img {
+  max-width: 75%;
+  max-height: 75%;
+}
 </style>

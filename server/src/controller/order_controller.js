@@ -1,6 +1,9 @@
 // get order model object from model folder
 import Order from '../model/Order.js';
 
+// get order set model object from model folder
+import OrderSet from '../model/OrderSet.js';
+
 // get order service static object from service folder
 import OrderService from '../service/order_service.js';
 
@@ -17,8 +20,12 @@ const orderController = {
     try {
       // retrieve all orders from the database
       const orders = await OrderService.getAllOrderSets();
-      // send the array of orders back to the client
-      return res.status(200).json(orders);
+
+      if (orders != null) {
+        return res.status(200).json(orders);
+      }
+
+      return res.status(200).json({ message: 'No Orders Yet!' });
     } catch (err) {
       // if error has occurred, send server error status and message
       res.status(500).json({ message: 'Server Error' });
@@ -30,7 +37,11 @@ const orderController = {
     try {
       const orders = await OrderService.getUserOrderSets(req.params.username);
 
-      return res.status(200).json(orders);
+      if (orders != null) {
+        return res.status(200).json(orders);
+      }
+
+      return res.status(200).json({ message: 'No Orders Yet!' });
     } catch (err) {
       res.status(500).json({ message: 'Server Error' });
     }
@@ -43,7 +54,11 @@ const orderController = {
         req.params.username
       );
 
-      return res.status(200).json(orders);
+      if (orders != null) {
+        return res.status(200).json(orders);
+      }
+
+      return res.status(200).json({ message: 'No Orders Yet!' });
     } catch (err) {
       res.status(500).json({ message: 'Server Error' });
     }
@@ -120,12 +135,22 @@ const orderController = {
       // generate new id for order set
       const uniqueId = uniqid();
 
+      // assign generated unique order set id to all orders created
+      for (let ctr = 0; ctr < req.body.orders.length; ctr++) {
+        req.body.orders[ctr].orderSetId = uniqueId;
+      }
+
       // add generated unique id and date to order set
-      const orderSet = {
+      const orderSet = new OrderSet({
         id: uniqueId,
+        user: req.user.username,
+        orders: req.body.orders,
+        name: req.body.name,
+        email: req.body.email,
+        address: req.body.address,
+        contactNo: req.body.contactNo,
         dateRequested: formattedDate,
-        ...req.body,
-      };
+      });
 
       // add new order/s from the cart to the database
       const newOrderSet = await OrderService.addOrderSet(orderSet);

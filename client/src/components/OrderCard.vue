@@ -1,60 +1,74 @@
 <template>
   <div class="px-8 pt-8">
-    <div
-      class="
-        bg-white
-        mx-auto
-        border-gray-500 border
-        text-gray-700
-        mb-0.5
-        h-30
-      "
-    >
-    <div class="flex p-3 border-l-8">
-      <div class="my-auto border-r-2 pr-3">
-        <span class="text-lg manrope-regular">Order #{{ order.id }}</span>
-      </div>
-      <div class="flex-1">
-        <div class="ml-3 space-y-1 border-r-2 pr-3">
-          <div class="manrope-extrabold">{{ order.type }}</div>
-          <div class="text-md manrope-regular">
-            <span class="text-md manrope-bold">Complete name:</span>
-            {{ order.name }}
-          </div>
-          <div class="text-md manrope-regular">
-            <span class="text-md manrope-bold"> Delivery Address:</span>
-            {{ order.address }}
-          </div>
-          <div class="text-md manrope-regular">
-            <span class="text-md manrope-bold">Date Ordered:</span>
-            {{ order.dateRequested }}
+    <div class="bg-light-blue rounded-xl p-4 mx-auto mb-0.5 h-30 cart-card">
+      <div class="flex p-3">
+        <div class="my-auto pr-3 w-1/4">
+          <span class="text-lg manrope-regular">Order #{{ order.id }}</span>
+        </div>
+        <div class="flex items-center pl-8 w-1/3">
+          <!-- TODO: replace alt attribute with 'No Preview' asset image -->
+          <img
+            :src="`http://localhost:5000/${order.img}`"
+            alt="Order Image" 
+            class="order-img"
+            border="0"
+          />
+        </div>
+        <div class="w-1/4 flex flex-col justify-center items-center">
+          <div class="ml-3 space-y-1 pr-3">
+            <div class="text-md manrope-regular">
+              <span class="text-md manrope-bold"> Type:</span>
+              {{ order.type }}
+            </div>
+            <div class="text-md manrope-regular">
+              <span class="text-md manrope-bold"> Dimensions:</span>
+              {{ order.width }} x {{ order.height }}
+            </div>
+            <div v-if="order.eyelets != null" class="text-md manrope-regular">
+              <span class="text-md manrope-bold">Number of Eyelets:</span>
+              {{ order.eyelets }}
+            </div>
+            <div
+              v-if="order.frameOption != null && order.frameOption !== 'placeholder'"
+              class="text-md manrope-regular"
+            >
+              <span class="text-md manrope-bold">Frame:</span>
+              {{ order.frameOption }}
+            </div>
+            <div
+              v-if="
+                order.frameOption === '3/4inches' ||
+                order.frameOption === '1.5inches'
+              "
+              class="text-md manrope-regular"
+            >
+              <span class="text-md manrope-bold">Frame Edges:</span>
+              {{ order.frameEdges }}
+            </div>
+            <div
+              v-if="order.frameFinishing != null && order.frameFinishing !== 'placeholder'"
+              class="text-md manrope-regular"
+            >
+              <span class="text-md manrope-bold">Frame Finishing:</span>
+              {{ order.frameFinishing }}
+            </div>
+            <div v-if="order.diecut != null" class="text-md manrope-regular">
+              <span class="text-md manrope-bold">Die-cut:</span>
+              {{ order.diecut }}
+            </div>
+            <div class="text-md manrope-regular">
+              <span class="text-md manrope-bold">Remarks:</span>
+              {{ order.remarks }}
+            </div>
           </div>
         </div>
-      </div>
-      <div>
-        <div class="ml-3 my-8 p-1 w-20 mr-12">
-          <div class="text-md manrope-bold text-center">{{ order.status }}</div>
+        <div
+          class="w-1/3 flex flex-col justify-center text-center items-center"
+        >
+          <label for="quantity" class="text-md manrope-bold">Quantity</label>
+          <p>{{ order.quantity }}</p>
         </div>
       </div>
-      <div>
-        <router-link :to="`/order-details/${order.id}`">
-          <button
-            class="
-              text-primary-blue
-              manrope-regular
-              rounded-sm
-              my-10
-              mr-4
-              ml-2
-              focus:outline-none
-              bg-gray-500
-            "
-          >
-            View Details >
-          </button>
-        </router-link>
-      </div>
-    </div>
     </div>
   </div>
 </template>
@@ -65,8 +79,23 @@ export default {
   props: {
     order: {
       type: Object,
-      required: true,
     },
   },
-}
+};
 </script>
+
+<style>
+.cart-card {
+  transition: 1500ms;
+}
+
+.cart-card:hover {
+  transition: 1500ms;
+  box-shadow: 5px 1px 11px 0px rgba(0, 0, 0, 0.26);
+}
+
+.order-img {
+  max-width: 75%;
+  max-height: 75%;
+}
+</style>

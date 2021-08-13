@@ -67,8 +67,8 @@ const routes = [
     },
   },
   {
-    path: '/order-history',
-    name: 'OrderHistory',
+    path: '/my-orders',
+    name: 'MyOrders',
     component: OrderHistory,
     meta: {
       requiresAuth: true,

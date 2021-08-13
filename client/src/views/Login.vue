@@ -90,9 +90,9 @@ export default {
       try {
         const result = await api.signIn(data);
         console.log(result.data);
-        
+
         store.dispatch('loginUser', result.data);
-        router.push({ name: 'Order' });
+        router.push({ name: 'MyOrders' });
       } catch (err) {
         console.log(err.response.data);
         state.error = true;
@@ -112,9 +112,8 @@ export default {
   height: 42rem;
 
   background: #ffffff;
-  border: 2px solid #c4c4c4;
   box-sizing: border-box;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.5);
+  box-shadow: 0px 12px 12px rgba(0, 0, 0, 0.25);
   border-radius: 20px;
 }
 
@@ -124,27 +123,18 @@ export default {
   color: red;
 }
 
-.manrope-regular {
-  font-family: 'Manrope', sans-serif;
-  font-weight: 400;
-}
-
-.manrope-bold {
-  font-family: 'Manrope', sans-serif;
-  font-weight: 600;
-}
-
-.manrope-extrabold {
-  font-family: 'Manrope', sans-serif;
-  font-weight: 800;
-}
-
 .login-text-field {
   outline: 0;
   border-width: 0 0 2px;
   border-bottom-color: #c4c4c4;
   width: 28rem;
   height: 3rem;
+}
+
+.login-text-field:focus {
+  outline: 0;
+  transition: 500ms;
+  border-bottom-color: #0f4c81;
 }
 
 .login-btn {
