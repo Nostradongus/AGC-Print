@@ -9,7 +9,7 @@
           <!-- TODO: replace alt attribute with 'No Preview' asset image -->
           <img
             :src="`http://localhost:5000/${order.img}`"
-            alt="Order Image" 
+            alt="Order Image"
             class="order-img"
             border="0"
           />
@@ -29,7 +29,9 @@
               {{ order.eyelets }}
             </div>
             <div
-              v-if="order.frameOption != null && order.frameOption !== 'placeholder'"
+              v-if="
+                order.frameOption != null && order.frameOption !== 'placeholder'
+              "
               class="text-md manrope-regular"
             >
               <span class="text-md manrope-bold">Frame:</span>
@@ -46,7 +48,10 @@
               {{ order.frameEdges }}
             </div>
             <div
-              v-if="order.frameFinishing != null && order.frameFinishing !== 'placeholder'"
+              v-if="
+                order.frameFinishing != null &&
+                order.frameFinishing !== 'placeholder'
+              "
               class="text-md manrope-regular"
             >
               <span class="text-md manrope-bold">Frame Finishing:</span>
@@ -67,6 +72,12 @@
         >
           <label for="quantity" class="text-md manrope-bold">Quantity</label>
           <p>{{ order.quantity }}</p>
+        </div>
+        <div
+          v-if="order.price == -1"
+          class="w-1/6 flex justify-center text-center items-center"
+        >
+          Pending Price
         </div>
       </div>
     </div>

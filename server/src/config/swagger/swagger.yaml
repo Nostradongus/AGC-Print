@@ -9,55 +9,34 @@ tags:
   - name: user
     description: Operations about user
 paths:
-  /:
-    get:
-      summary: Gets the needed data for the login page
-      tags: [Index]
-      responses:
-        200:
-          description: Successfully returns the data for the login page
-  /home:
-    get:
-      summary: Gets the needed data for the home (login) page
-      tags: [Index]
-      responses:
-        200:
-          description: Sucessfully returns the data for the home (login) page
   /login:
     post:
-      summary: Returns an access token and user attributes if the user's entered credentials are valid
+      summary: Returns an access token and user attributes if the user's entered credentials are valid.
       tags: [Index]
-      responses: 
+      responses:
         200:
-          description:  Alerts the user that they logged-in successfully. Return access token and user attributes
+          description: Alerts the user that they logged-in successfully. Return access token and user attributes.
         422:
-          description: Username or password inputted was incorrect
+          description: Username or password inputted was incorrect.
   /logout:
     get:
-      summary: Refreshes or resets the access token of the application and destroys the created session for the local user cart
+      summary: Refreshes or resets the access token of the application and destroys the created session for the local user cart.
       tags: [Index]
       responses:
         204:
-          description: User successfully logs out from the application
+          description: User successfully logs out from the application.
   /register:
-    get:
-      summary: Gets the needed data for the register page
-      tags: [Index]
-      responses:
-        200:
-          description: Successfully returns the data needed for the register page
     post:
-      summary: Registers a new user and saves it to the database
+      summary: Registers a new user and saves it to the database.
       tags: [Index]
       responses:
-        201: 
-          description: Returns the access tokens and user attributes if the user's entered credentials are valid
+        201:
+          description: Returns the access tokens and user attributes if the user's entered credentials are valid.
         422:
-          description: Username or e-mail inputted already exists in the database
-    
+          description: Username or e-mail inputted already exists in the database.
   /users:
     get:
-      summary: Returns the list of all the users
+      summary: Returns the list of all the users in the database.
       tags: [Users]
       responses:
         200:
@@ -68,10 +47,134 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/User'
+  /users/:username:
+    get:
+      summary: Returns a specific user data from the database.
+      tags: [Users]
+      responses:
+        200:
+          description: Successfully returns a specific user data.
+  /order:
+    get:
+      summary: Returns all orders from the database.
+      tags: [Orders]
+      responses:
+        200:
+          description: Successfully returns all orders from the database.
+        500:
+          description: Server Error.
+  /order/:username:
+    get:
+      summary: Returns all orders of the user.
+      tags: [Orders]
+      responses:
+        200:
+          description: Successfully returns all orders of the user.
+        500:
+          description: Server Error.
+  /order/:username/pastOrders:
+    get:
+      summary: Returns all of the past orders made by the user.
+      tags: [Orders]
+      responses:
+        200:
+          description: Successfully returns all of the past orders made by the user.
+        500:
+          description: Server Error.
+  /order/:username/currentOrders:
+    get:
+      summary: Returns all of the active orders of the user.
+      tags: [Orders]
+      responses:
+        200:
+          description: Successfully returns all of the active orders of the user.
+        500:
+          description: Server Error.
+  /order/orders/active:
+    get:
+      summary: Returns all of the active orders of all clients.
+      tags: [Orders]
+      responses:
+        200:
+          description: Successfully returns all of the active orders of all clients.
+        500:
+          description: Server Error.
+  /order/details/:id:
+    get:
+      summary: Returns a specific order from the database.
+      tags: [Orders]
+      responses:
+        200:
+          description: Successfully returns a specific order from the database.
+        500:
+          description: Server Error.
+  /order/details/orderSet/:id:
+    get:
+      summary: Returns a specific order set from the database.
+      tags: [Orders]
+      responses:
+        200:
+          description: Successfully returns a specific order set from the database.
+        500:
+          description: Server Error.
+  /order/cart/add:
+    post:
+      summary: Adds a temporary order in cart.
+      tags: [Orders]
+      responses:
+        200:
+          description: Successfully adds a temporary order in cart.
+        500:
+          description: Server Error.
+  /order/cart/confirm:
+    post:
+      summary: Adds a new order set to the database.
+      tags: [Orders]
+      responses:
+        200:
+          description: Successfully adds a new order set to the database.
+        500:
+          description: Server Error.
+  /order/cart/delete:
+    delete:
+      summary: Deletes temporary order in cart.
+      tags: [Orders]
+      responses:
+        200:
+          description: Successfully deletes temporary order in cart.
+        500:
+          description: Server Error.
+  /order/delete/:id:
+    delete:
+      summary: Deletes specific order from database.
+      tags: [Orders]
+      responses:
+        200:
+          description: Successfully deletes specific order from database.
+        500:
+          description: Server Error.
+  /order/delete/orderSet/:id:
+    delete:
+      summary: Deletes specific order set from database.
+      tags: [Orders]
+      responses:
+        200:
+          description: Successfully deletes specific order set from database.
+        500:
+          description: Server Error.
+  /order/update/orderSet/:id:
+    patch:
+      summary: Updates the status of a specific order set in the database.
+      tags: [Orders]
+      responses:
+        200:
+          description: Successfully updates the status of a specific order set in the database.
+        500:
+          description: Server Error.
 components:
   schemas:
     User:
-      type: object
+      type: Object
       required:
         - username
         - password
@@ -81,25 +184,25 @@ components:
         - contactNo
       properties:
         _id:
-          type: string
+          type: String
           description: Auto-generated ID of the user. Generated by MongoDB.
         username:
-          type: string
+          type: String
           description: User's given username.
         password:
-          type: string
+          type: String
           description: User's encrypted password.
         firstname:
-          type: string
+          type: String
           description: User's first name.
         lastname:
-          type: string
+          type: String
           description: User's last name.
         email:
-          type: string
+          type: String
           description: User's e-mail address.
         contactNo:
-          type: string
+          type: String
           description: User's contact number.
       example:
         _id: 60d74f88e797493bc9656b60
@@ -110,81 +213,129 @@ components:
         email: sonson_great@gmail.com
         contactNo: 09287683291
     Order:
-      type: object
-      required: 
+      type: Object
+      required:
         - id
-        - name
-        - email
-        - address
-        - contactNo
+        - orderSetId
+        - user
         - payMethod
         - type
         - quantity
-        - img
-        - status
         - width
         - height
         - dateRequested
       properties:
         _id:
-          type: string
+          type: String
           description: Auto-generated ID of the order. Generated by MongoDB.
         id:
-          type: string
+          type: String
           description: Auto-generated ID of the order using uniqid.
-        name:
-          type: string
-          description: name of the customer who ordered.
-        email:
-          type: string
-          description: e-mail address of the customer who ordered.
-        address:
-          type: string
-          description: billing address of the customer who ordered.
-        contactNo:
-          type: string
-          description: contact number of the customer who ordered.
-        payMethod:
-          type: string
-          description: payment method of the customer who ordered.
-        workerInCharge:
-          type: string
-          description: name of the worker in charge of the order. 
+        orderSetId:
+          type: String
+          description: Auto-generated ID of the order set using uniqid.
+        user:
+          type: String
+          description: Name of the customer who ordered.
         type:
-          type: string
-          description: kind of printing service needed by the customer.
+          type: String
+          description: Kind of printing service needed by the customer.
         quantity:
-          type: number
-          description: number of print needed by the customer.
+          type: Number
+          description: Number of print needed by the customer.
         img:
-          type: string
-          description: file path to the image uploaded by the customer.
-        price: 
-          type: number
-          description: price of the order.
-        status:
-          type: string
-          description: current status of the order.
+          type: String
+          description: File name of the order's image.
+        imgPath:
+          type: String
+          description: File path of the order's image
+        price:
+          type: Number
+          description: Price of the order.
+          default: -1
         width:
-          type: string
-          description: width of the order.
+          type: String
+          description: Width of the order.
         height:
-          type: string
-          description: height of the order.
+          type: String
+          description: Height of the order.
+        frameOption:
+          type: String
+          description: Frame option of the order. (exclusive for Canvas Print)
         frameEdges:
-          type: string
-          description: frame edges of a specific order.
+          type: String
+          description: Frame edges of a specific order. (exclusive for Canvas Print)
         frameFinishing:
-          type: string
-          description: frame finishing of a specific order.
+          type: String
+          description: Frame finishing of a specific order. (exclusive for Canvas Print).
+        eyelets:
+          type: Number
+          description: Eyelets of the order. (exclusive for Tarpaulin)
+        diecut:
+          type: String
+          description: Diecut of order. (exclusive for Stickers)
+        remarks:
+          type: String
+          description: Other details of the order.
+    OrderSet:
+      type: Object
+      required:
+        - id
+        - user
+        - orders
+        - name
+        - email
+        - address
+        - contactNo
+        - payMethod
+        - dateRequested
+      properties:
+        _id:
+          type: String
+          description: Auto-generated ID of the order set. Generated by MongoDB.
+        id:
+          type: String
+          description: Auto-generated ID of the order set using uniqid.
+        user:
+          type: String
+          description: User who made the order.
+        orders:
+          type: String
+          description: Stores the set of order objects.
+        name:
+          type: String
+          description: Name of the customer.
+        email:
+          type: String
+          description: E-mail of the customer.
+        address:
+          type: String
+          description: Billing Address of the customer.
+        contactNo:
+          type: String
+          description: Contact number of the customer.
+        payMethod:
+          type: String
+          description: Payment method chosen by the customer.
+        workerInCharge:
+          type: String
+          description: Worker-in-charge of the order set.
+        price:
+          type: String
+          description: Price of the order set.
+        status:
+          type: String
+          description: Current status of the order set.
+          default: 'Pending'
         dateRequested:
-          type: string
-          description: date when the order was requested.
+          type: String
+          description: Date when the order was requested.
         dateShipped:
-          type: string
-          description: date when the order was shipped.
+          type: String
+          description: Date when the order was shipped
+          default: null
     Worker:
-      type: object
+      type: Object
       required:
         - username
         - password
@@ -194,27 +345,24 @@ components:
         - contactNo
         - isSystemAdmin
       properties:
-        _id: 
-          type: string
-          description: Auto-generated ID of the worker. Generated by MongoDB. 
+        _id:
+          type: String
+          description: Auto-generated ID of the worker. Generated by MongoDB.
         username:
-          type: string
-          description: username of the worker.
+          type: String
+          description: Username of the worker.
         firstname:
-          type: string
-          description: first name of the worker.
+          type: String
+          description: First name of the worker.
         lastname:
-          type: string
-          description: last name of the worker. 
+          type: String
+          description: Last name of the worker.
         email:
-          type: string
-          description: e-mail address of the worker.
+          type: String
+          description: E-mail address of the worker.
         contactNo:
-          type: string
-          description: contact number of the worker.
+          type: String
+          description: Contact number of the worker.
         isSystemAdmin:
-          type: boolean
-          description: determines if the worker is a system admin.
-    Cart:
-      type: object
-      description: session schema
+          type: Boolean
+          description: Determines if the worker is a system admin.

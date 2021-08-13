@@ -1,74 +1,115 @@
+d
 <template>
   <div>
     <side-bar />
     <page-header title="Order Details">
       <div class="p-8" v-if="state.order">
-        <p class="manrope-bold text-3xl">Order #{{ state.order.id }}</p>
-        <div class="overflow-y-auto w-full h-full manrope-regular text-xl mt-2">
-          <img
-            :src="`http://localhost:5000/${state.order.img}`"
-            :alt="state.order.img"
-            border="0"
-          />
-          <p>Type: {{ state.order.type }}</p>
-          <p>Quantity: {{ state.order.quantity }}</p>
-          <p>
-            Dimensions: {{ state.order.width }} in. x
-            {{ state.order.height }} in.
-          </p>
-          <p v-if="state.order.eyelets != null">
-            Eyelets: {{ state.order.eyelets }}
-          </p>
-          <p v-if="state.order.diecut != null">
-            Diecut: {{ state.order.diecut }}
-          </p>
-          <p
-            v-if="
-              state.order.frameOption !== 'placeholder' &&
-              state.order.frameOption != null
+        <!-- Order Details -->
+        <div class="flex">
+          <div class="flex-1">
+            <span class="text-lg manrope-bold">Order #: </span>
+            <span class="text-lg manrope-regular">{{ state.order.id }}</span>
+
+            <br />
+
+            <span class="text-lg manrope-bold">Name of Receiver: </span>
+            <span class="text-lg manrope-regular">{{ state.order.name }}</span>
+
+            <br />
+
+            <span class="text-lg manrope-bold">Email Address: </span>
+            <span class="text-lg manrope-regular">{{ state.order.email }}</span>
+
+            <br />
+
+            <span class="text-lg manrope-bold">Contact Number: </span>
+            <span class="text-lg manrope-regular">
+              +{{ state.order.contactNo }}
+            </span>
+
+            <br />
+
+            <span class="text-lg manrope-bold">Delivery Address: </span>
+            <span class="text-lg manrope-regular">{{
+              state.order.address
+            }}</span>
+          </div>
+          <div>
+            <span class="text-lg manrope-bold">Order Status: </span>
+            <span class="text-lg manrope-regular">{{
+              state.order.status
+            }}</span>
+
+            <br />
+
+            <span class="text-lg manrope-bold">Total Price: </span>
+            <span
+              v-if="state.order.totalPrice != null"
+              class="text-lg manrope-regular"
+              >{{ state.order.totalPrice }}</span
+            >
+            <span
+              v-else-if="state.order.totalPrice == null"
+              class="text-lg manrope-regular"
+              >Pending Total Price</span
+            >
+
+            <br />
+          </div>
+        </div>
+
+        <order-card
+          v-for="order in state.order.orders"
+          :key="order.id"
+          :order="order"
+        />
+      </div>
+
+      <div class="flex mb-8">
+        <div class="flex-1">
+          <router-link
+            class="
+              manrope-regular
+              text-white
+              inline-block
+              transition
+              duration-300
+              ease-in-out
+              text-center text-lg
+              hover:bg-link-water hover:text-primary-blue
+              w-32
+              mx-8
+              p-3
+              rounded-xl
+              bg-primary-blue
             "
+            to="/my-orders"
+            >Back</router-link
           >
-            Frame Option: {{ state.order.frameOption }}
-          </p>
-          <p
-            v-if="
-              state.order.frameFinishing !== 'placeholder' &&
-              state.order.frameFinishing != null
+        </div>
+        <div>
+          <router-link
+            v-if="state.totalPrice !== -1"
+            class="
+              manrope-regular
+              text-white
+              inline-block
+              transition
+              duration-300
+              ease-in-out
+              text-center text-lg
+              hover:bg-link-water hover:text-primary-blue
+              w-32
+              mx-8
+              p-3
+              rounded-xl
+              bg-primary-blue
             "
+            to="/my-orders"
+            >Pay Here</router-link
           >
-            Frame Finishing: {{ state.order.frameFinishing }}
-          </p>
-          <p
-            v-if="
-              state.order.frameEdges !== 'placeholder' &&
-              state.order.frameEdges != null
-            "
-          >
-            Frame Edges: {{ state.order.frameEdges }}
-          </p>
-          <p v-if="state.order.remarks !== ''">
-            Remarks: {{ state.order.remarks }}
-          </p>
         </div>
       </div>
-      <router-link
-        class="
-          manrope-regular
-          text-white
-          inline-block
-          transition
-          duration-300
-          ease-in-out
-          text-center text-lg
-          hover:bg-link-water hover:text-primary-blue
-          w-32
-          mx-8
-          rounded-xl
-          bg-primary-blue
-        "
-        to="/my-orders"
-        >Back</router-link
-      >
     </page-header>
   </div>
 </template>
@@ -79,11 +120,12 @@ import PageHeader from '../components/PageHeader.vue';
 import { useRouter, useRoute } from 'vue-router';
 import { ref, reactive, watchEffect, onMounted } from 'vue';
 import { useStore } from 'vuex';
+import OrderCard from '../components/OrderCard.vue';
 import * as api from '../api';
 
 export default {
   name: 'OrderDetails',
-  components: { SideBar, PageHeader },
+  components: { SideBar, PageHeader, OrderCard },
   setup() {
     const router = useRouter();
     const route = useRoute();

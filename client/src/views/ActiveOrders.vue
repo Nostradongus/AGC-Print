@@ -1,9 +1,13 @@
 <template>
   <div>
-    <side-bar/>
+    <side-bar />
     <page-header title="Active Orders">
       <!-- display all active orders of user -->
-      <OrderCard v-for="order in state.orders" :key="order.id" :order="order"/>
+      <OrderSetCard
+        v-for="order in state.orders"
+        :key="order.id"
+        :order="order"
+      />
     </page-header>
   </div>
 </template>
@@ -11,7 +15,7 @@
 <script>
 import { reactive, onMounted } from 'vue';
 import { useStore } from 'vuex';
-import OrderCard from '../components/OrderCard.vue';
+import OrderSetCard from '../components/OrderSetCard.vue';
 import SideBar from '../components/SideBar.vue';
 import PageHeader from '../components/PageHeader.vue';
 import * as api from '../api';
@@ -19,22 +23,25 @@ import * as api from '../api';
 export default {
   name: 'ActiveOrders',
   components: {
-    OrderCard,
+    OrderSetCard,
     SideBar,
     PageHeader,
-    },
-    name: 'Order',
+  },
+  name: 'Order',
   setup() {
     const store = useStore();
     const state = reactive({
-      orders:null,
+      orders: null,
+      empty: true,
     });
 
     async function getAllActiveOrderSets() {
       try {
-        const data = store.state.worker.worker.username;
-        const result = await api.getAllActiveOrderSets(data);
+        const result = await api.getAllActiveOrderSets();
         state.orders = result.data;
+        if (state.orders.length !== 0) {
+          state.empty = false;
+        }
       } catch (err) {
         console.log(err.response.data);
       }
