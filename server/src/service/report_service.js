@@ -15,7 +15,19 @@ const ReportService = {
   // this method adds a new report data to the Report collection in the database
   addReport: async (report) => {
     // insert new report to the database
-    Report.create(report);
+    const newReport = new Report({
+      id: report.id,
+      orderSetId: report.orderSetId,
+      title: report.title,
+      type: report.type,
+      user: report.user,
+      description: report.description,
+      img: report.img,
+      imgPath: report.imgPath,
+      status: report.status,
+      dateRequested: report.dateRequested,
+    });
+    newReport.save();
 
     // return back new report data to the client
     return report;
