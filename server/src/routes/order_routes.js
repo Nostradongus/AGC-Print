@@ -51,6 +51,7 @@ router.get(
   orderController.getUserCurrentOrderSets
 );
 
+// route for all active orders of users
 router.get(
   '/orders/active',
   token.authenticateToken,

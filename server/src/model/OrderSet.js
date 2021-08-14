@@ -21,27 +21,27 @@ const OrderSetSchema = new mongoose.Schema({
   // name of customer
   name: {
     type: String,
-    required: false,
+    required: true,
   },
   // email of customer
   email: {
     type: String,
-    required: false,
+    required: true,
   },
   // address of customer
   address: {
     type: String,
-    required: false,
+    required: true,
   },
   // contact number of customer
   contactNo: {
     type: String,
-    required: false,
+    required: true,
   },
   // payment method chosen by the customer
   payMethod: {
     type: String,
-    required: false,
+    required: true,
     default: null,
   },
   // worker / staff in charged of the order set
