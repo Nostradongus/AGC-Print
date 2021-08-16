@@ -21,7 +21,7 @@ const indexController = {
     return res.status(204).json('LOGOUT');
   },
 
-  // index controller method to login user
+  // index controller method to login user or worker
   postLogin: async (req, res) => {
     // check if there are server-side (backend) validation errors
     const validationError = validationResult(req);
