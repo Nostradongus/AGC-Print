@@ -2,7 +2,7 @@
 import express from 'express';
 
 // get index controller object for index controller methods
-import adminController from '../controller/index_controller.js';
+import adminController from '../controller/admin_controller.js';
 
 // get validation middleware for server-side (backend) validation methods
 import validator from '../middleware/validator.js';
