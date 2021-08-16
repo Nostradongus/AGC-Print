@@ -86,6 +86,7 @@ const adminController = {
           lastname: req.body.lastname,
           contactNo: req.body.contactNo,
           email: req.body.email,
+          isSystemAdmin: req.body.isSystemAdmin,
         };
 
         // hash password
