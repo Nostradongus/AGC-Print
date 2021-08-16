@@ -14,7 +14,7 @@ import userRoutes from './routes/user_routes.js';
 import orderRoutes from './routes/order_routes.js';
 import workerRoutes from './routes/worker_routes.js';
 import reportRoutes from './routes/report_routes.js';
-import adminRoutes from './routes/admin_routes';
+import adminRoutes from './routes/admin_routes.js';
 
 // connect to AGC Print database
 connectDatabase();
