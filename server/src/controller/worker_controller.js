@@ -1,6 +1,8 @@
 // get worker service static object from service folder
 import WorkerService from '../service/worker_service.js';
 
+import nodemailer from 'nodemailer';
+
 const workerController = {
   // worker controller method to retrieve and return all workers from the database
   getWorkers: async (req, res) => {
@@ -43,6 +45,33 @@ const workerController = {
       return res.status(201).json(worker);
     } catch (err) {
       // if error has occurred, send server error status and message
+      res.status(500).json({ message: 'Server Error' });
+    }
+  },
+
+  // worker controller method to send an email to users about updated status of their orders
+  sendUpdate: async (req, res) => {
+    try {
+      // create reusable transporter object using the default SMTP transport
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: 'sweng.nodemailer@gmail.com', // generated ethereal user
+          pass: '1234567890Test', // generated ethereal password
+        },
+      });
+
+      // send mail with defined transport object
+      const info = await transporter.sendMail({
+        from: 'sweng.nodemailer@gmail.com', // sender address
+        to: 'luffytar7@gmail.com', // list of receivers
+        subject: 'Automated Email Test 1', // Subject line
+        text: 'Hello', // plain text body
+      });
+
+      console.log('Message sent: %s', info.messageId);
+      // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+    } catch (err) {
       res.status(500).json({ message: 'Server Error' });
     }
   },

@@ -24,12 +24,12 @@ const adminController = {
       return res.status(400).json({ message: 'Incorrect inputs.' });
     } else {
       // check if username already exists in the database
-      const workerData = await UserService.getWorker({
+      const workerData = await WorkerService.getWorker({
         username: req.body.username.toLowerCase(),
       });
 
       // check if email already exists in the database
-      const emailData = await UserService.getUser({ email: req.body.email });
+      const emailData = await WorkerService.getUser({ email: req.body.email });
 
       // contact number and email format check
       const validContactNo = req.body.contactNo[0] + req.body.contactNo[1];
