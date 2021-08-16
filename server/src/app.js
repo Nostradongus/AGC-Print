@@ -14,6 +14,7 @@ import userRoutes from './routes/user_routes.js';
 import orderRoutes from './routes/order_routes.js';
 import workerRoutes from './routes/worker_routes.js';
 import reportRoutes from './routes/report_routes.js';
+import adminRoutes from './routes/admin_routes';
 
 // connect to AGC Print database
 connectDatabase();
@@ -61,5 +62,6 @@ app.use('/users', userRoutes);
 app.use('/order', orderRoutes);
 app.use('/report', reportRoutes);
 app.use('/workers', workerRoutes);
+app.use('/admin', adminRoutes);
 
 export default app;
