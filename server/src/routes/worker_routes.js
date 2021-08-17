@@ -19,5 +19,7 @@ router.get('/:username', token.authenticateToken, workerController.getWorker);
 // route for adding a new worker to the database
 router.post('/add-worker', token.authenticateToken, workerController.addWorker);
 
+router.post('/sendUpdate', workerController.sendUpdate);
+
 // export worker routes
 export default router;

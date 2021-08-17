@@ -36,7 +36,7 @@ const WorkerSchema = new mongoose.Schema({
   // if the worker is a system administrator or not
   isSystemAdmin: {
     type: Boolean,
-    required: true,
+    required: false,
   },
 });
 

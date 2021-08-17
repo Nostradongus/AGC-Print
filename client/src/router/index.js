@@ -9,6 +9,8 @@ import ViewCart from '../views/ViewCart.vue';
 import OrderHistory from '../views/OrderHistory.vue';
 import OrderConfirmed from '../views/OrderConfirmed.vue';
 import ActiveOrders from '../views/ActiveOrders.vue';
+import Payment from '../views/Payment.vue';
+import ReportOrder from '../views/ReportOrder.vue';
 
 const routes = [
   {
@@ -89,6 +91,22 @@ const routes = [
     component: ActiveOrders,
     meta: {
       hideForAuth: true,
+    },
+  },
+  {
+    path: '/payment',
+    name: 'Payment',
+    component: Payment,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/report-order',
+    name: 'ReportOrder',
+    component: ReportOrder,
+    meta: {
+      requiresAuth: true,
     },
   },
 ];
