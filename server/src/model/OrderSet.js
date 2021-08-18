@@ -41,7 +41,7 @@ const OrderSetSchema = new mongoose.Schema({
   // payment method chosen by the customer
   payMethod: {
     type: String,
-    required: true,
+    required: false,
     default: null,
   },
   // worker / staff in charged of the order set
