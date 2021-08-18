@@ -102,7 +102,7 @@ const routes = [
     },
   },
   {
-    path: '/report-order',
+    path: '/report-order/:id',
     name: 'ReportOrder',
     component: ReportOrder,
     meta: {

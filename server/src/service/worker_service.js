@@ -18,7 +18,6 @@ const WorkerService = {
       email: worker.email,
       contactNo: worker.contactNo,
       isSystemAdmin: worker.isSystemAdmin,
-      assignedOrders: [],
     });
 
     // add new worker account data to the Worker collection

@@ -103,7 +103,7 @@
               rounded-xl
               bg-primary-blue
             "
-            to="/report-order"
+            :to="`/report-order/${route.params.id}`"
             >Report Order</router-link
           >
           <router-link
@@ -123,7 +123,7 @@
               rounded-xl
               bg-primary-blue
             "
-            to="/payment/"
+            :to="`/payment/`"
             >Pay Here</router-link
           >
         </div>
@@ -161,12 +161,11 @@ export default {
       try {
         const res = await api.getOrderSet(route.params.id);
         state.order = res.data;
-        console.log(state.order);
       } catch (err) {
         console.log(err);
       }
     }
-    return { state };
+    return { state, route };
   },
 };
 </script>

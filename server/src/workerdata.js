@@ -1,3 +1,4 @@
+/* eslint-disable require-jsdoc */
 // import database module for database connection
 import connectDB from './config/connectDB.js';
 

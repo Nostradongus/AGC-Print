@@ -14,25 +14,27 @@
           h-30
           grid grid-cols-2
         "
+        v-if="state.order"
       >
         <div>
           <div class="mb-2">
             <h3 class="manrope-bold">Order Number:</h3>
-            <p>Test 12345</p>
+            <p>{{ state.order.id }}</p>
           </div>
           <div class="mb-2">
             <h3 class="manrope-bold">Total Project Cost:</h3>
-            <p>12345</p>
+            <p v-if="state.order.price === -1">Pending Price</p>
+            <p v-else>{{ state.order.price }}</p>
           </div>
         </div>
         <div>
           <div class="mb-2">
             <h3 class="manrope-bold">Status:</h3>
-            <p>Test Complete</p>
+            <p>{{ state.order.status }}</p>
           </div>
           <div class="mb-2">
             <h3 class="manrope-bold">Delivery Address:</h3>
-            <p>Test 12345</p>
+            <p>{{ state.order.address }}</p>
           </div>
         </div>
       </div>
@@ -95,8 +97,31 @@
 <script>
 import SideBar from '../components/SideBar.vue';
 import PageHeader from '../components/PageHeader.vue';
+import { reactive, onMounted } from 'vue';
+import * as api from '../api';
+import { useRoute } from 'vue-router';
 export default {
   name: 'ReportOrder',
   components: { SideBar, PageHeader },
+  setup() {
+    const route = useRoute();
+    const state = reactive({
+      order: null,
+    });
+
+    onMounted(() => {
+      getOrderDetails();
+    });
+
+    async function getOrderDetails() {
+      try {
+        const res = await api.getOrderSet(route.params.id);
+        state.order = res.data;
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    return { state };
+  },
 };
 </script>
