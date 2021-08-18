@@ -45,3 +45,10 @@ export const getReport = (id) => API.get(`/report/details/${id}`);
 export const addReport = (report) => API.post('/report/add/new', report);
 export const deleteReport = (id) => API.delete(`/report/delete/${id}`);
 export const updateReportStatus = (id) => API.patch(`/report/update/${id}`);
+
+// payment receipt data api methods
+export const getAllPayments = () => API.get('/payment');
+export const getUserPayments = (username) => API.get(`/payment/${username}`);
+export const getPayment = (id) => API.get(`/report/details/${id}`);
+export const addPayment = (payment) => API.post('/payment/add/new', payment);
+export const deletePayment = (id) => API.delete(`/report/delete/${id}`);
