@@ -119,7 +119,7 @@
                 rounded-xl
                 bg-primary-blue
               "
-              to="/orders/"
+              to="/my-orders/"
               >Back</router-link
             >
           </div>

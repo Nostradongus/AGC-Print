@@ -45,7 +45,7 @@
 import SideBar from '../components/SideBar.vue';
 import PageHeader from '../components/PageHeader.vue';
 import OrderSetCard from '../components/OrderSetCard.vue';
-import { reactive, onMounted, onBeforeMount } from 'vue';
+import { reactive, onBeforeMount } from 'vue';
 import { useStore } from 'vuex';
 import * as api from '../api';
 
@@ -68,7 +68,6 @@ export default {
         const data = store.state.user.user.username;
         const result = await api.getUserOrderSets(data);
         state.orders = result.data;
-        console.log(state.orders);
         if (state.orders.length !== 0) {
           state.empty = false;
         }
