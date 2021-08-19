@@ -96,7 +96,9 @@
         >Frame</label
       >
       <p
-        v-if="state.frameOptionValidation != null && !state.frameOptionValidation"
+        v-if="
+          state.frameOptionValidation != null && !state.frameOptionValidation
+        "
         class="text-red manrope-bold text-left text-sm"
       >
         Please select a frame option.
@@ -130,7 +132,10 @@
         >Frame Finishing</label
       >
       <p
-        v-if="state.frameFinishingValidation != null && !state.frameFinishingValidation"
+        v-if="
+          state.frameFinishingValidation != null &&
+          !state.frameFinishingValidation
+        "
         class="text-red manrope-bold text-left text-sm"
       >
         Please select a frame finishing.
@@ -233,10 +238,7 @@ import { useRouter } from 'vue-router';
 import { ref, reactive } from 'vue';
 import { useStore } from 'vuex';
 import useVuelidate from '@vuelidate/core';
-import {
-  required,
-  numeric,
-} from '@vuelidate/validators';
+import { required, numeric } from '@vuelidate/validators';
 import * as api from '../../api';
 
 export default {
@@ -262,13 +264,13 @@ export default {
     });
 
     const rules = {
-      quantity: {required, numeric},
-      width: {required, numeric},
-      height: {required, numeric},
-      type: { required }
+      quantity: { required, numeric },
+      width: { required, numeric },
+      height: { required, numeric },
+      type: { required },
     };
 
-    const v = useVuelidate(rules,state);
+    const v = useVuelidate(rules, state);
 
     function onSelectFile() {
       state.fileValidation = file.value.files.length == 0 ? false : true;
@@ -276,24 +278,33 @@ export default {
     }
 
     function onSelectFrameOption() {
-      state.frameOptionValidation = state.frameOption !== 'placeholder' ? true : false;
-      if (state.frameOption === '3/4 Inches' || state.frameOption === '1.5 Inches') {
+      state.frameOptionValidation =
+        state.frameOption !== 'placeholder' ? true : false;
+      if (
+        state.frameOption === '3/4 Inches' ||
+        state.frameOption === '1.5 Inches'
+      ) {
         state.frameFinishing = 'placeholder';
         state.frameFinishingValidation = null;
-      } 
-      if (state.frameOption === 'Shadow Box' || state.frameOption === 'Glassless Frame' ||
-          state.frameOption === 'Floating Frame') {
+      }
+      if (
+        state.frameOption === 'Shadow Box' ||
+        state.frameOption === 'Glassless Frame' ||
+        state.frameOption === 'Floating Frame'
+      ) {
         state.frameEdges = 'placeholder';
         state.frameEdgesValidation = null;
       }
     }
 
     function onSelectFrameFinishing() {
-      state.frameFinishingValidation = state.frameFinishing !== 'placeholder' ? true : false;
+      state.frameFinishingValidation =
+        state.frameFinishing !== 'placeholder' ? true : false;
     }
 
     function onSelectFrameEdges() {
-      state.frameEdgesValidation = state.frameEdges !== 'placeholder' ? true : false;
+      state.frameEdgesValidation =
+        state.frameEdges !== 'placeholder' ? true : false;
     }
 
     async function addToCart() {
@@ -301,25 +312,33 @@ export default {
 
       state.fileValidation = file.value.files.length == 0 ? false : true;
 
-      if (state.frameOption === '3/4 Inches' || state.frameOption === '1.5 Inches') {
-        state.frameValidation = state.frameEdges !== 'placeholder' ? true : false;
+      if (
+        state.frameOption === '3/4 Inches' ||
+        state.frameOption === '1.5 Inches'
+      ) {
+        state.frameValidation =
+          state.frameEdges !== 'placeholder' ? true : false;
         if (!state.frameValidation) {
           state.frameEdgesValidation = false;
         }
-      } else if (state.frameOption === 'Shadow Box' || state.frameOption === 'Glassless Frame' ||
-                 state.frameOption === 'Floating Frame') {
-        state.frameValidation = state.frameFinishing !== 'placeholder' ? true : false;
+      } else if (
+        state.frameOption === 'Shadow Box' ||
+        state.frameOption === 'Glassless Frame' ||
+        state.frameOption === 'Floating Frame'
+      ) {
+        state.frameValidation =
+          state.frameFinishing !== 'placeholder' ? true : false;
         if (!state.frameValidation) {
           state.frameFinishingValidation = false;
         }
       } else {
         if (state.frameOption !== 'Print Only') {
           state.frameOptionValidation = false;
-        } 
+        }
         state.frameValidation = state.frameOptionValidation;
       }
 
-      if(validated && state.fileValidation && state.frameValidation){
+      if (validated && state.fileValidation && state.frameValidation) {
         // create FormData to store order data
         const formData = new FormData();
         formData.append('quantity', state.quantity);
@@ -344,16 +363,16 @@ export default {
       }
     }
 
-    return { 
-             file, 
-             state, 
-             onSelectFile, 
-             onSelectFrameOption, 
-             onSelectFrameFinishing, 
-             onSelectFrameEdges, 
-             addToCart, 
-             v 
-           };
+    return {
+      file,
+      state,
+      onSelectFile,
+      onSelectFrameOption,
+      onSelectFrameFinishing,
+      onSelectFrameEdges,
+      addToCart,
+      v,
+    };
   },
 };
 </script>

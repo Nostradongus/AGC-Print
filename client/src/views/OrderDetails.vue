@@ -123,7 +123,7 @@
               rounded-xl
               bg-primary-blue
             "
-            :to="`/payment/`"
+            :to="`/payment/${route.params.id}`"
             >Pay Here</router-link
           >
         </div>

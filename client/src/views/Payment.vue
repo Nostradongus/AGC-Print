@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="state.order">
     <side-bar />
     <page-header title="Payment Portal">
       <div class="pr-8 pl-8 pt-4">
@@ -44,7 +44,7 @@
               <div class="grid grid-cols-2">
                 <div>
                   <p class="text-lg manrope-regular">
-                    Order Number: 1234567890
+                    Order Number: {{ state.order.id }}
                   </p>
                   <p class="text-lg manrope-regular">
                     Total Project Cost: PHP 1000.00
@@ -62,8 +62,8 @@
           <div class="p-4">
             <p class="manrope-bold text-md mb-3">Upload Payment Slip Here:</p>
             <input
-              id="order-image"
-              name="order-image"
+              id="payment-image"
+              name="payment-image"
               type="file"
               ref="file"
               class="manrope-regular w-72"
@@ -71,7 +71,7 @@
               @change="onSelectFile"
             />
             <label
-              for="order-image"
+              for="payment-image"
               class="
                 absolute
                 manrope-regular
@@ -81,6 +81,12 @@
               "
               >Upload Image</label
             >
+            <p
+              v-if="state.fileValidation != null && !state.fileValidation"
+              class="text-red manrope-bold text-left text-sm"
+            >
+              No File Uploaded Yet.
+            </p>
           </div>
         </div>
         <div>
@@ -124,7 +130,7 @@
             >
           </div>
           <div>
-            <router-link
+            <button
               class="
                 manrope-regular
                 text-white
@@ -140,9 +146,10 @@
                 rounded-xl
                 bg-primary-blue
               "
-              to="/orders/"
-              >Pay Now</router-link
+              @click="payOrder"
             >
+              Pay Now
+            </button>
           </div>
         </div>
       </div>
@@ -153,8 +160,8 @@
 <script>
 import SideBar from '../components/SideBar.vue';
 import PageHeader from '../components/PageHeader.vue';
-
-import { reactive, onMounted, onBeforeMount } from 'vue';
+import { useRoute } from 'vue-router';
+import { reactive, onMounted, onBeforeMount, ref } from 'vue';
 import { useStore } from 'vuex';
 import * as api from '../api';
 
@@ -163,6 +170,41 @@ export default {
   components: {
     SideBar,
     PageHeader,
+  },
+  setup() {
+    const file = ref(null);
+    const route = useRoute();
+    const state = reactive({
+      order: null,
+      fileValidation: null,
+    });
+
+    async function getOrderDetails() {
+      try {
+        const res = await api.getOrderSet(route.params.id);
+        state.order = res.data;
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+    onMounted(() => {
+      getOrderDetails();
+    });
+
+    function onSelectFile() {
+      state.imageFile = file.value.files[0];
+    }
+
+    function payOrder() {
+      state.fileValidation = file.value.files.length === 0 ? false : true;
+
+      if (state.fileValidation) {
+        //TODO: API CALL FOR PAYMENT
+        const formData = new FormData();
+      }
+    }
+    return { file, state, onSelectFile, payOrder };
   },
 };
 </script>

@@ -94,7 +94,7 @@ const routes = [
     },
   },
   {
-    path: '/payment',
+    path: '/payment/:id',
     name: 'Payment',
     component: Payment,
     meta: {
