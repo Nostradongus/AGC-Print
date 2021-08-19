@@ -39,7 +39,7 @@ const OrderService = {
     }),
 
   // this method returns all past orders of users for the worker to view
-  getAllPastOrderSets: async () => OrderSet.find({ status: 'Complete ' }),
+  getAllPastOrderSets: async () => OrderSet.find({ status: 'Complete' }),
 
   // this method retrieves and returns all orders of a specific user
   getUserOrderSets: async (username) => OrderSet.find({ user: username }),
