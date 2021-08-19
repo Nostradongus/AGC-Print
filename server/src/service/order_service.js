@@ -7,7 +7,7 @@ const OrderService = {
   // this method retrieves and returns all order data in the database
   getAllOrderSets: async () => OrderSet.find({}),
 
-  // this method returns all past orders of the users
+  // this method returns all past orders of a specific user
   getUserPastOrderSets: async (username) =>
     OrderSet.find({ user: username, status: 'Complete' }),
 
@@ -37,6 +37,9 @@ const OrderService = {
         ],
       },
     }),
+
+  // this method returns all past orders of users for the worker to view
+  getAllPastOrderSets: async () => OrderSet.find({ status: 'Complete ' }),
 
   // this method retrieves and returns all orders of a specific user
   getUserOrderSets: async (username) => OrderSet.find({ user: username }),

@@ -1,7 +1,7 @@
 // import express module for router
 import express from 'express';
 
-// import multer for upload configuration of order image files
+// import multer for upload configuration of user report files
 import multer from 'multer';
 
 // import report controller object for report controller methods
@@ -13,7 +13,7 @@ import token from '../middleware/token.js';
 // get express router
 const router = express.Router();
 
-// set up multer for uploading report images
+// set up multer for uploading report files
 const reportImageStorage = multer.diskStorage({
   // where the report image files will be uploaded
   destination: function (req, file, cb) {

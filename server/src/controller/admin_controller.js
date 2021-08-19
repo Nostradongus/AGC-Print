@@ -29,7 +29,7 @@ const adminController = {
       });
 
       // check if email already exists in the database
-      const emailData = await WorkerService.getWorker({ email: req.body.email });
+      const emailData = await WorkerService.getUser({ email: req.body.email });
 
       // contact number and email format check
       const validContactNo = req.body.contactNo[0] + req.body.contactNo[1];

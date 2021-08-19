@@ -1,4 +1,4 @@
-// get Report model in models folder
+// get Report model in model folder
 import Report from '../model/Report.js';
 
 // create report object that contains methods for report data manipulation

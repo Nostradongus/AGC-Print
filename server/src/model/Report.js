@@ -31,7 +31,8 @@ const ReportSchema = new mongoose.Schema({
   // description (text content) of the report
   description: {
     type: String,
-    required: true,
+    required: false,
+    default: null,
   },
   // filename of the report's image
   img: {

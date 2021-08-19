@@ -1,4 +1,3 @@
-d
 <template>
   <div>
     <side-bar />
@@ -99,13 +98,32 @@ d
               ease-in-out
               text-center text-lg
               hover:bg-link-water hover:text-primary-blue
+              mx-8
+              p-3
+              rounded-xl
+              bg-primary-blue
+            "
+            :to="`/report-order/${route.params.id}`"
+            >Report Order</router-link
+          >
+          <router-link
+            v-if="state.totalPrice !== -1"
+            class="
+              manrope-regular
+              text-white
+              inline-block
+              transition
+              duration-300
+              ease-in-out
+              text-center text-lg
+              hover:bg-link-water hover:text-primary-blue
               w-32
               mx-8
               p-3
               rounded-xl
               bg-primary-blue
             "
-            to="/my-orders"
+            :to="`/payment/`"
             >Pay Here</router-link
           >
         </div>
@@ -143,12 +161,11 @@ export default {
       try {
         const res = await api.getOrderSet(route.params.id);
         state.order = res.data;
-        console.log(state.order);
       } catch (err) {
         console.log(err);
       }
     }
-    return { state };
+    return { state, route };
   },
 };
 </script>

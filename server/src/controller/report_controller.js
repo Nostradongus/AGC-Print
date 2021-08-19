@@ -1,6 +1,3 @@
-// get report model object from model folder
-import Report from '../model/Report.js';
-
 // get report service static object from service folder
 import ReportService from '../service/report_service.js';
 
@@ -47,8 +44,17 @@ const reportController = {
     try {
       const reports = await ReportService.getUserReports(req.params.username);
 
-      return res.status(200).json(reports);
+      // if there are reports from user, send data back to client
+      if (reports != null) {
+        return res.status(200).json(reports);
+      }
+
+      // if no reports yet from user, send message
+      return res
+        .status(404)
+        .json({ message: 'No reports created from user yet!' });
     } catch (err) {
+      // if error has occurred, send server error status and message
       res.status(500).json({ message: 'Server Error' });
     }
   },
@@ -74,7 +80,7 @@ const reportController = {
       fs.renameSync(origFilePath, newFilePath);
 
       // create new report object
-      const report = new Report({
+      const report = {
         id: uniqueId,
         orderSetId: req.body.orderSetId,
         title: req.body.title,
@@ -85,7 +91,7 @@ const reportController = {
         imgPath: newFilePath,
         status: 'Not Yet Resolved',
         dateRequested: formattedDate,
-      });
+      };
 
       // add new report to database
       const result = await ReportService.addReport(report);
