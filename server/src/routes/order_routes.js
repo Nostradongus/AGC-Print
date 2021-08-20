@@ -72,6 +72,13 @@ router.get(
   orderController.getAllActiveOrderSets
 );
 
+// route for all past orders of users
+router.get(
+  '/orders/past',
+  token.authenticateToken,
+  orderController.getAllPastOrderSets
+);
+
 // route for getting a specific order from the database
 router.get('/details/:id', token.authenticateToken, orderController.getOrder);
 

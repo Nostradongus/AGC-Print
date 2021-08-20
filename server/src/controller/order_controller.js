@@ -95,6 +95,19 @@ const orderController = {
     }
   },
 
+  getAllPastOrderSets: async (req, res) => {
+    try {
+      const orders = await OrderService.getAllPastOrderSets();
+
+      if (orders == null) {
+        orders = 'There are no past orders.';
+      }
+      return res.status(200).json(orders);
+    } catch (err) {
+      res.status(500).json({ message: 'Server Error' });
+    }
+  },
+
   // order controller method to retrieve and return a specific order from the database
   getOrder: async (req, res) => {
     try {

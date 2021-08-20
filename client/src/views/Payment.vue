@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="state.order">
     <side-bar />
     <page-header title="Payment Portal">
       <div class="pr-8 pl-8 pt-4">
@@ -44,7 +44,7 @@
               <div class="grid grid-cols-2">
                 <div>
                   <p class="text-lg manrope-regular">
-                    Order Number: 1234567890
+                    Order Number: {{ state.order.id }}
                   </p>
                   <p class="text-lg manrope-regular">
                     Total Project Cost: PHP 1000.00

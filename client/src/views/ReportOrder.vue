@@ -73,7 +73,7 @@
             v-if="state.typeValidation != null && !state.typeValidation"
             class="text-red manrope-bold text-left text-sm"
           >
-            Please select type of report.
+            Please select type of issue.
           </p>
         </div>
         <div class="flex flex-row mb-3">
@@ -93,28 +93,26 @@
             v-if="v.description.$error && !state.descValidation"
             class="text-red manrope-bold text-center text-sm"
           >
-            Please input a description of the issue.
+            Please explain the issue regarding the order.
           </p>
         </div>
         <div class="flex flex-row mb-3 items-center">
           <h3 class="w-1/3 text-center manrope-bold">Upload Image/s</h3>
-          <input 
-            id="report-file"
-            name="report-file"
-            @change="onSelectFile" 
-            class="w-full lg:w-1/2" 
-            ref="file"
-            type="file"
-          />
-        </div>
-        <div class="flex flex-row mb-5 items-center">
-          <div class="w-1/3" />
-          <p
-            v-if="state.fileValidation != null && !state.fileValidation"
-            class="text-red manrope-bold text-center text-sm"
-          >
-            No File Uploaded Yet.
-          </p>
+          <div class="w-full lg:w-1/2">
+            <input
+              id="report-file"
+              name="report-file"
+              ref="file"
+              type="file"
+              @change="onSelectFile"
+            />
+            <p
+              v-if="state.fileValidation != null && !state.fileValidation"
+              class="text-red manrope-bold text-left text-sm"
+            >
+              No File Uploaded Yet.
+            </p>
+          </div>
         </div>
         <div class="flex justify-end lg:mr-48"> 
           <div class="flex-1">
@@ -225,6 +223,10 @@ export default {
     onMounted(() => {
       getOrderDetails();
     });
+
+    function onSelectFile() {
+      state.imageFile = file.value.files[0];
+    }
 
     async function getOrderDetails() {
       try {
