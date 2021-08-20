@@ -17,7 +17,21 @@ const router = express.Router();
 const paymentFileStorage = multer.diskStorage({
   // where the report image files will be uploaded
   destination: function (req, file, cb) {
-    cb(null, './src/public/payment_images');
+    // image extensions
+    const imgExtensions = ['png', 'jpg', 'jpeg', 'svg'];
+
+    // get uploaded file's extension (file type)
+    const filename = file.originalname;
+    const ext = filename.substring(filename.indexOf('.') + 1);
+
+    // if uploaded order file is a png, jpg, or svg file
+    if (imgExtensions.includes(ext)) {
+      // upload to order images subfolder
+      cb(null, './src/public/payment_images');
+    } else {
+      // upload to order documents subfolder
+      cb(null, './src/public/payment_docs');
+    }
   },
 
   // filename format for report images
@@ -48,7 +62,7 @@ router.get(
 router.post(
   '/add/new',
   token.authenticateToken,
-  paymentFileUpload.single('payment-image'),
+  paymentFileUpload.single('payment-file'),
   paymentController.addPayment
 );
 

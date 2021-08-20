@@ -170,16 +170,33 @@ const orderController = {
     }
   },
 
-  // order controller method to upload and manage temporary order image coming from the client user order cart
+  // order controller method to create a temporary order object for user client local cart
   addToCart: (req, res) => {
     // generated unique order id
     const uniqueId = uniqid();
 
-    // get and rename uploaded image, and url path
-    const ext = req.file.filename.split('.');
-    const filename = `order-${uniqueId}.${ext[1]}`;
-    const origFilePath = `./src/public/order_images/${req.file.filename}`;
-    const newFilePath = `./src/public/order_images/order-${uniqueId}.${ext[1]}`;
+    // get and rename uploaded order file, and url path
+    // image extensions
+    const imgExtensions = ['png', 'jpg', 'jpeg', 'svg'];
+
+    // get file extension and create filename format for uploaded order file
+    const ext = req.file.filename.substring(req.file.filename.indexOf('.') + 1);
+    const filename = `order-${uniqueId}.${ext}`;
+
+    // public subfolder directory where the order file will be transferred and uploaded
+    let folder = 'order_images';
+
+    // if uploaded order file is not an image format
+    if (!imgExtensions.includes(ext)) {
+      // order file shall be transferred and uploaded to the order_docs public subfolder
+      folder = 'order_docs';
+    }
+
+    // old path and new path
+    const origFilePath = `./src/public/${folder}/${req.file.filename}`;
+    const newFilePath = `./src/public/${folder}/${filename}`;
+
+    // rename uploaded order file
     fs.renameSync(origFilePath, newFilePath);
 
     // create new Order object using deep copy
@@ -188,8 +205,8 @@ const orderController = {
       user: req.user.username,
       type: JSON.parse(JSON.stringify(req.body.type)),
       quantity: JSON.parse(JSON.stringify(req.body.quantity)),
-      img: filename,
-      imgPath: newFilePath,
+      filename: filename,
+      filePath: newFilePath,
       width: JSON.parse(JSON.stringify(req.body.width)),
       height: JSON.parse(JSON.stringify(req.body.height)),
       frameOption: null,
@@ -240,7 +257,7 @@ const orderController = {
   // order controller method to delete uploaded temporary order image coming from the client user order cart
   deleteFromCart: (req, res) => {
     // delete uploaded order image
-    fs.unlink(req.params.id, function (err) {
+    fs.unlink(req.params.imgPath, function (err) {
       if (err) {
         // if error has occurred, send server error status and message
         return res.status(500).json({ message: 'Server Error' });

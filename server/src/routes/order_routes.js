@@ -15,12 +15,26 @@ const router = express.Router();
 
 // set up multer for uploading order images
 const orderImageStorage = multer.diskStorage({
-  // where the order image files will be uploaded
+  // where the order files will be uploaded
   destination: function (req, file, cb) {
-    cb(null, './src/public/order_images');
+    // image extensions
+    const imgExtensions = ['png', 'jpg', 'jpeg', 'svg'];
+
+    // get uploaded file's extension (file type)
+    const filename = file.originalname;
+    const ext = filename.substring(filename.indexOf('.') + 1);
+
+    // if uploaded order file is a png, jpg, or svg file
+    if (imgExtensions.includes(ext)) {
+      // upload to order images subfolder
+      cb(null, './src/public/order_images');
+    } else {
+      // upload to order documents subfolder
+      cb(null, './src/public/order_docs');
+    }
   },
 
-  // filename format for order images
+  // filename format for order file
   filename: function (req, file, cb) {
     cb(null, file.originalname);
   },
@@ -72,7 +86,7 @@ router.get(
 router.post(
   '/cart/add',
   token.authenticateToken,
-  orderImageUpload.single('order-image'),
+  orderImageUpload.single('order-file'),
   orderController.addToCart
 );
 

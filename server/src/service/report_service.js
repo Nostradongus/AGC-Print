@@ -18,7 +18,6 @@ const ReportService = {
     const newReport = new Report({
       id: report.id,
       orderSetId: report.orderSetId,
-      title: report.title,
       type: report.type,
       user: report.user,
       description: report.description,

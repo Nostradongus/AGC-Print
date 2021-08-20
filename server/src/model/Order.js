@@ -29,12 +29,12 @@ const OrderSchema = new mongoose.Schema({
     required: true,
   },
   // filename of the order's image
-  img: {
+  filename: {
     type: String,
     required: false,
   },
   // file path of the order's image
-  imgPath: {
+  filePath: {
     type: String,
     required: false,
   },

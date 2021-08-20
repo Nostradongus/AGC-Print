@@ -213,7 +213,7 @@ export default {
         formData.append('type', state.type);
         formData.append('eyelets', state.eyelets);
         formData.append('remarks', state.remarks);
-        formData.append('order-image', state.imageFile);
+        formData.append('order-file', state.imageFile);
         formData.append('user', store.state.user.user.username);
 
         // add order data to cart and get generated order id

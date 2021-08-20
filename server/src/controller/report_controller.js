@@ -73,22 +73,40 @@ const reportController = {
       const uniqueId = uniqid();
 
       // get and rename uploaded image, and url path
-      const ext = req.file.filename.split('.');
-      const filename = `report-${uniqueId}.${ext[1]}`;
-      const origFilePath = `./src/public/report_images/${req.file.filename}`;
-      const newFilePath = `./src/public/report_images/report-${uniqueId}.${ext[1]}`;
+      // image extensions
+      const imgExtensions = ['png', 'jpg', 'jpeg', 'svg'];
+
+      // get file extension and create filename format for uploaded order file
+      const ext = req.file.filename.substring(
+        req.file.filename.indexOf('.') + 1
+      );
+      const filename = `report-${uniqueId}.${ext}`;
+
+      // public subfolder directory where the order file will be transferred and uploaded
+      let folder = 'report_images';
+
+      // if uploaded order file is not an image format
+      if (!imgExtensions.includes(ext)) {
+        // report file shall be transferred and uploaded to the report_docs public subfolder
+        folder = 'report_docs';
+      }
+
+      // old path and new path
+      const origFilePath = `./src/public/${folder}/${req.file.filename}`;
+      const newFilePath = `./src/public/${folder}/${filename}`;
+
+      // rename uploaded report file
       fs.renameSync(origFilePath, newFilePath);
 
       // create new report object
       const report = {
         id: uniqueId,
         orderSetId: req.body.orderSetId,
-        title: req.body.title,
         type: req.body.type,
         user: req.user.username,
         description: req.body.description,
-        img: filename,
-        imgPath: newFilePath,
+        filename: filename,
+        filePath: newFilePath,
         status: 'Not Yet Resolved',
         dateRequested: formattedDate,
       };

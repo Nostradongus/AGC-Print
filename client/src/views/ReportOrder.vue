@@ -39,10 +39,19 @@
         </div>
       </div>
       <!-- Report Form -->
-      <form class="flex flex-col m-8" enctype="multipart/form-data">
-        <div class="flex flex-row mb-8 items-center">
+      <form 
+        @submit.prevent="submitReport"
+        class="flex flex-col m-8"
+        enctype="multipart/form-data">
+        <div class="flex flex-row mb-3 items-center">
           <h3 class="w-1/3 text-center manrope-bold">What is the issue?</h3>
-          <select class="w-full lg:w-1/2 dropdown-field">
+          <select 
+            name="type"
+            id="type"
+            class="w-full lg:w-1/2 dropdown-field"
+            v-model="state.type"
+            @change="onSelectType"
+          >
             <option value="placeholder" disabled selected hidden>
               Select one
             </option>
@@ -58,18 +67,79 @@
             <option value="Others">Others</option>
           </select>
         </div>
-        <div class="flex flex-row mb-8">
+        <div class="flex flex-row mb-5 items-center">
+          <div class="w-1/3" />
+          <p
+            v-if="state.typeValidation != null && !state.typeValidation"
+            class="text-red manrope-bold text-left text-sm"
+          >
+            Please select type of report.
+          </p>
+        </div>
+        <div class="flex flex-row mb-3">
           <h3 class="w-1/3 text-center manrope-bold">Detailed Description</h3>
           <textarea
+            id="description"
+            name="description"
             class="w-full lg:w-1/2 manrope-regular input-text-field h-64"
             placeholder="Tell us about your report"
+            v-model="state.description"
+            @change="onChange"
           />
         </div>
-        <div class="flex flex-row mb-8 items-center">
-          <h3 class="w-1/3 text-center manrope-bold">Upload Image/s</h3>
-          <input class="w-full lg:w-1/2" type="file" />
+        <div class="flex flex-row mb-5 items-center">
+          <div class="w-1/3" />
+          <p
+            v-if="v.description.$error && !state.descValidation"
+            class="text-red manrope-bold text-center text-sm"
+          >
+            Please input a description of the issue.
+          </p>
         </div>
-        <div class="flex justify-end lg:mr-48">
+        <div class="flex flex-row mb-3 items-center">
+          <h3 class="w-1/3 text-center manrope-bold">Upload Image/s</h3>
+          <input 
+            id="report-file"
+            name="report-file"
+            @change="onSelectFile" 
+            class="w-full lg:w-1/2" 
+            ref="file"
+            type="file"
+          />
+        </div>
+        <div class="flex flex-row mb-5 items-center">
+          <div class="w-1/3" />
+          <p
+            v-if="state.fileValidation != null && !state.fileValidation"
+            class="text-red manrope-bold text-center text-sm"
+          >
+            No File Uploaded Yet.
+          </p>
+        </div>
+        <div class="flex justify-end lg:mr-48"> 
+          <div class="flex-1">
+            <router-link
+              class="
+                manrope-regular
+                text-white
+                inline-block
+                transition
+                duration-300
+                ease-in-out
+                text-center text-lg
+                hover:bg-link-water hover:text-primary-blue
+                w-32
+                mb-2
+                mt-8
+                mx-32
+                rounded-xl
+                bg-primary-blue
+                p-3
+              "
+              :to="`/order-details/${route.params.id}`"
+              >Back</router-link
+            >
+          </div>
           <button
             class="
               manrope-regular
@@ -79,7 +149,7 @@
               ease-in-out
               text-center text-lg
               hover:bg-link-water hover:text-primary-blue
-              mb-8
+              mb-2
               mt-8
               rounded-xl
               bg-primary-blue
@@ -89,6 +159,14 @@
             Submit Report
           </button>
         </div>
+        <div class="flex justify-end lg:mr-40">
+          <p
+            v-if="state.reportSubmitted"
+            class="text-primary-blue manrope-bold text-center text-sm"
+          >
+            Report Successfully Submitted!
+          </p>
+        </div>
       </form>
     </page-header>
   </div>
@@ -97,17 +175,52 @@
 <script>
 import SideBar from '../components/SideBar.vue';
 import PageHeader from '../components/PageHeader.vue';
-import { reactive, onMounted } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 import * as api from '../api';
 import { useRoute } from 'vue-router';
+import useVuelidate from '@vuelidate/core';
+import { required } from '@vuelidate/validators';
+
 export default {
   name: 'ReportOrder',
   components: { SideBar, PageHeader },
   setup() {
+    let file = ref(null);
     const route = useRoute();
-    const state = reactive({
+    let state = reactive({
       order: null,
+      type: 'placeholder',
+      description: '',
+      fileValidation: null,
+      typeValidation: null,
+      descValidation: null,
+      reportFile: null,
+      reportSubmitted: false,
     });
+
+    const rules = {
+      type: { required },
+      description: { required }
+    };
+
+    const v = useVuelidate(rules, state);
+
+    function onSelectFile() {
+      state.reportSubmitted = false;
+      state.fileValidation = file.value.files.length == 0 ? false : true;
+      if (state.fileValidation) {
+        state.reportFile = file.value.files[0];
+      }
+    }
+
+    function onChange() {
+      state.reportSubmitted = false;
+    }
+
+    function onSelectType() {
+      state.reportSubmitted = false;
+      state.typeValidation = state.type !== 'placeholder' ? true : false;
+    }
 
     onMounted(() => {
       getOrderDetails();
@@ -121,7 +234,60 @@ export default {
         console.log(err);
       }
     }
-    return { state };
+
+    async function submitReport(e) {
+      e.preventDefault();
+
+      state.reportSubmitted = false;
+      
+      // get field validation results
+      const validated = await v.value.$validate();
+
+      // check if report file has been uploaded by user
+      state.fileValidation = file.value.files.length == 0 ? false : true;
+
+      // check if report type has been specified by user or not
+      state.typeValidation = state.type !== 'placeholder' ? true : false;
+
+      // check if report description has been given by user
+      state.descValidation = state.description !== '' ? true : false
+
+      if (validated && state.fileValidation && state.typeValidation && state.descValidation) {
+        // create FormData to store user report data with uploaded file
+        const formData = new FormData();
+        formData.append('orderSetId', route.params.id);
+        formData.append('type', state.type);
+        formData.append('description', state.description);
+        formData.append('report-file', state.reportFile);
+
+        // add user report data to database
+        const res = await api.addReport(formData);
+
+        // if user report successfully submitted
+        if (res.data != null && typeof res.data !== 'undefined') {
+          // set indicator that user report was submitted successfully
+          state.reportSubmitted = true;
+
+          // reset fields
+          state.fileValidation = null;
+          state.typeValidation = null;
+          state.type = 'placeholder';
+          state.description = '';
+          document.getElementById('report-file').value = '';
+        }
+      }
+    }
+    
+    return { 
+             state, 
+             file, 
+             onSelectFile, 
+             onSelectType, 
+             onChange, 
+             v, 
+             submitReport,
+             route
+           };
   },
 };
 </script>

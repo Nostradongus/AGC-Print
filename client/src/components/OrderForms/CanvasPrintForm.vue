@@ -167,8 +167,8 @@
     </div>
     <div class="relative mt-20">
       <input
-        id="order-image"
-        name="order-image"
+        id="order-file"
+        name="order-file"
         type="file"
         ref="file"
         class="manrope-regular w-72"
@@ -176,7 +176,7 @@
         @change="onSelectFile"
       />
       <label
-        for="order-image"
+        for="order-file"
         class="absolute manrope-regular left-0 -top-8 text-gray-600 text-md"
         >Upload Image</label
       >
@@ -272,7 +272,9 @@ export default {
 
     function onSelectFile() {
       state.fileValidation = file.value.files.length == 0 ? false : true;
-      state.imageFile = file.value.files[0];
+      if (state.fileValidation) {
+        state.imageFile = file.value.files[0];
+      }
     }
 
     function onSelectFrameOption() {
@@ -320,7 +322,7 @@ export default {
       }
 
       if(validated && state.fileValidation && state.frameValidation){
-        // create FormData to store order data
+        // create FormData to store order data with uploaded file
         const formData = new FormData();
         formData.append('quantity', state.quantity);
         formData.append('width', state.width);
@@ -330,7 +332,7 @@ export default {
         formData.append('frameFinishing', state.frameFinishing);
         formData.append('frameEdges', state.frameEdges);
         formData.append('remarks', state.remarks);
-        formData.append('order-image', state.imageFile);
+        formData.append('order-file', state.imageFile);
         formData.append('user', store.state.user.user.username);
 
         // add order data to cart and get generated order id
