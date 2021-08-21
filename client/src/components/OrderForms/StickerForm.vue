@@ -135,7 +135,7 @@
         id="other-details"
         name="other-details"
         type="text"
-        class="manrope-regular input-text-field w-1/4"
+        class="manrope-regular input-text-field w-full"
         min="0"
         v-model="state.remarks"
       ></textarea>

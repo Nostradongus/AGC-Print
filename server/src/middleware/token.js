@@ -40,9 +40,7 @@ const token = {
   // create token for the current user
   generateAccessToken: (data) => {
     // generate access token given the data
-    const accessToken = jwt.sign(data, process.env.ACCESS_TOKEN_SECRET, {
-      expiresIn: '1h',
-    });
+    const accessToken = jwt.sign(data, process.env.ACCESS_TOKEN_SECRET);
 
     // return the generated access token
     return accessToken;

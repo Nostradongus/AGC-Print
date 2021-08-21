@@ -5,7 +5,7 @@
       <!-- display all orders of user -->
       <div v-if="!state.empty" class="h-full w-full">
         <!-- message and status filter option box -->
-        <div class="flex items-end mb-2">
+        <div class="flex items-end mb-5">
           <div class="flex-1">
             <!-- order sort message -->
             <h1
@@ -65,11 +65,13 @@
           v-if="state.emptyStatus"
         >No orders in "{{ state.status }}" status for now</p
         >
-        <OrderSetCard
-          v-for="order in state.orders"
-          :key="order.id"
-          :order="order"
-        />
+        <div class="overflow-y-auto max-h-screen scrollbar-hidden">
+          <OrderSetCard
+            v-for="order in state.orders"
+            :key="order.id"
+            :order="order"
+          />
+        </div>
       </div>
       <div v-if="state.empty">
         <div class="mx-8 mt-8 text-2xl relative">
@@ -161,7 +163,7 @@ export default {
         state.orders = filteredOrders;
 
         // if no orders on the list have the selected status
-        if (state.orders.length == 0) {
+        if (state.orders.length === 0) {
           state.emptyStatus = true;
         } else {
           state.emptyStatus = false;
@@ -227,5 +229,16 @@ export default {
 .manrope-extrabold {
   font-family: 'Manrope', sans-serif;
   font-weight: 800;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge add Firefox */
+.scrollbar-hidden {
+  -ms-overflow-style: none;
+  scrollbar-width: none; /* Firefox */
 }
 </style>

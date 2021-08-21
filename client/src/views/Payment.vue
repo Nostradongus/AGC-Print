@@ -91,7 +91,7 @@
               v-if="state.fileTypeValidation != null && !state.fileTypeValidation"
               class="text-red manrope-bold text-left text-xs mt-2"
             >
-              File must be in .jpg, .png, .svg, .psd, .ai, or .pdf format.
+              File must be in .jpg, .png, or .pdf format.
             </p>
           </div>
         </div>
@@ -219,7 +219,7 @@ export default {
         state.paymentFile = file.value.files[0];
 
         // valid file type extensions
-        const extensions = ['png', 'jpg', 'jpeg', 'svg', 'ai', 'psd', 'pdf'];
+        const extensions = ['png', 'jpg', 'jpeg', 'pdf'];
 
         // get uploaded file's extension
         const fileExtension = state.paymentFile.name.substring(state.paymentFile.name.indexOf('.') + 1);
