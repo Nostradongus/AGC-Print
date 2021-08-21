@@ -19,7 +19,7 @@
         <div>
           <div class="mb-2">
             <h3 class="manrope-bold">Order Number:</h3>
-            <p>{{ state.order.id }}</p>
+            <p>{{ state.order.userOrderNum }}</p>
           </div>
           <div class="mb-2">
             <h3 class="manrope-bold">Total Project Cost:</h3>
@@ -106,13 +106,22 @@
               type="file"
               @change="onSelectFile"
             />
-            <p
-              v-if="state.fileValidation != null && !state.fileValidation"
-              class="text-red manrope-bold text-left text-sm"
-            >
-              No File Uploaded Yet.
-            </p>
           </div>
+        </div>
+        <div class="flex flex-row mb-3 items-center">
+          <div class="w-1/3" />
+          <p
+            v-if="state.fileValidation != null && !state.fileValidation"
+            class="text-red manrope-bold text-left text-sm"
+          >
+            No File Uploaded Yet.
+          </p>
+          <p
+            v-if="state.fileTypeValidation != null && !state.fileTypeValidation"
+            class="text-red manrope-bold text-left text-sm"
+          >
+            File must be in .jpg, .png, .svg, .psd, .ai, or .pdf format.
+          </p>
         </div>
         <div class="flex justify-end lg:mr-48"> 
           <div class="flex-1">
@@ -190,6 +199,7 @@ export default {
       type: 'placeholder',
       description: '',
       fileValidation: null,
+      fileTypeValidation: null,
       typeValidation: null,
       descValidation: null,
       reportFile: null,
@@ -225,7 +235,24 @@ export default {
     });
 
     function onSelectFile() {
-      state.imageFile = file.value.files[0];
+      state.reportSubmitted = false;
+      state.fileValidation = file.value.files.length == 0 ? false : true;
+
+      // check if there uploaded file by user
+      if (state.fileValidation) {
+        state.reportFile = file.value.files[0];
+
+        // valid file type extensions
+        const extensions = ['png', 'jpg', 'jpeg', 'svg', 'ai', 'psd', 'pdf'];
+
+        // get uploaded file's extension
+        const fileExtension = state.reportFile.name.substring(state.reportFile.name.indexOf('.') + 1);
+
+        // check if uploaded file contains valid file type extension
+        state.fileTypeValidation = extensions.includes(fileExtension);
+      } else {
+        state.fileTypeValidation = null;
+      }
     }
 
     async function getOrderDetails() {
@@ -254,7 +281,11 @@ export default {
       // check if report description has been given by user
       state.descValidation = state.description !== '' ? true : false
 
-      if (validated && state.fileValidation && state.typeValidation && state.descValidation) {
+      const isValid = validated && state.fileValidation && 
+                      state.typeValidation && state.descValidation &&
+                      state.fileTypeValidation;
+
+      if (isValid) {
         // create FormData to store user report data with uploaded file
         const formData = new FormData();
         formData.append('orderSetId', route.params.id);
@@ -272,10 +303,11 @@ export default {
 
           // reset fields
           state.fileValidation = null;
+          state.fileTypeValidation = null;
           state.typeValidation = null;
           state.type = 'placeholder';
           state.description = '';
-          document.getElementById('report-file').value = '';
+          document.getElementById('report-file').value = ''; // remove recently uploaded file
         }
       }
     }

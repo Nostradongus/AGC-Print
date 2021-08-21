@@ -191,6 +191,12 @@
       >
         No File Uploaded Yet.
       </p>
+      <p
+        v-if="state.fileTypeValidation != null && !state.fileTypeValidation"
+        class="text-red manrope-bold text-left text-sm"
+      >
+        File must be in .jpg, .png, .svg, .psd, .ai, or .pdf format.
+      </p>
     </div>
 
     <div class="relative mt-20">
@@ -257,6 +263,7 @@ export default {
       frameEdges: 'placeholder',
       remarks: '',
       fileValidation: null,
+      fileTypeValidation: null,
       frameValidation: null,
       frameOptionValidation: null,
       frameFinishingValidation: null,
@@ -274,8 +281,21 @@ export default {
 
     function onSelectFile() {
       state.fileValidation = file.value.files.length == 0 ? false : true;
+
+      // check if there is uploaded file by user
       if (state.fileValidation) {
-        state.imageFile = file.value.files[0];
+        state.orderFile = file.value.files[0];
+
+        // valid file type extensions
+        const extensions = ['png', 'jpg', 'jpeg', 'svg', 'ai', 'psd', 'pdf'];
+
+        // get uploaded file's extension
+        const fileExtension = state.orderFile.name.substring(state.orderFile.name.indexOf('.') + 1);
+
+        // check if uploaded file contains valid file type extension
+        state.fileTypeValidation = extensions.includes(fileExtension);
+      } else {
+        state.fileTypeValidation = null;
       }
     }
 
@@ -340,7 +360,7 @@ export default {
         state.frameValidation = state.frameOptionValidation;
       }
 
-      if(validated && state.fileValidation && state.frameValidation){
+      if(validated && state.fileValidation && state.fileTypeValidation && state.frameValidation){
         // create FormData to store order data with uploaded file
         const formData = new FormData();
         formData.append('quantity', state.quantity);
@@ -351,7 +371,7 @@ export default {
         formData.append('frameFinishing', state.frameFinishing);
         formData.append('frameEdges', state.frameEdges);
         formData.append('remarks', state.remarks);
-        formData.append('order-file', state.imageFile);
+        formData.append('order-file', state.orderFile);
         formData.append('user', store.state.user.user.username);
 
         // add order data to cart and get generated order id

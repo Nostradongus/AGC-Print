@@ -1,23 +1,23 @@
 <template>
-  <div class="px-8 pt-8">
+  <div class="px-8 pt-3 pb-5">
     <div class="mx-auto mb-0.5 h-30 bg-light-blue rounded-xl p-3 order-card">
       <div class="flex p-1">
-        <div class="my-auto pr-3 w-1/4">
-          <span class="text-lg manrope-regular">Order #{{ order.id }}</span>
+        <div class="my-auto pr-3 w-1/5">
+          <span class="text-lg manrope-regular">Order #{{ order.userOrderNum }}</span>
         </div>
         <div class="flex-1">
-          <div class="ml-3 space-y-1 pr-3">
+          <div class="space-y-1 ml-3 mt-1">
             <div class="manrope-extrabold">{{ order.name }}</div>
-            <div class="text-md manrope-regular">
+            <div class="text-sm manrope-regular">
               <span class="text-md manrope-bold">Contact Number:</span>
               {{ order.contactNo }}
             </div>
-            <div class="text-md manrope-regular">
-              <span class="text-md manrope-bold"> Delivery Address:</span>
+            <div class="text-sm manrope-regular">
+              <span class="text-sm manrope-bold"> Delivery Address:</span>
               {{ order.address }}
             </div>
-            <div class="text-md manrope-regular">
-              <span class="text-md manrope-bold">Date Ordered:</span>
+            <div class="text-sm manrope-regular">
+              <span class="text-sm manrope-bold">Date Ordered:</span>
               {{ order.dateRequested }}
             </div>
           </div>

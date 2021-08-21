@@ -4,13 +4,16 @@ import Report from '../model/Report.js';
 // create report object that contains methods for report data manipulation
 const ReportService = {
   // this method retrieves and returns all report data in the database
-  getAllReports: async () => Report.find({}),
+  // from most recent to least recent
+  getAllReports: async () => Report.find({}).sort({ field: 'descending' }),
 
   // this method retrieves and returns a specific report data based on the given report id
   getReport: async (id) => Report.findOne(id),
 
   // this method retrieves and returns all reports of a specific user
-  getUserReports: async (username) => Report.find({ user: username }),
+  // from most recent to least recent
+  getUserReports: async (username) =>
+    Report.find({ user: username }).sort({ field: 'descending' }),
 
   // this method adds a new report data to the Report collection in the database
   addReport: async (report) => {

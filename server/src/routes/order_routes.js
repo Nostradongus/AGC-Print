@@ -51,16 +51,16 @@ router.get(
   orderController.getUserOrderSets
 );
 
-// route for user's past orders
+// route for user's orders according to filter option
 router.get(
-  '/:username/pastOrders',
+  '/:username/filter/:status',
   token.authenticateToken,
-  orderController.getUserPastOrderSets
+  orderController.getUserOrderSetsFiltered
 );
 
 // route for user's current orders
 router.get(
-  '/:username/currentOrders',
+  '/:username/current',
   token.authenticateToken,
   orderController.getUserCurrentOrderSets
 );
@@ -72,11 +72,11 @@ router.get(
   orderController.getAllActiveOrderSets
 );
 
-// route for all past orders of users
+// route for all orders according to filter option
 router.get(
-  '/orders/past',
+  '/orders/filter/:status',
   token.authenticateToken,
-  orderController.getAllPastOrderSets
+  orderController.getAllOrderSetsFiltered
 );
 
 // route for getting a specific order from the database

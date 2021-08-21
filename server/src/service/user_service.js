@@ -22,6 +22,10 @@ const UserService = {
     // add new user account data to the User collection
     return newUser.save();
   },
+  // this method updates the number of orders made by the user
+  // executed when a newly created order set was assigned a user order number
+  updateUserOrderNumber: async (username, orderNum) =>
+    User.updateOne({ username: username }, { orderNum: orderNum }),
 };
 
 // export user service object for user account data creation and manipulation

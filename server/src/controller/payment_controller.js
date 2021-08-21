@@ -14,8 +14,14 @@ const paymentController = {
     try {
       // retrieve all payment receipts from the database
       const payments = await PaymentService.getAllPayments();
+
+      // if there are existing payment receipt data from the database
+      if (payments != null && payments.length != 0) {
+        return res.status(200).json(payments);
+      }
+
       // send the array of payments back to the client
-      return res.status(200).json(payments);
+      return res.status(404).json({ message: 'No Payment Data Found!' });
     } catch (err) {
       // if error has occurred, send server error status and message
       res.status(500).json({ message: 'Server Error' });
@@ -47,7 +53,7 @@ const paymentController = {
       );
 
       // if there are payment receipts uploaded from user, send data back to client
-      if (payments != null) {
+      if (payments != null && payments.length != 0) {
         return res.status(200).json(payments);
       }
 

@@ -5,13 +5,45 @@ import OrderSet from '../model/OrderSet.js';
 // create service object that contains methods for order data manipulation
 const OrderService = {
   // this method retrieves and returns all order data in the database
-  getAllOrderSets: async () => OrderSet.find({}),
+  // from most recent to least recent
+  getAllOrderSets: async () =>
+    OrderSet.find({}).sort({ createdAt: 'descending' }),
 
-  // this method returns all past orders of a specific user
-  getUserPastOrderSets: async (username) =>
-    OrderSet.find({ user: username, status: 'Complete' }),
+  // this method returns all orders of users for the worker to view according to filter option
+  // from most recent to least recent
+  getAllOrderSetsFiltered: async (status) =>
+    OrderSet.find({ status: status }).sort({ createdAt: 'descending' }),
+
+  // this method retrieves and returns all orders of a specific user
+  // from most recent to least recent
+  getUserOrderSets: async (username) =>
+    OrderSet.find({ user: username }).sort({
+      userOrderNum: 'descending',
+    }),
+
+  // this method returns all orders of a specific user according to filter option
+  // from most recent to least recent
+  getUserOrderSetsFiltered: async (username, status) =>
+    OrderSet.find({ user: username, status: status }).sort({
+      userOrderNum: 'descending',
+    }),
+
+  // this method returns all active orders of users for the worker to process
+  // from most recent to least recent
+  getAllActiveOrderSets: async () =>
+    OrderSet.find({
+      status: {
+        $in: [
+          'Pending',
+          'Waiting for Downpayment',
+          'Processing',
+          'Ready for Delivery',
+        ],
+      },
+    }).sort({ createdAt: 'descending' }),
 
   // this method returns all current orders of the users
+  // from most recent to least recent
   getUserCurrentOrderSets: async (username) =>
     OrderSet.find({
       user: username,
@@ -20,29 +52,10 @@ const OrderService = {
           'Pending',
           'Waiting for Downpayment',
           'Processing',
-          'Schedule Delivery',
+          'Ready for Delivery',
         ],
       },
-    }),
-
-  // this method returns all active orders of users for the worker to process
-  getAllActiveOrderSets: async () =>
-    OrderSet.find({
-      status: {
-        $in: [
-          'Pending',
-          'Waiting for Downpayment',
-          'Processing',
-          'Schedule Delivery',
-        ],
-      },
-    }),
-
-  // this method returns all past orders of users for the worker to view
-  getAllPastOrderSets: async () => OrderSet.find({ status: 'Complete' }),
-
-  // this method retrieves and returns all orders of a specific user
-  getUserOrderSets: async (username) => OrderSet.find({ user: username }),
+    }).sort({ userOrderNum: 'descending' }),
 
   // this method retrieves and returns a specific order set data based on given order set id
   getOrderSet: async (id) => OrderSet.findOne(id),

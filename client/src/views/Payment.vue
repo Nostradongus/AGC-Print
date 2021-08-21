@@ -44,7 +44,7 @@
               <div class="grid grid-cols-2">
                 <div>
                   <p class="text-lg manrope-regular">
-                    Order Number: {{ state.order.id }}
+                    Order Number: {{ state.order.userOrderNum }}
                   </p>
                   <p class="text-lg manrope-regular">
                     Total Project Cost: PHP 1000.00
@@ -152,7 +152,6 @@
                 rounded-xl
                 bg-primary-blue
               "
-              to="/orders/"
               @click="submitPayment"
               >Pay Now</button
             >
@@ -191,11 +190,25 @@ export default {
     let file = ref(null);
     const route = useRoute();
     let state = reactive({
+      order: null,
       fileValidation: null,
       fileTypeValidation: null,
       paymentSubmitted: false,
       paymentFile: null,
     });
+
+    onMounted(() => {
+      getOrderDetails();
+    });
+
+    async function getOrderDetails() {
+      try {
+        const res = await api.getOrderSet(route.params.id);
+        state.order = res.data;
+      } catch (err) {
+        console.log(err);
+      }
+    }
 
     function onSelectFile() {
       state.paymentSubmitted = false;

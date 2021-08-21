@@ -7,7 +7,7 @@
         <div class="flex">
           <div class="flex-1">
             <span class="text-lg manrope-bold">Order #: </span>
-            <span class="text-lg manrope-regular">{{ state.order.id }}</span>
+            <span class="text-lg manrope-regular">{{ state.order.userOrderNum }}</span>
 
             <br />
 

@@ -41,6 +41,7 @@ app.use(
 );
 
 // for static public folder, containing the uploaded order / report / payment images and documents
+app.use('/assets', express.static(__dirname + '/src/public/assets'));
 app.use(
   '/order_images',
   express.static(__dirname + '/src/public/order_images')

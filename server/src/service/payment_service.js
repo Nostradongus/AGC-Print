@@ -4,13 +4,16 @@ import Payment from '../model/Payment.js';
 // create payment receipt model that contains methods for payment receipt data manipulation
 const PaymentService = {
   // this method retrieves and returns all payment receipt data in the database
-  getAllPayments: async () => Payment.find({}),
+  // from most recent to least recent
+  getAllPayments: async () => Payment.find({}).sort({ field: 'descending' }),
 
   // this method retrieves and returns a specific payment receipt data based on the given id
   getPayment: async (id) => Payment.findOne(id),
 
   // this method retrieves and returns all payment receipts of a specific user
-  getUserPayments: async (username) => Payment.find({ user: username }),
+  // from most recent to least recent
+  getUserPayments: async (username) =>
+    Payment.find({ user: username }).sort({ field: 'descending' }),
 
   // this method adds a new payment receipt data to the Payment collection in the database
   addPayment: async (payment) => {
