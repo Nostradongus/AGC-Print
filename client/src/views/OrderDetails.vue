@@ -7,7 +7,7 @@
         <div class="flex">
           <div class="flex-1">
             <span class="text-lg manrope-bold">Order #: </span>
-            <span class="text-lg manrope-regular">{{ state.order.id }}</span>
+            <span class="text-lg manrope-regular">{{ state.order.userOrderNum }}</span>
 
             <br />
 
@@ -123,7 +123,7 @@
               rounded-xl
               bg-primary-blue
             "
-            :to="`/payment/`"
+            :to="`/payment-order/${route.params.id}`"
             >Pay Here</router-link
           >
         </div>

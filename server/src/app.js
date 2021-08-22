@@ -40,8 +40,26 @@ app.use(
   })
 );
 
-// for static public folder, containing the uploaded order images
-app.use(express.static(__dirname + '/src/public/order_images'));
+// for static public folder, containing the uploaded order / report / payment images and documents
+app.use('/assets', express.static(__dirname + '/src/public/assets'));
+app.use(
+  '/order_images',
+  express.static(__dirname + '/src/public/order_images')
+);
+app.use('/order_docs', express.static(__dirname + '/src/public/order_docs'));
+app.use(
+  '/report_images',
+  express.static(__dirname + '/src/public/report_images')
+);
+app.use('/report_docs', express.static(__dirname + '/src/public/report_docs'));
+app.use(
+  '/payment_images',
+  express.static(__dirname + '/src/public/payment_images')
+);
+app.use(
+  '/payment_docs',
+  express.static(__dirname + '/src/public/payment_docs')
+);
 
 app.use(
   morgan(process.env.NODE_ENV === 'development' ? 'dev' : 'combined', {

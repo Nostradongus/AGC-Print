@@ -94,7 +94,7 @@ const routes = [
     },
   },
   {
-    path: '/payment',
+    path: '/payment-order/:id',
     name: 'Payment',
     component: Payment,
     meta: {
@@ -121,7 +121,6 @@ router.beforeEach((to, from, next) => {
   const hideForAuth = to.matched.some((record) => record.meta.hideForAuth);
   const user = localStorage.getItem('user');
   if (requiresAuth) {
-    console.log('test');
     if (user != null) {
       next();
     } else {

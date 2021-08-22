@@ -13,11 +13,6 @@ const ReportSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  // title of the report
-  title: {
-    type: String,
-    required: true,
-  },
   // type of report
   type: {
     type: String,
@@ -35,13 +30,13 @@ const ReportSchema = new mongoose.Schema({
     default: null,
   },
   // filename of the report's image
-  img: {
+  filename: {
     type: String,
     required: false,
     default: null,
   },
   // file path of the report's image
-  imgPath: {
+  filePath: {
     type: String,
     required: false,
     default: null,

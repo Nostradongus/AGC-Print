@@ -13,6 +13,11 @@ const OrderSetSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  // nth order set made by user
+  userOrderNum: {
+    type: String,
+    required: true,
+  },
   // the set of orders (Order objects)
   orders: {
     type: Array,

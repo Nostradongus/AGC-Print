@@ -33,6 +33,12 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  // number of orders the user has made
+  orderNum: {
+    type: Number,
+    required: true,
+    default: 1,
+  },
 });
 
 // implement user schema as user model

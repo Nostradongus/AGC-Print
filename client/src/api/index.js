@@ -19,13 +19,13 @@ export const signUp = (userData) => API.post('/register', userData);
 // order data api methods
 export const getAllOrderSets = () => API.get('/order');
 export const getUserOrderSets = (username) => API.get(`/order/${username}`);
+export const getUserOrderSetsFiltered = (username, status) =>
+  API.get(`/order/${username}/filter/${status}`);
+export const getUserCurrentOrderSets = (username) => API.get(`/order/${username}/current`);
+export const getAllActiveOrderSets = () => API.get(`/order/orders/active`);
+export const getAllOrderSetsFiltered = (status) => API.get(`/order/orders/filter/${status}`);
 export const getOrder = (id) => API.get(`/order/details/${id}`);
 export const getOrderSet = (id) => API.get(`/order/details/orderSet/${id}`);
-export const getUserPastOrderSets = (username) =>
-  API.get(`/order/${username}/pastOrders`);
-export const getUserCurrentOrderSets = (username) =>
-  API.get(`/order/${username}/currentOrders`);
-export const getAllActiveOrderSets = () => API.get(`/order/active`);
 export const deleteFromCart = (imgPath) =>
   API.delete('/order/cart/delete', { imgPath });
 export const addToCart = (orderData) => API.post('/order/cart/add', orderData);

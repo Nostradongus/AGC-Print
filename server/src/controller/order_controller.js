@@ -12,6 +12,7 @@ import fs from 'fs';
 
 // import uniqid module for unique id generator
 import uniqid from 'uniqid';
+import UserService from '../service/user_service.js';
 
 // order controller object for order controller methods
 const orderController = {
@@ -21,13 +22,31 @@ const orderController = {
       // retrieve all orders from the database
       const orders = await OrderService.getAllOrderSets();
 
-      if (orders != null) {
+      if (orders != null && orders.length != 0) {
         return res.status(200).json(orders);
       }
 
-      return res.status(200).json({ message: 'No Orders Yet!' });
+      return res.status(404).json({ message: 'No Orders Yet!' });
     } catch (err) {
       // if error has occurred, send server error status and message
+      res.status(500).json({ message: 'Server Error' });
+    }
+  },
+
+  // order controller method to retrieve and return all order sets from the database
+  // according to filter option
+  getAllOrderSetsFiltered: async (req, res) => {
+    try {
+      const orders = await OrderService.getAllOrderSetsFiltered(
+        req.params.status
+      );
+
+      if (orders == null && orders.length != 0) {
+        return res.status(200).json(orders);
+      }
+
+      return res.status(404).json({ message: 'No Orders Yet!' });
+    } catch (err) {
       res.status(500).json({ message: 'Server Error' });
     }
   },
@@ -37,28 +56,30 @@ const orderController = {
     try {
       const orders = await OrderService.getUserOrderSets(req.params.username);
 
-      if (orders != null) {
+      if (orders != null && orders.length != 0) {
         return res.status(200).json(orders);
       }
 
-      return res.status(200).json({ message: 'No Orders Yet!' });
+      return res.status(404).json({ message: 'No Orders Yet!' });
     } catch (err) {
       res.status(500).json({ message: 'Server Error' });
     }
   },
 
-  // order controller method to retrieve and return all past order sets of a user from the database
-  getUserPastOrderSets: async (req, res) => {
+  // order controller method to retrieve and return all order sets of a user from the database
+  // according to filter option
+  getUserOrderSetsFiltered: async (req, res) => {
     try {
       const orders = await OrderService.getUserPastOrderSets(
-        req.params.username
+        req.params.username,
+        req.params.status
       );
 
-      if (orders == null) {
-        orders = 'You have no past orders.';
+      if (orders == null && orders.length != 0) {
+        return res.status(200).json(orders);
       }
 
-      return res.status(200).json(orders);
+      return res.status(404).json({ message: 'No Orders Yet!' });
     } catch (err) {
       res.status(500).json({ message: 'Server Error' });
     }
@@ -71,38 +92,25 @@ const orderController = {
         req.params.username
       );
 
-      if (orders == null) {
-        orders = 'You have no current orders.';
+      if (orders == null && orders.length != 0) {
+        return res.status(200).json(orders);
       }
 
-      return res.status(200).json(orders);
+      return res.status(404).json({ message: 'No Orders Yet!' });
     } catch (err) {
       res.status(500).json({ message: 'Server Error' });
     }
   },
 
-  // order controller method to retrieve and return all active order sets of a user from the database
+  // order controller method to retrieve and return all active order sets from the database
   getAllActiveOrderSets: async (req, res) => {
     try {
       const orders = await OrderService.getAllActiveOrderSets();
 
       if (orders == null) {
-        orders = 'There are no active orders.';
+        return req.status(200).json(orders);
       }
-      return res.status(200).json(orders);
-    } catch (err) {
-      res.status(500).json({ message: 'Server Error' });
-    }
-  },
-
-  getAllPastOrderSets: async (req, res) => {
-    try {
-      const orders = await OrderService.getAllPastOrderSets();
-
-      if (orders == null) {
-        orders = 'There are no past orders.';
-      }
-      return res.status(200).json(orders);
+      return res.status(404).json({ message: 'No Orders Yet!' });
     } catch (err) {
       res.status(500).json({ message: 'Server Error' });
     }
@@ -160,10 +168,16 @@ const orderController = {
         req.body.orders[ctr].orderSetId = uniqueId;
       }
 
+      // get number of orders made by user
+      const orderNum = (
+        await UserService.getUser({ username: req.user.username })
+      ).orderNum;
+
       // add generated unique id and date to order set
       const orderSet = new OrderSet({
         id: uniqueId,
         user: req.user.username,
+        userOrderNum: orderNum.toString().padStart(13, '0'),
         orders: req.body.orders,
         name: req.body.name,
         email: req.body.email,
@@ -171,6 +185,10 @@ const orderController = {
         contactNo: req.body.contactNo,
         dateRequested: formattedDate,
       });
+
+      // increment the number of orders made by user by 1
+      // since a new order set was made
+      await UserService.updateUserOrderNumber(req.user.username, orderNum + 1);
 
       // add new order/s from the cart to the database
       const newOrderSet = await OrderService.addOrderSet(orderSet);
@@ -183,16 +201,33 @@ const orderController = {
     }
   },
 
-  // order controller method to upload and manage temporary order image coming from the client user order cart
+  // order controller method to create a temporary order object for user client local cart
   addToCart: (req, res) => {
     // generated unique order id
     const uniqueId = uniqid();
 
-    // get and rename uploaded image, and url path
-    const ext = req.file.filename.split('.');
-    const filename = `order-${uniqueId}.${ext[1]}`;
-    const origFilePath = `./src/public/order_images/${req.file.filename}`;
-    const newFilePath = `./src/public/order_images/order-${uniqueId}.${ext[1]}`;
+    // get and rename uploaded order file, and url path
+    // image extensions
+    const imgExtensions = ['png', 'jpg', 'jpeg', 'svg'];
+
+    // get file extension and create filename format for uploaded order file
+    const ext = req.file.filename.substring(req.file.filename.indexOf('.') + 1);
+    const filename = `order-${uniqueId}.${ext}`;
+
+    // public subfolder directory where the order file will be transferred and uploaded
+    let folder = 'order_images';
+
+    // if uploaded order file is not an image format
+    if (!imgExtensions.includes(ext)) {
+      // order file shall be transferred and uploaded to the order_docs public subfolder
+      folder = 'order_docs';
+    }
+
+    // old path and new path
+    const origFilePath = `./src/public/${folder}/${req.file.filename}`;
+    const newFilePath = `./src/public/${folder}/${filename}`;
+
+    // rename uploaded order file
     fs.renameSync(origFilePath, newFilePath);
 
     // create new Order object using deep copy
@@ -201,8 +236,8 @@ const orderController = {
       user: req.user.username,
       type: JSON.parse(JSON.stringify(req.body.type)),
       quantity: JSON.parse(JSON.stringify(req.body.quantity)),
-      img: filename,
-      imgPath: newFilePath,
+      filename: filename,
+      filePath: newFilePath,
       width: JSON.parse(JSON.stringify(req.body.width)),
       height: JSON.parse(JSON.stringify(req.body.height)),
       frameOption: null,
@@ -253,7 +288,7 @@ const orderController = {
   // order controller method to delete uploaded temporary order image coming from the client user order cart
   deleteFromCart: (req, res) => {
     // delete uploaded order image
-    fs.unlink(req.params.id, function (err) {
+    fs.unlink(req.params.imgPath, function (err) {
       if (err) {
         // if error has occurred, send server error status and message
         return res.status(500).json({ message: 'Server Error' });

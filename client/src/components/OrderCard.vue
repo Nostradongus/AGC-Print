@@ -1,20 +1,21 @@
 <template>
-  <div class="px-8 pt-8">
+  <div class="px-8 pt-3 pb-5">
     <div class="bg-light-blue rounded-xl p-4 mx-auto mb-0.5 h-30 cart-card">
       <div class="flex p-3">
-        <div class="my-auto pr-3 w-1/4">
+        <div class="my-auto pr-3 w-1/3">
           <span class="text-lg manrope-regular">Order #{{ order.id }}</span>
         </div>
         <div class="flex items-center pl-8 w-1/3">
           <!-- TODO: replace alt attribute with 'No Preview' asset image -->
           <img
-            :src="`http://localhost:5000/${order.img}`"
+            :src="`http://localhost:5000/order_images/${order.filename}`"
+            onerror="this.onerror=null;this.src='http://localhost:5000/assets/nopreview.png'"
             alt="Order Image"
             class="order-img"
             border="0"
           />
         </div>
-        <div class="w-1/4 flex flex-col justify-center items-center">
+        <div class="w-1/3 flex flex-col justify-center items-center">
           <div class="ml-3 space-y-1 pr-3">
             <div class="text-md manrope-regular">
               <span class="text-md manrope-bold"> Type:</span>
@@ -62,7 +63,7 @@
               {{ order.diecut }}
             </div>
             <div class="text-md manrope-regular">
-              <span class="text-md manrope-bold">Remarks:</span>
+              <span v-if="order.remarks !== ''" class="text-md manrope-bold">Remarks:</span>
               {{ order.remarks }}
             </div>
           </div>

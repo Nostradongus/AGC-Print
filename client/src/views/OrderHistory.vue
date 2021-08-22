@@ -4,13 +4,76 @@
     <page-header title="Order History">
       <!-- display all orders of user -->
       <div v-if="!state.empty" class="h-full w-full">
-        <OrderSetCard
-          v-for="order in state.orders"
-          :key="order.id"
-          :order="order"
-        />
+        <!-- message and status filter option box -->
+        <div class="flex items-end mb-5">
+          <div class="flex-1">
+            <!-- order sort message -->
+            <h1
+              class="
+                manrope-bold
+                left-0
+                -top-3.5
+                text-lg
+                pt-8
+                px-8
+                text-primary-blue
+              "
+            >Orders are sorted by most recent to least recent</h1
+            >
+          </div>
+          <div class="flex flex-row items-center mr-10">
+            <!-- status filter box label -->
+            <p
+              class="
+                manrope-bold
+                left-0
+                -top-3.5
+                text-lg
+                pt-8
+                px-3
+                text-primary-blue
+              "
+            >Filter Orders By Status: </p
+            >
+            <!-- status filter box -->
+            <select 
+              name="type"
+              id="type"
+              class="w-full md:w-60 md:h-1/2 dropdown-field mt-8"
+              v-model="state.status"
+              @change="onSelectStatus"
+            >
+              <option value="All">All</option>
+              <option value="Pending">Pending</option>
+              <option value="Waiting for Downpayment">Waiting for Downpayment</option>
+              <option value="Processing">Processing</option>
+              <option value="Ready for Delivery">Ready for Delivery</option>
+              <option value="Complete">Complete</option>
+            </select>
+          </div>
+        </div>
+        <p
+          class="
+            manrope-bold
+            left-0
+            -top-3.5
+            text-xl
+            pt-3
+            px-8
+            text-red
+          "
+          v-if="state.emptyStatus"
+        >No orders in "{{ state.status }}" status for now</p
+        >
+        <div class="overflow-y-auto max-h-screen scrollbar-hidden">
+          <OrderSetCard
+            v-for="order in state.orders"
+            :key="order.id"
+            :order="order"
+          />
+        </div>
       </div>
-      <div v-else>
+      <div v-if="state.empty">
         <div class="mx-8 mt-8 text-2xl relative">
           You currently don't have any orders.
         </div>
@@ -58,16 +121,21 @@ export default {
   },
   setup() {
     const store = useStore();
-    const state = reactive({
+    let state = reactive({
+      username: store.state.user.user.username,
       orders: null,
-      empty: true,
+      ordersBackup: null,
+      status: 'All',
+      emptyStatus: false,
+      empty: null,
     });
 
-    async function getUserOrders() {
+    async function getInitUserOrders() {
       try {
-        const data = store.state.user.user.username;
-        const result = await api.getUserOrderSets(data);
+        // get all user order sets at first 
+        const result = await api.getUserOrderSets(state.username);
         state.orders = result.data;
+        state.ordersBackup = result.data;
         if (state.orders.length !== 0) {
           state.empty = false;
         }
@@ -76,14 +144,43 @@ export default {
       }
     }
 
+    function onSelectStatus() {
+      if (state.status === 'All') {
+        state.orders = state.ordersBackup;
+        state.emptyStatus = false;
+      } else {
+        // new list of orders to display according to selected status filter 
+        const filteredOrders = [];
+
+        // get all orders according to selected status filter
+        for (let ctr = 0; ctr < state.ordersBackup.length; ctr++) {
+          if (state.ordersBackup[ctr].status === state.status) {
+            filteredOrders.push(state.ordersBackup[ctr]);
+          }
+        }
+
+        // set filtered orders list
+        state.orders = filteredOrders;
+
+        // if no orders on the list have the selected status
+        if (state.orders.length === 0) {
+          state.emptyStatus = true;
+        } else {
+          state.emptyStatus = false;
+        }
+      }
+    }
+
     onBeforeMount(() => {
       // populate user order history page with previous ('Completed') orders
       if (store.state.user.user != null) {
-        getUserOrders();
+        getInitUserOrders();
+      } else {
+        state.empty = false;
       }
     });
 
-    return { state, getUserOrders };
+    return { state, getInitUserOrders, onSelectStatus };
   },
 };
 </script>
@@ -132,5 +229,16 @@ export default {
 .manrope-extrabold {
   font-family: 'Manrope', sans-serif;
   font-weight: 800;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge add Firefox */
+.scrollbar-hidden {
+  -ms-overflow-style: none;
+  scrollbar-width: none; /* Firefox */
 }
 </style>

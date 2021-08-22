@@ -14,8 +14,14 @@ const paymentController = {
     try {
       // retrieve all payment receipts from the database
       const payments = await PaymentService.getAllPayments();
+
+      // if there are existing payment receipt data from the database
+      if (payments != null && payments.length != 0) {
+        return res.status(200).json(payments);
+      }
+
       // send the array of payments back to the client
-      return res.status(200).json(payments);
+      return res.status(404).json({ message: 'No Payment Data Found!' });
     } catch (err) {
       // if error has occurred, send server error status and message
       res.status(500).json({ message: 'Server Error' });
@@ -47,7 +53,7 @@ const paymentController = {
       );
 
       // if there are payment receipts uploaded from user, send data back to client
-      if (payments != null) {
+      if (payments != null && payments.length != 0) {
         return res.status(200).json(payments);
       }
 
@@ -74,20 +80,37 @@ const paymentController = {
       // generate new id for payment receipt
       const uniqueId = uniqid();
 
-      // get and rename uploaded image, and url path
-      const ext = req.file.filename.split('.');
-      const filename = `payment-${uniqueId}.${ext[1]}`;
-      const origFilePath = `./src/public/payment_images/${req.file.filename}`;
-      const newFilePath = `./src/public/payment_images/payment-${uniqueId}.${ext[1]}`;
+      // get and rename uploaded payment file, and url path
+      // image extensions
+      const imgExtensions = ['png', 'jpg', 'jpeg', 'svg'];
+
+      // get file extension and create filename format for uploaded payment file
+      const ext = req.file.filename.substring(
+        req.file.filename.indexOf('.') + 1
+      );
+      const filename = `payment-${uniqueId}.${ext}`;
+
+      // public subfolder directory where the payment file will be transferred and uploaded
+      let folder = 'payment_images';
+
+      // if uploaded payment file is not an image format
+      if (!imgExtensions.includes(ext)) {
+        // payment file shall be transferred and uploaded to the payment_docs public subfolder
+        folder = 'payment_docs';
+      }
+
+      // old path and new path
+      const origFilePath = `./src/public/${folder}/${req.file.filename}`;
+      const newFilePath = `./src/public/${folder}/${filename}`;
+
+      // rename uploaded report file
       fs.renameSync(origFilePath, newFilePath);
 
       // create new payment receipt object
       const payment = {
         id: uniqueId,
         orderSetId: req.body.orderSetId,
-        title: req.body.title,
-        user: req.user.username, // TODO: QAs, change this and revert it back once done with testing
-        description: req.body.description,
+        user: req.user.username,
         filename: filename,
         filePath: newFilePath,
         dateUploaded: formattedDate,

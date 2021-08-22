@@ -13,21 +13,10 @@ const PaymentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  // title of payment receipt
-  title: {
-    type: String,
-    required: true,
-  },
   // user who uploaded the payment receipt
   user: {
     type: String,
     required: true,
-  },
-  // description of the payment receipt
-  description: {
-    type: String,
-    required: false,
-    default: null,
   },
   // filename of the uploaded payment receipt
   filename: {
