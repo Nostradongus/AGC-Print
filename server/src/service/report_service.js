@@ -24,8 +24,8 @@ const ReportService = {
       type: report.type,
       user: report.user,
       description: report.description,
-      img: report.img,
-      imgPath: report.imgPath,
+      filename: report.filename,
+      filePath: report.filePath,
       status: report.status,
       dateRequested: report.dateRequested,
     });
