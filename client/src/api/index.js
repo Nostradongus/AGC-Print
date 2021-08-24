@@ -21,9 +21,11 @@ export const getAllOrderSets = () => API.get('/order');
 export const getUserOrderSets = (username) => API.get(`/order/${username}`);
 export const getUserOrderSetsFiltered = (username, status) =>
   API.get(`/order/${username}/filter/${status}`);
-export const getUserCurrentOrderSets = (username) => API.get(`/order/${username}/current`);
+export const getUserCurrentOrderSets = (username) =>
+  API.get(`/order/${username}/current`);
 export const getAllActiveOrderSets = () => API.get(`/order/orders/active`);
-export const getAllOrderSetsFiltered = (status) => API.get(`/order/orders/filter/${status}`);
+export const getAllOrderSetsFiltered = (status) =>
+  API.get(`/order/orders/filter/${status}`);
 export const getOrder = (id) => API.get(`/order/details/${id}`);
 export const getOrderSet = (id) => API.get(`/order/details/orderSet/${id}`);
 export const deleteFromCart = (imgPath) =>
@@ -39,6 +41,8 @@ export const updateOrderSetStatus = (id, status) =>
 // user data api methods
 export const getUsers = () => API.get('/users');
 export const getUser = (username) => API.get(`/users/${username}`);
+export const patchUser = (username, data) =>
+  API.patch(`/users/${username}`, data);
 
 // report data api methods
 export const getAllReports = () => API.get('/report');

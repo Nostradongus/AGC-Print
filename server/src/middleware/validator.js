@@ -56,6 +56,14 @@ const validator = {
 
     return validation;
   },
+
+  validateUserProfileUpdate: () => {
+    const validation = [
+      check('email').isEmail().withMessage('Please input a valid email.'),
+    ];
+
+    return validation;
+  },
 };
 
 export default validator;

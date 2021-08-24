@@ -103,7 +103,7 @@
           duration-500
           ease-in-out
         "
-        to="/profile"
+        :to="`/profile/${state.username}`"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -201,6 +201,7 @@ export default {
     const router = useRouter();
     const store = useStore();
     const state = reactive({
+      username: store.state.user.user.username,
       error: false,
     });
 

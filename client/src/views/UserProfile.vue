@@ -4,60 +4,65 @@
     <page-header title="Profile">
       <div class="p-8 flex">
         <div class="img-container">
-          <img src="../assets/logo.png" alt="">
+          <img src="../assets/logo.png" alt="" />
         </div>
         <div class="ml-6">
-          <h1 class="manrope-bold
-                text-5xl
-                text-primary-blue" id="fullname">Full Name</h1>
-          <br/>
-          <h1 class="manrope-regular text-3xl text-light-gray" id="role">Client</h1>
+          <h1 class="manrope-bold text-5xl text-primary-blue" id="fullname">
+            {{ state.name }}
+          </h1>
+          <br />
+          <h1 class="manrope-regular text-3xl text-light-gray" id="role">
+            Client
+          </h1>
           <router-link
-          class="
-            manrope-regular
-            text-primary-blue
-            text-xl
-            inline-block
-            transition
-            duration-300
-            ease-in-out
-            text-center text-md
-            hover:bg-primary-blue hover:text-white
-            py-3
-            px-12
-            mt-20
-            rounded-3xl
-            bg-light-blue
-          "
-          to="/edit-profile"
-          >Edit Profile</router-link
-        >
+            class="
+              manrope-regular
+              text-primary-blue text-xl
+              inline-block
+              transition
+              duration-300
+              ease-in-out
+              text-center text-md
+              hover:bg-primary-blue hover:text-white
+              py-3
+              px-12
+              mt-20
+              rounded-3xl
+              bg-light-blue
+            "
+            :to="`/edit-profile/${state.username}`"
+            >Edit Profile</router-link
+          >
         </div>
-        
       </div>
       <div class="px-8">
         <div id="accountinformation">
           <h1 class="manrope-regular text-2xl">Account Information</h1>
-          <hr class="border-3">
+          <hr class="border-3" />
           <div class="p-4 flex">
             <h1 class="manrope-regular text-xl w-64">Username</h1>
-            <h1 class="manrope-regular text-xl" id="username">username</h1>
+            <h1 class="manrope-regular text-xl" id="username">
+              {{ state.username }}
+            </h1>
           </div>
           <div class="p-4 flex">
             <h1 class="manrope-regular text-xl w-64">E-mail</h1>
-            <h1 class="manrope-regular text-xl" id="email">user@sample.com</h1>
+            <h1 class="manrope-regular text-xl" id="email">
+              {{ state.email }}
+            </h1>
           </div>
         </div>
         <div id="accountinformation">
           <h1 class="manrope-regular text-2xl">Contact Details</h1>
-          <hr class="border-3">
+          <hr class="border-3" />
           <div class="p-4 flex">
             <h1 class="manrope-regular text-xl w-64">Contact Number</h1>
-            <h1 class="manrope-regular text-xl" id="contactno">+639171111111</h1>
+            <h1 class="manrope-regular text-xl" id="contactno">
+              +{{ state.contact }}
+            </h1>
           </div>
-        </div>     
+        </div>
       </div>
-      
     </page-header>
   </div>
 </template>
@@ -65,15 +70,42 @@
 <script>
 import SideBar from '../components/SideBar.vue';
 import PageHeader from '../components/PageHeader.vue';
-export default({
+import { onMounted, reactive } from 'vue';
+import { useStore } from 'vuex';
+import * as api from '../api';
+
+export default {
   name: 'UserProfile',
   components: {
     SideBar,
     PageHeader,
-  }
-})
-</script>
+  },
+  setup() {
+    const store = useStore();
+    const state = reactive({
+      username: store.state.user.user.username,
+      email: store.state.user.user.email,
+      name: `${store.state.user.user.firstname} ${store.state.user.user.lastname}`,
+      contact: '',
+    });
 
+    onMounted(() => {
+      getContactNumber();
+    });
+
+    async function getContactNumber() {
+      try {
+        const result = await api.getUser(state.username);
+        state.contact = result.data.contactNo;
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+    return { state };
+  },
+};
+</script>
 
 <style>
 .header {

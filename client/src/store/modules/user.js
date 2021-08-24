@@ -11,7 +11,7 @@ export default {
     },
     LOGIN_USER(state, payload) {
       state.user = payload.data;
-      localStorage.setItem('user', JSON.stringify({...state.user}));
+      localStorage.setItem('user', JSON.stringify({ ...state.user }));
       state.token = payload.accessToken;
       localStorage.setItem('token', state.token);
     },
@@ -19,6 +19,12 @@ export default {
       localStorage.removeItem('user');
       localStorage.removeItem('token');
       localStorage.removeItem('order');
+    },
+    UPDATE_USER(state, payload) {
+      if (payload.email !== '') {
+        state.user.email = payload.email;
+      }
+      localStorage.setItem('user', JSON.stringify({ ...state.user }));
     },
   },
   actions: {
@@ -30,6 +36,9 @@ export default {
     },
     initState({ commit }) {
       commit('INIT_STATE');
+    },
+    updateUser({ commit }, data) {
+      commit('UPDATE_USER', data);
     },
   },
 };

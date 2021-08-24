@@ -48,7 +48,7 @@ const routes = [
     },
   },
   {
-    path: '/profile',
+    path: '/profile/:username',
     name: 'UserProfile',
     component: UserProfile,
     meta: {
@@ -56,7 +56,7 @@ const routes = [
     },
   },
   {
-    path: '/edit-profile',
+    path: '/edit-profile/:username',
     name: 'EditProfile',
     component: EditProfile,
     meta: {
