@@ -55,7 +55,7 @@
             <option value="placeholder" disabled selected hidden>
               Select one
             </option>
-            <option value="Damage Product">Damage Product</option>
+            <option value="Damaged Product">Damaged Product</option>
             <option value="Print Quality">Bad Print Quality</option>
             <option value="Wrong Item">Wrong Item / Product</option>
             <option value="Scratches">Scratches on the Print</option>

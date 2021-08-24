@@ -11,6 +11,7 @@ module.exports = {
       'light-gray': '#c4c4c4',
       'light-blue': '#e7edf2',
       'link-water': '#c0ccdc',
+      'dark-red': '#7d0000',
       white: '#ffffff',
       red: '#ff0000',
     },

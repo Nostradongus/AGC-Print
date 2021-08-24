@@ -10,7 +10,7 @@
         />
       </div>
       <div v-else>
-        <div class="mx-8 mt-8 text-2xl relative">
+        <div class="mx-8 mt-8 text-2xl relative manrope-bold">
           You currently don't have any orders.
         </div>
       </div>

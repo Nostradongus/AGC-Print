@@ -154,7 +154,7 @@
         </div>
         <div class="relative mt-6">
           <div class="flex flex-row items-center justify-center">
-            <p class="absolute left-14 text-lg">+63</p>
+            <p class="absolute left-14 text-lg manrope-regular">+63</p>
             <input
               id="contactno"
               name="contactNo"

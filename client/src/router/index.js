@@ -11,6 +11,8 @@ import OrderConfirmed from '../views/OrderConfirmed.vue';
 import ActiveOrders from '../views/ActiveOrders.vue';
 import Payment from '../views/Payment.vue';
 import ReportOrder from '../views/ReportOrder.vue';
+import UserProfile from '../views/UserProfile.vue';
+import EditProfile from '../views/EditProfile.vue';
 
 const routes = [
   {
@@ -41,6 +43,22 @@ const routes = [
     path: '/view-cart',
     name: 'ViewCart',
     component: ViewCart,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/profile',
+    name: 'UserProfile',
+    component: UserProfile,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/edit-profile',
+    name: 'EditProfile',
+    component: EditProfile,
     meta: {
       requiresAuth: true,
     },
