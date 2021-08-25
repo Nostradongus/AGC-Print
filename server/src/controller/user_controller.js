@@ -2,6 +2,7 @@
 import { validationResult } from 'express-validator';
 import logger from '../logger/index.js';
 import UserService from '../service/user_service.js';
+import bcrypt from 'bcrypt';
 
 // user controller object containing all user controller methods
 const userController = {
@@ -55,17 +56,47 @@ const userController = {
 
   updateUser: async (req, res) => {
     const validationError = validationResult(req);
+    const errors = {};
 
     if (validationError.isEmpty()) {
       try {
-        const emailData = await UserService.getUser({ email: req.body.email });
+        const userData = await UserService.getUser({
+          username: req.body.username,
+        });
 
-        if (emailData != null) {
+        const comparePass = await bcrypt.compare(
+          req.body.password,
+          userData.password
+        );
+
+        if (userData.email === req.body.email) {
           const details = {
-            error: 'E-mail Already Exists!',
-            emailError: true,
+            errorMsg: 'E-mail Already Exists!',
+            error: true,
           };
-          return res.status(400).json(details);
+          errors.emailError = details;
+          // return res.status(400).json(details);
+        }
+
+        if (userData.contactNo === req.body.contactNo) {
+          const details = {
+            errorMsg: 'Please enter a new contact number',
+            error: true,
+          };
+          errors.contactError = details;
+          // return res.status(400).json(details);
+        }
+
+        if (comparePass) {
+          const details = {
+            errorMsg: 'Please enter a new password',
+            error: true,
+          };
+          errors.passwordError = details;
+        }
+
+        if (Object.entries(errors).length != 0) {
+          return res.status(400).json(errors);
         }
 
         await UserService.updateUser(req);
