@@ -59,7 +59,9 @@
       >
 
       <!-- display all recently placed orders of user -->
-      <OrderCard v-for="order in state.orders" :key="order.id" :order="order"/>
+      <div class="overflow-y-auto max-h-screen scrollbar-hidden pt-2 pb-2">
+        <OrderCard v-for="order in state.orders" :key="order.id" :order="order"/>
+      </div>
       
       <!-- go back button -->
       <router-link
@@ -169,5 +171,16 @@ export default {
 .manrope-extrabold {
   font-family: 'Manrope', sans-serif;
   font-weight: 800;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge add Firefox */
+.scrollbar-hidden {
+  -ms-overflow-style: none;
+  scrollbar-width: none; /* Firefox */
 }
 </style>
