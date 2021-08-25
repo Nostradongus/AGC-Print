@@ -36,13 +36,21 @@
                 class="manrope-regular login-text-field"
                 :placeholder="state.email"
                 v-model="formData.email"
-                :class="{ 'text-field-error': v.email.$error }"
+                :class="{
+                  'text-field-error': v.email.$error || state.emailError,
+                }"
               />
               <p
                 class="text-red manrope-bold text-left text-sm"
                 v-if="v.email.$error"
               >
                 {{ v.email.$errors[0].$message }}
+              </p>
+              <p
+                class="text-red manrope-bold text-left text-sm"
+                v-else-if="state.emailError"
+              >
+                Email Already Exists!
               </p>
             </div>
           </div>
@@ -183,6 +191,7 @@ export default {
       email: store.state.user.user.email,
       name: `${store.state.user.user.firstname} ${store.state.user.user.lastname}`,
       contact: '',
+      emailError: false,
     });
 
     const formData = reactive({
@@ -244,7 +253,12 @@ export default {
           router.push(`/profile/${state.username}`);
         }
       } catch (err) {
-        console.log(err);
+        if (err.response != null) {
+          console.log(err);
+          state.emailError = err.response.data.emailError;
+        } else {
+          console.log(err);
+        }
       }
     }
 

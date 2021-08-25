@@ -58,6 +58,16 @@ const userController = {
 
     if (validationError.isEmpty()) {
       try {
+        const emailData = await UserService.getUser({ email: req.body.email });
+
+        if (emailData != null) {
+          const details = {
+            error: 'E-mail Already Exists!',
+            emailError: true,
+          };
+          return res.status(400).json(details);
+        }
+
         await UserService.updateUser(req);
         // Note status 204 does not return any response body
         return res.status(204).send();
