@@ -36,7 +36,7 @@
           type="number"
           class="manrope-regular input-text-field w-48"
           :class="{ 'border-red': v.width.$error }"
-          min="1"
+          step="0.01"
           v-model="state.width"
         />
         <label
@@ -58,7 +58,7 @@
           type="number"
           class="manrope-regular input-text-field w-48"
           :class="{ 'border-red': v.height.$error }"
-          min="1"
+          step="0.01"
           v-model="state.height"
         />
         <label
@@ -178,6 +178,7 @@ import useVuelidate from '@vuelidate/core';
 import {
   required,
   numeric,
+  minValue,
 } from '@vuelidate/validators';
 import * as api from '../../api';
 
@@ -202,8 +203,8 @@ export default {
 
     const rules = {
       quantity: {required, numeric},
-      width: {required, numeric},
-      height: {required, numeric},
+      width: {required, numeric, minValue: minValue(0.5)},
+      height: {required, numeric, minValue: minValue(0.5)},
     };
 
     const v = useVuelidate(rules,state);

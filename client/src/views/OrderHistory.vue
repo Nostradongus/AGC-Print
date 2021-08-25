@@ -49,6 +49,7 @@
               <option value="Processing">Processing</option>
               <option value="Ready for Delivery">Ready for Delivery</option>
               <option value="Complete">Complete</option>
+              <option value="Cancelled">Cancelled</option>
             </select>
           </div>
         </div>
@@ -138,9 +139,14 @@ export default {
         state.ordersBackup = result.data;
         if (state.orders.length !== 0) {
           state.empty = false;
+        } else {
+          state.empty = true;
         }
       } catch (err) {
         console.log(err.response.data);
+
+        // since no order sets, indicate as empty
+        state.empty = true;
       }
     }
 

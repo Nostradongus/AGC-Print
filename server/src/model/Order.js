@@ -13,6 +13,11 @@ const OrderSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  // status of the specific order (Pending, Processing, Completed, Cancelled)
+  status: {
+    type: String,
+    default: 'Pending',
+  },
   // user who made the order
   user: {
     type: String,

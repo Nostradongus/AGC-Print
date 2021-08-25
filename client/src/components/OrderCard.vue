@@ -75,10 +75,16 @@
           <p>{{ order.quantity }}</p>
         </div>
         <div
-          v-if="order.price == -1"
+          v-if="order.price === -1"
           class="w-1/6 flex justify-center text-center items-center"
         >
           Pending Price
+        </div>
+        <div
+          v-else
+          class="w-1/6 flex justify-center text-center items-center"
+        >
+          ₱ {{ order.price }}
         </div>
       </div>
     </div>

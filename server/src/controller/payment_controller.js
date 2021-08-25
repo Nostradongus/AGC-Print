@@ -67,6 +67,28 @@ const paymentController = {
     }
   },
 
+  // payment receipt controller method to retrieve and return all payment receipts for an order set
+  getOrderSetIdPayments: async (req, res) => {
+    try {
+      const payments = await PaymentService.getOrderSetIdPayments(
+        req.params.orderSetId
+      );
+
+      // if there are payment receipts uploaded from user, send data back to client
+      if (payments != null && payments.length != 0) {
+        return res.status(200).json(payments);
+      }
+
+      // if no payment receipts uploaded yet from user, send message
+      return res
+        .status(404)
+        .json({ message: 'No payment receipts uploaded from user yet!' });
+    } catch (err) {
+      // if error has occurred, send server error status and message
+      res.status(500).json({ message: 'Server Error' });
+    }
+  },
+
   // payment receipt controller method to add a new payment receipt to the database
   addPayment: async (req, res) => {
     try {
@@ -126,7 +148,20 @@ const paymentController = {
       res.status(500).json({ message: 'Server Error' });
     }
   },
-
+  // payment receipt controller method to update a payment's payment account from the database
+  updatePaymentAcc: async (req, res) => {
+    try {
+      const result = await PaymentService.updatePaymentAcc({
+        id: req.params.id,
+        paymentAcc: req.body.paymentAcc,
+      });
+      // send result back to the client to indicate success
+      res.status(204).json(result);
+    } catch (err) {
+      // if error has occurred, send server error status and message
+      res.status(500).json({ message: 'Server Error' });
+    }
+  },
   // payment receipt controller method to delete a payment receipt from the database
   deletePayment: async (req, res) => {
     try {

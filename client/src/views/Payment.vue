@@ -44,23 +44,29 @@
               <div class="grid grid-cols-2">
                 <div>
                   <p class="text-lg manrope-regular">
-                    Order Number: {{ state.order.userOrderNum }}
+                    Order Number: {{ state.order.id }}
                   </p>
                   <p class="text-lg manrope-regular">
-                    Total Project Cost: PHP 1000.00
+                    Total Project Cost: ₱ {{ state.order.price }}
                   </p>
                 </div>
                 <div>
-                  <p class="text-lg manrope-regular">Downpayment: N/A</p>
+                  <!-- TODO: to be updated -->
+                  <p v-if="!state.order.paidDownPayment" class="text-lg manrope-regular">
+                    Downpayment: ₱ {{ state.downPayment }}
+                  </p>
+                  <p v-else class="text-lg manrope-regular">
+                    Downpayment: Already Paid
+                  </p>
                   <p class="text-lg manrope-regular">
-                    Remaning Balance: PHP 500.00
+                    Remaining Balance: To Be Updated
                   </p>
                 </div>
               </div>
             </div>
           </div>
           <div class="p-4">
-            <p class="manrope-bold text-md mb-3">Upload Payment Slip Here:</p>
+            <p class="manrope-bold text-md mb-3">Upload Payment Receipt Here:</p>
             <input
               id="payment-file"
               name="payment-file"
@@ -95,23 +101,13 @@
             </p>
           </div>
         </div>
-        <div>
-          <div class="bg-light-blue rounded-xl p-4 mx-auto mb-2 h-30">
-            <div class="flex justify-center">
-              <div class="flex-auto">
-                <p class="text-lg manrope-regular">02/01/2021</p>
-              </div>
-              <div class="flex-auto">
-                <p class="text-lg manrope-regular">OR#123456789</p>
-              </div>
-              <div class="flex-auto">
-                <p class="text-lg manrope-regular">BDO</p>
-              </div>
-              <div class="flex-auto">
-                <p class="text-lg manrope-regular">PHP500.00</p>
-              </div>
-            </div>
-          </div>
+        <div class="overflow-y-auto h-80 pt-2 pb-2">
+          <!-- list of submitted payments by user -->
+          <payment-card
+            v-for="payment in state.payment"
+            :key="payment.id"
+            :payment="payment"
+          />
         </div>
         <div class="flex items-end mt-8">
           <div class="flex-1">
@@ -157,7 +153,7 @@
             >
           </div>
         </div>
-        <div class="flex items-end mt-1">
+        <div class="flex items-end mt-1 mb-5">
           <div class="flex-1" />
           <p
             v-if="state.paymentSubmitted"
@@ -174,6 +170,7 @@
 <script>
 import SideBar from '../components/SideBar.vue';
 import PageHeader from '../components/PageHeader.vue';
+import PaymentCard from '../components/PaymentCard.vue';
 
 import { ref, reactive, onMounted, onBeforeMount } from 'vue';
 import { useStore } from 'vuex';
@@ -185,26 +182,43 @@ export default {
   components: {
     SideBar,
     PageHeader,
+    PaymentCard,
   },
   setup() {
     let file = ref(null);
     const route = useRoute();
     let state = reactive({
       order: null,
+      payment: null,
       fileValidation: null,
       fileTypeValidation: null,
       paymentSubmitted: false,
       paymentFile: null,
+      curDate: null,
+      downPayment: null,
     });
 
     onMounted(() => {
       getOrderDetails();
+      getOrderPayments();
     });
 
     async function getOrderDetails() {
       try {
         const res = await api.getOrderSet(route.params.id);
         state.order = res.data;
+
+        // calculate down payment value
+        state.downPayment = state.order.price * 0.50;
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+    async function getOrderPayments() {
+      try {
+        const res = await api.getOrderSetIdPayments(route.params.id);
+        state.payment = res.data;
       } catch (err) {
         console.log(err);
       }
@@ -252,6 +266,10 @@ export default {
         if (res.data != null && typeof res.data !== 'undefined') {
           // set indicator that user payment receipt was submitted successfully
           state.paymentSubmitted = true;
+
+          // update payment list of order set
+          const payments = await api.getOrderSetIdPayments(route.params.id);
+          state.payment = payments.data;
 
           // reset fields
           state.fileValidation = null;

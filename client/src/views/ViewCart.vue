@@ -2,19 +2,21 @@
   <div v-if="state.orders">
     <side-bar />
     <page-header title="Cart">
-      <div v-if="state.orders.length !== 0">
-        <cart-item
-          v-for="order in state.orders"
-          :key="order.id"
-          :order="order"
-        />
-      </div>
-      <div v-else>
-        <div class="mx-8 mt-8 text-2xl relative">
-          You currently don't have any orders.
+      <div class="overflow-y-auto max-h-screen scrollbar-hidden pt-2 pb-2">
+        <div v-if="state.orders.length !== 0">
+          <cart-item
+            v-for="order in state.orders"
+            :key="order.id"
+            :order="order"
+          />
+        </div>
+        <div v-else>
+          <div class="mx-8 mt-8 text-2xl relative">
+            You currently don't have any orders.
+          </div>
         </div>
       </div>
-      <div class="flex justify-end px-8 pt-8">
+      <div class="flex justify-end px-8 pt-1">
         <router-link
           class="
             manrope-regular
@@ -33,7 +35,7 @@
             bg-light-blue
           "
           to="/order"
-          >Add item</router-link
+          >Add Order</router-link
         >
         <router-link
           v-if="state.orders.length !== 0"
@@ -154,5 +156,16 @@ export default {
 .manrope-extrabold {
   font-family: 'Manrope', sans-serif;
   font-weight: 800;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge add Firefox */
+.scrollbar-hidden {
+  -ms-overflow-style: none;
+  scrollbar-width: none; /* Firefox */
 }
 </style>

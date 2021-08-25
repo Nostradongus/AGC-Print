@@ -7,7 +7,7 @@
         <div class="flex">
           <div class="flex-1">
             <span class="text-lg manrope-bold">Order #: </span>
-            <span class="text-lg manrope-regular">{{ state.order.userOrderNum }}</span>
+            <span class="text-lg manrope-regular">{{ state.order.id }}</span>
 
             <br />
 
@@ -43,12 +43,12 @@
 
             <span class="text-lg manrope-bold">Total Price: </span>
             <span
-              v-if="state.order.totalPrice != null"
+              v-if="state.order.price !== -1"
               class="text-lg manrope-regular"
-              >{{ state.order.totalPrice }}</span
+              >₱ {{ state.order.price }}</span
             >
             <span
-              v-else-if="state.order.totalPrice == null"
+              v-else-if="state.order.price === -1"
               class="text-lg manrope-regular"
               >Pending Total Price</span
             >
@@ -58,7 +58,7 @@
         </div>
 
         <order-card
-          v-for="order in state.order.orders"
+          v-for="order in state.orders"
           :key="order.id"
           :order="order"
         />
@@ -86,9 +86,9 @@
             >Back</router-link
           >
         </div>
-        <div>
+        <div v-if="state.order">
           <router-link
-            v-if="state.totalPrice !== -1"
+            v-if="state.order.status === 'Complete' && state.order.reported != true"
             class="
               manrope-regular
               text-white
@@ -107,7 +107,7 @@
             >Report Order</router-link
           >
           <router-link
-            v-if="state.totalPrice !== -1"
+            v-if="state.order.price !== -1 && state.order.status !== 'Complete' && state.order.status !== 'Pending'"
             class="
               manrope-regular
               text-white
@@ -150,6 +150,7 @@ export default {
     const store = useStore();
     const state = reactive({
       order: null,
+      orders: null,
     });
 
     onMounted(() => {
@@ -159,8 +160,13 @@ export default {
 
     async function loadOrder() {
       try {
-        const res = await api.getOrderSet(route.params.id);
-        state.order = res.data;
+        // get order set
+        const orderSet = await api.getOrderSet(route.params.id);
+        state.order = orderSet.data;
+
+        // get orders of order set
+        const orders = await api.getOrdersFromOrderSet(route.params.id);
+        state.orders = orders.data;
       } catch (err) {
         console.log(err);
       }

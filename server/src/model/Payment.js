@@ -13,6 +13,12 @@ const PaymentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  // name of the bank used by the client to pay
+  paymentAcc: {
+    type: String,
+    default: null,
+    required: false,
+  },
   // user who uploaded the payment receipt
   user: {
     type: String,
@@ -34,6 +40,23 @@ const PaymentSchema = new mongoose.Schema({
   dateUploaded: {
     type: String,
     required: true,
+  },
+  // amount shown by the receipt; updated by staff
+  amount: {
+    type: Number,
+    default: -1,
+    required: false,
+  },
+  // indicator if payment is already confirmed by staff
+  confirmed: {
+    type: Boolean,
+    default: false,
+    required: false,
+  },
+  // when the payment receipt file was created in the database
+  timestamp: {
+    type: Date,
+    default: Date.now(),
   },
 });
 
