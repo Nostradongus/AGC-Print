@@ -90,6 +90,7 @@ import PageHeader from '../components/PageHeader.vue';
 import OrderCard from '../components/OrderCard.vue';
 import { reactive, onMounted, onBeforeMount } from 'vue';
 import { useStore } from 'vuex';
+import * as api from '../api/index.js';
 
 export default {
   name: 'OrderConfirmed',

@@ -41,6 +41,18 @@ const PaymentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  // date when the payment was received and confirmed by the staff
+  dateConfirmed: {
+    type: String,
+    default: null,
+    required: false,
+  },
+  // reference number given by account
+  refNumber: {
+    type: Number,
+    default: null,
+    required: false,
+  },
   // amount shown by the receipt; updated by staff
   amount: {
     type: Number,

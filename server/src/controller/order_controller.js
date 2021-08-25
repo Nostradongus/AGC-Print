@@ -195,6 +195,7 @@ const orderController = {
         id: uniqueId,
         user: req.user.username,
         userOrderNum: orderNum.toString(),
+        orders: req.body.orders,
         name: req.body.name,
         email: req.body.email,
         address: req.body.address,

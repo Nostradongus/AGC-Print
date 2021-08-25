@@ -19,6 +19,12 @@ const OrderSetSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  // list of orders in the order set
+  orders: {
+    type: Array,
+    default: [],
+    required: true,
+  },
   // name of customer
   name: {
     type: String,

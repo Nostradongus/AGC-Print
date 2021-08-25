@@ -101,7 +101,7 @@
             </p>
           </div>
         </div>
-        <div class="overflow-y-auto h-80 pt-2 pb-2">
+        <div class="overflow-y-auto max-h-80 pt-2 pb-2">
           <!-- list of submitted payments by user -->
           <payment-card
             v-for="payment in state.payment"

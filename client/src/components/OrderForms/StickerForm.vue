@@ -19,7 +19,7 @@
       <label
         for="quantity"
         class="absolute manrope-regular left-0 -top-3.5 text-gray-600 text-md"
-        >Quantity</label
+        >Quantity (Minimum: 100 pcs.)</label
       >
       <p
         v-if="v.quantity.$error"
@@ -202,7 +202,7 @@ export default {
     });
 
     const rules = {
-      quantity: {required, numeric},
+      quantity: {required, numeric, minValue: minValue(100)},
       width: {required, numeric, minValue: minValue(0.5)},
       height: {required, numeric, minValue: minValue(0.5)},
     };

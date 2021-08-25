@@ -1,20 +1,20 @@
 <template>
     <div class="bg-light-blue rounded-xl p-4 mx-auto mb-2 h-30 payment-card">
         <div class="flex justify-center">
-            <div class="flex-auto">
+            <div v-if="!payment.confirmed" class="flex-auto">
                 <p class="text-lg manrope-regular">{{ payment.dateUploaded }}</p>
             </div>
+            <div v-if="!payment.confirmed" class="flex-auto">
+                <p class="text-lg manrope-regular">Payment Pending Verification</p>
+            </div>
             <div v-if="payment.confirmed" class="flex-auto">
-                <p class="text-lg manrope-regular">OR#{{ payment.id }}</p>
+                <p class="text-lg manrope-regular">Ref #{{ payment.refNumber }}</p>
             </div>
             <div v-if="payment.confirmed" class="flex-auto">
                 <p class="text-lg manrope-regular">{{ payment.paymentAcc }}</p>
             </div>
             <div v-if="payment.confirmed" class="flex-auto">
                 <p class="text-lg manrope-regular">₱ {{ payment.amount }}</p>
-            </div>
-            <div v-if="!payment.confirmed" class="flex-auto">
-                <p class="text-lg manrope-regular">Payment Pending Verification</p>
             </div>
         </div>
     </div>
