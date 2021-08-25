@@ -213,7 +213,7 @@ const orderController = {
       );
 
       // send order data back to the client to indicate success
-      return res.status(200).json(orderSet);
+      return res.status(200).json(newOrderSet);
     } catch (err) {
       // if error has occurred, send server error status and message
       res.status(500).json({ message: 'Server Error' });
