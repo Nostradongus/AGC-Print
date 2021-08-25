@@ -57,11 +57,13 @@
           </div>
         </div>
 
-        <order-card
-          v-for="order in state.orders"
-          :key="order.id"
-          :order="order"
-        />
+        <div class="overflow-y-auto max-h-96 pt-2 pb-2 mt-5">
+          <order-card
+            v-for="order in state.orders"
+            :key="order.id"
+            :order="order"
+          />
+        </div>
       </div>
 
       <div class="flex mb-8">
@@ -226,5 +228,16 @@ export default {
 .manrope-extrabold {
   font-family: 'Manrope', sans-serif;
   font-weight: 800;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge add Firefox */
+.scrollbar-hidden {
+  -ms-overflow-style: none;
+  scrollbar-width: none; /* Firefox */
 }
 </style>

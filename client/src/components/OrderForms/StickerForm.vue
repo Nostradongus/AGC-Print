@@ -37,6 +37,7 @@
           class="manrope-regular input-text-field w-48"
           :class="{ 'border-red': v.width.$error }"
           step="0.01"
+          @change="onChangeHeightWidth"
           v-model="state.width"
         />
         <label
@@ -59,6 +60,7 @@
           class="manrope-regular input-text-field w-48"
           :class="{ 'border-red': v.height.$error }"
           step="0.01"
+          @change="onChangeHeightWidth"
           v-model="state.height"
         />
         <label
@@ -73,6 +75,13 @@
           {{ v.height.$errors[0].$message }}
         </p>
       </div>
+    </div>
+    <div v-if="!state.dimValidation" class="relative mt-2">
+      <p
+        class="text-red manrope-bold text-left text-sm"
+      >
+        Width and height cannot be both 64 inches!
+      </p>
     </div>
     <div class="flex justify-start">
       <div class="relative mt-20">
@@ -199,6 +208,7 @@ export default {
       fileValidation: null,
       fileTypeValidation: null,
       diecutValidation: null,
+      dimValidation: true,
     });
 
     const rules = {
@@ -208,6 +218,15 @@ export default {
     };
 
     const v = useVuelidate(rules,state);
+
+    function onChangeHeightWidth() {
+      // check if height and width are both 64 inches
+      if (parseInt(state.width) === 64 && parseInt(state.height) === 64) {
+        state.dimValidation = false;
+      } else {
+        state.dimValidation = true;
+      }
+    }
 
     function onSelectFile() {
       state.fileValidation = file.value.files.length == 0 ? false : true;
@@ -242,7 +261,7 @@ export default {
         state.diecutValidation = false;
       }
 
-      if(validated && state.fileValidation && state.fileTypeValidation && state.diecutValidation){
+      if(validated && state.fileValidation && state.fileTypeValidation && state.diecutValidation && state.dimValidation) {
         // create FormData to store order data
         const formData = new FormData();
         formData.append('quantity', state.quantity);
@@ -265,7 +284,7 @@ export default {
       }
     }
 
-    return { file, state, onSelectFile, onSelectDiecut, addToCart, v };
+    return { file, state, onSelectFile, onSelectDiecut, onChangeHeightWidth, addToCart, v };
   },
 };
 </script>
