@@ -195,7 +195,6 @@ const orderController = {
         id: uniqueId,
         user: req.user.username,
         userOrderNum: orderNum.toString(),
-        orders: req.body.orders,
         name: req.body.name,
         email: req.body.email,
         address: req.body.address,
@@ -214,7 +213,7 @@ const orderController = {
       );
 
       // send order data back to the client to indicate success
-      return res.status(200).json(newOrderSet);
+      return res.status(200).json(orderSet);
     } catch (err) {
       // if error has occurred, send server error status and message
       res.status(500).json({ message: 'Server Error' });

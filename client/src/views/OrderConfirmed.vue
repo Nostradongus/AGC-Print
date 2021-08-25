@@ -108,7 +108,7 @@ export default {
 
     async function getPlacedOrders() {
       // get recently placed orders
-      state.orders = store.state.order.orderSet.orders;
+      state.orders = store.state.order.orders;
 
       // get delivery information details from order set
       state.orderSet = store.state.order.orderSet;
