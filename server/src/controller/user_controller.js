@@ -56,7 +56,7 @@ const userController = {
   updateUser: async (req, res) => {
     const validationError = validationResult(req);
 
-    if (!validationError.isEmpty()) {
+    if (validationError.isEmpty()) {
       try {
         await UserService.updateUser(req);
         // Note status 204 does not return any response body
