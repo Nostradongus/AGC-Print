@@ -142,7 +142,7 @@
             </div>
           </div>
         </div>
-        <div class="flex mt-6">
+        <div class="flex mt-6 mb-6">
           <router-link
             class="
               manrope-regular

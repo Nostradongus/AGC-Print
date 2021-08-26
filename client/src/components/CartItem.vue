@@ -2,7 +2,7 @@
   <div class="px-8 pt-3 pb-5">
     <div class="bg-light-blue rounded-xl p-4 mx-auto mb-0.5 h-30 cart-card">
       <div class="flex p-3">
-        <div class="flex items-center w-1/5">
+        <div class="flex items-center w-1/5 h-1/5">
           <img
             :src="`http://localhost:5000/order_images/${order.filename}`"
             onerror="this.onerror=null;this.src='http://localhost:5000/assets/nopreview.png'"
