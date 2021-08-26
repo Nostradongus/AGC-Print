@@ -36,7 +36,7 @@
           type="number"
           class="manrope-regular input-text-field w-48"
           :class="{ 'border-red': v.width.$error }"
-          min="1"
+          @change="onChangeHeightWidth"
           v-model="state.width"
         />
         <label
@@ -58,7 +58,7 @@
           type="number"
           class="manrope-regular input-text-field w-48"
           :class="{ 'border-red': v.height.$error }"
-          min="1"
+          @change="onChangeHeightWidth"
           v-model="state.height"
         />
         <label
@@ -73,6 +73,13 @@
           {{ v.height.$errors[0].$message }}
         </p>
       </div>
+    </div>
+    <div v-if="!state.dimValidation" class="relative mt-2">
+      <p
+        class="text-red manrope-bold text-left text-sm"
+      >
+        Width and height cannot be both 64 inches!
+      </p>
     </div>
     <div class="relative mt-12">
       <input
@@ -171,6 +178,8 @@ import useVuelidate from '@vuelidate/core';
 import {
   required,
   numeric,
+  minValue,
+  maxValue
 } from '@vuelidate/validators';
 import * as api from '../../api';
 
@@ -189,16 +198,26 @@ export default {
       imageFile: null,
       remarks: '',
       fileValidation: null,
+      dimValidation: true,
     });
 
     const rules = {
       quantity: {required, numeric},
-      width: {required, numeric},
-      height: {required, numeric},
+      width: {required, numeric, minValue: minValue(6), maxValue: maxValue(120)},
+      height: {required, numeric, minValue: minValue(6), maxValue: maxValue(120)},
       eyelets: { required }
     };
 
     const v = useVuelidate(rules,state);
+
+    function onChangeHeightWidth() {
+      // check if height and width are both 64 inches
+      if (parseInt(state.width) === 64 && parseInt(state.height) === 64) {
+        state.dimValidation = false;
+      } else {
+        state.dimValidation = true;
+      }
+    }
 
     function onSelect() {
       state.fileValidation = file.value.files.length == 0 ? false : true;
@@ -225,7 +244,7 @@ export default {
 
       state.fileValidation = file.value.files.length == 0 ? false : true;
 
-      if(validated && state.fileValidation && state.fileTypeValidation){
+      if(validated && state.fileValidation && state.fileTypeValidation && state.dimValidation){
         // create FormData to store order data
         const formData = new FormData();
         formData.append('quantity', state.quantity);
@@ -247,7 +266,7 @@ export default {
         router.push({ name: 'ViewCart' });
       }
     }
-    return { file, state, onSelect, addToCart, v };
+    return { file, state, onSelect, onChangeHeightWidth, addToCart, v };
   },
 };
 </script>

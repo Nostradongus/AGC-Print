@@ -7,25 +7,25 @@ const OrderService = {
   // this method retrieves and returns all order data in the database
   // from most recent to least recent
   getAllOrderSets: async () =>
-    OrderSet.find({}).sort({ createdAt: 'descending' }),
+    OrderSet.find({}).sort({ timestamp: 'descending' }),
 
   // this method returns all orders of users for the worker to view according to filter option
   // from most recent to least recent
   getAllOrderSetsFiltered: async (status) =>
-    OrderSet.find({ status: status }).sort({ createdAt: 'descending' }),
+    OrderSet.find({ status: status }).sort({ timestamp: 'descending' }),
 
   // this method retrieves and returns all orders of a specific user
   // from most recent to least recent
   getUserOrderSets: async (username) =>
     OrderSet.find({ user: username }).sort({
-      userOrderNum: 'descending',
+      timestamp: 'descending',
     }),
 
   // this method returns all orders of a specific user according to filter option
   // from most recent to least recent
   getUserOrderSetsFiltered: async (username, status) =>
     OrderSet.find({ user: username, status: status }).sort({
-      userOrderNum: 'descending',
+      timestamp: 'descending',
     }),
 
   // this method returns all active orders of users for the worker to process
@@ -40,20 +40,11 @@ const OrderService = {
           'Ready for Delivery',
         ],
       },
-    }).sort({ createdAt: 'descending' }),
+    }).sort({ timestamp: 'descending' }),
 
-  // this method returns all past orders of users for the worker
+  // this method returns all active orders of the users
   // from most recent to least recent
-  getAllPastOrderSets: async () =>
-    OrderSet.find({
-      status: {
-        $in: ['Complete', 'Cancelled'],
-      },
-    }).sort({ createdAt: 'descending' }),
-
-  // this method returns all current orders of the users
-  // from most recent to least recent
-  getUserCurrentOrderSets: async (username) =>
+  getUserActiveOrderSets: async (username) =>
     OrderSet.find({
       user: username,
       status: {
@@ -64,18 +55,26 @@ const OrderService = {
           'Ready for Delivery',
         ],
       },
-    }).sort({ userOrderNum: 'descending' }),
+    }).sort({ timestamp: 'descending' }),
+
+  getAllCancelledOrderSets: async () =>
+    OrderSet.find({
+      status: 'Cancelled',
+    }).sort({ timestamp: 'descending' }),
 
   // this method retrieves and returns a specific order set data based on given order set id
   getOrderSet: async (id) => OrderSet.findOne(id),
+
+  // this method retrieves and returns all orders from an order set given the order set id
+  getOrdersFromOrderSet: async (id) => Order.find({ orderSetId: id }),
 
   // this method retrieves and returns a specific order data based on given order id
   getOrder: async (id) => Order.findOne(id),
 
   // this method adds a new order data to the Order collection in the database
-  addOrderSet: async (orderSet) => {
+  addOrderSet: async (orderSet, orders) => {
     // get the orders from the order set and insert all of them to the database
-    Order.insertMany(orderSet.orders);
+    Order.insertMany(orders);
 
     // insert order set to the database
     OrderSet.create(orderSet);
@@ -97,6 +96,22 @@ const OrderService = {
   // this method updates an order set's status from the database
   updateOrderSetStatus: async (data) =>
     OrderSet.updateOne({ id: data.id }, { status: data.status }),
+
+  // this method updates an order set's price from the database
+  updateOrderSetPrice: async (data) =>
+    OrderSet.updateOne({ id: data.id }, { price: data.price }),
+
+  // this method updates that an order set has been reported, from the database
+  updateOrderSetReported: async (data) =>
+    OrderSet.updateOne({ id: data.id }, { reported: data.reported }),
+
+  // this method updates an order's status from the database
+  updateOrderStatus: async (data) =>
+    Order.updateOne({ id: data.id }, { status: data.status }),
+
+  // this method updates an order's price from the database
+  updateOrderPrice: async (data) =>
+    Order.updateOne({ id: data.id }, { price: data.price }),
 };
 
 // export order service object for order data creation and manipulation

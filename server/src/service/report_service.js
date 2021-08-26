@@ -5,7 +5,7 @@ import Report from '../model/Report.js';
 const ReportService = {
   // this method retrieves and returns all report data in the database
   // from most recent to least recent
-  getAllReports: async () => Report.find({}).sort({ field: 'descending' }),
+  getAllReports: async () => Report.find({}).sort({ timestamp: 'descending' }),
 
   // this method retrieves and returns a specific report data based on the given report id
   getReport: async (id) => Report.findOne(id),
@@ -13,7 +13,7 @@ const ReportService = {
   // this method retrieves and returns all reports of a specific user
   // from most recent to least recent
   getUserReports: async (username) =>
-    Report.find({ user: username }).sort({ field: 'descending' }),
+    Report.find({ user: username }).sort({ timestamp: 'descending' }),
 
   // this method adds a new report data to the Report collection in the database
   addReport: async (report) => {
@@ -24,8 +24,7 @@ const ReportService = {
       type: report.type,
       user: report.user,
       description: report.description,
-      filename: report.filename,
-      filePath: report.filePath,
+      files: report.files,
       status: report.status,
       dateRequested: report.dateRequested,
     });

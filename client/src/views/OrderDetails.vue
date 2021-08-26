@@ -7,7 +7,7 @@
         <div class="flex">
           <div class="flex-1">
             <span class="text-lg manrope-bold">Order #: </span>
-            <span class="text-lg manrope-regular">{{ state.order.userOrderNum }}</span>
+            <span class="text-lg manrope-regular">{{ state.order.id }}</span>
 
             <br />
 
@@ -43,12 +43,12 @@
 
             <span class="text-lg manrope-bold">Total Price: </span>
             <span
-              v-if="state.order.totalPrice != null"
+              v-if="state.order.price !== -1"
               class="text-lg manrope-regular"
-              >{{ state.order.totalPrice }}</span
+              >₱ {{ state.order.price }}</span
             >
             <span
-              v-else-if="state.order.totalPrice == null"
+              v-else-if="state.order.price === -1"
               class="text-lg manrope-regular"
               >Pending Total Price</span
             >
@@ -57,11 +57,13 @@
           </div>
         </div>
 
-        <order-card
-          v-for="order in state.order.orders"
-          :key="order.id"
-          :order="order"
-        />
+        <div class="overflow-y-auto max-h-96 pt-2 pb-2 mt-5">
+          <order-card
+            v-for="order in state.orders"
+            :key="order.id"
+            :order="order"
+          />
+        </div>
       </div>
 
       <div class="flex mb-8">
@@ -86,9 +88,9 @@
             >Back</router-link
           >
         </div>
-        <div>
+        <div v-if="state.order">
           <router-link
-            v-if="state.totalPrice !== -1"
+            v-if="state.order.status === 'Complete' && state.order.reported != true"
             class="
               manrope-regular
               text-white
@@ -107,7 +109,7 @@
             >Report Order</router-link
           >
           <router-link
-            v-if="state.totalPrice !== -1"
+            v-if="state.order.price !== -1 && state.order.status !== 'Complete' && state.order.status !== 'Pending'"
             class="
               manrope-regular
               text-white
@@ -150,6 +152,7 @@ export default {
     const store = useStore();
     const state = reactive({
       order: null,
+      orders: null,
     });
 
     onMounted(() => {
@@ -159,8 +162,13 @@ export default {
 
     async function loadOrder() {
       try {
-        const res = await api.getOrderSet(route.params.id);
-        state.order = res.data;
+        // get order set
+        const orderSet = await api.getOrderSet(route.params.id);
+        state.order = orderSet.data;
+
+        // get orders of order set
+        const orders = await api.getOrdersFromOrderSet(route.params.id);
+        state.orders = orders.data;
       } catch (err) {
         console.log(err);
       }
@@ -220,5 +228,16 @@ export default {
 .manrope-extrabold {
   font-family: 'Manrope', sans-serif;
   font-weight: 800;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge add Firefox */
+.scrollbar-hidden {
+  -ms-overflow-style: none;
+  scrollbar-width: none; /* Firefox */
 }
 </style>

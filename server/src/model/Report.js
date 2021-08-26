@@ -29,17 +29,10 @@ const ReportSchema = new mongoose.Schema({
     required: false,
     default: null,
   },
-  // filename of the report's image
-  filename: {
-    type: String,
-    required: false,
-    default: null,
-  },
-  // file path of the report's image
-  filePath: {
-    type: String,
-    required: false,
-    default: null,
+  // uploaded images of the report
+  files: {
+    type: Array,
+    required: true,
   },
   // status of report (Resolved or Not Yet Resolved)
   status: {
@@ -51,6 +44,11 @@ const ReportSchema = new mongoose.Schema({
   dateRequested: {
     type: String,
     required: true,
+  },
+  // when the report was created in the database
+  timestamp: {
+    type: Date,
+    default: Date.now(),
   },
 });
 

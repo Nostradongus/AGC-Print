@@ -86,9 +86,9 @@ const orderController = {
   },
 
   // order controller method to retrieve and return all current order sets of a user from the database
-  getUserCurrentOrderSets: async (req, res) => {
+  getUserActiveOrderSets: async (req, res) => {
     try {
-      const orders = await OrderService.getUserCurrentOrderSets(
+      const orders = await OrderService.getUserActiveOrderSets(
         req.params.username
       );
 
@@ -150,6 +150,23 @@ const orderController = {
     }
   },
 
+  // order controller method to retrieve and return all orders from an order set from the database
+  getOrdersFromOrderSet: async (req, res) => {
+    try {
+      // retrieve a specific order set from the database given the id data from the request
+      const orders = await OrderService.getOrdersFromOrderSet(req.params.id);
+      // if order set exists in the database, send the data back to the client
+      if (orders != null && orders.length !== 0) {
+        return res.status(200).json(orders);
+      }
+      // if order does not exist, send error status and message
+      return res.status(404).json({ message: 'Orders not found!' });
+    } catch (err) {
+      // if error has occurred, send server error status and message
+      res.status(500).json({ message: 'Server Error' });
+    }
+  },
+
   // order controller method to add new order set to the database
   addOrderSet: async (req, res) => {
     try {
@@ -177,8 +194,7 @@ const orderController = {
       const orderSet = new OrderSet({
         id: uniqueId,
         user: req.user.username,
-        userOrderNum: orderNum.toString().padStart(13, '0'),
-        orders: req.body.orders,
+        userOrderNum: orderNum.toString(),
         name: req.body.name,
         email: req.body.email,
         address: req.body.address,
@@ -191,7 +207,10 @@ const orderController = {
       await UserService.updateUserOrderNumber(req.user.username, orderNum + 1);
 
       // add new order/s from the cart to the database
-      const newOrderSet = await OrderService.addOrderSet(orderSet);
+      const newOrderSet = await OrderService.addOrderSet(
+        orderSet,
+        req.body.orders
+      );
 
       // send order data back to the client to indicate success
       return res.status(200).json(newOrderSet);
@@ -285,10 +304,27 @@ const orderController = {
     return res.status(201).json(newOrder);
   },
 
-  // order controller method to delete uploaded temporary order image coming from the client user order cart
-  deleteFromCart: (req, res) => {
-    // delete uploaded order image
-    fs.unlink(req.params.imgPath, function (err) {
+  // order controller method to delete uploaded temporary order file coming from the client user order cart
+  deleteFromCart: async (req, res) => {
+    // image file extensions
+    const imgExtensions = ['png', 'jpg', 'jpeg', 'svg'];
+
+    // get cart order item file extension
+    const ext = req.params.filename.substring(
+      req.params.filename.indexOf('.') + 1
+    );
+
+    let path = '';
+
+    // if image file
+    if (imgExtensions.includes(ext)) {
+      path = `./src/public/order_images/${req.params.filename}`;
+    } else {
+      path = `./src/public/order_docs/${req.params.filename}`;
+    }
+
+    // delete uploaded order file
+    await fs.unlink(path, function (err) {
       if (err) {
         // if error has occurred, send server error status and message
         return res.status(500).json({ message: 'Server Error' });
@@ -341,6 +377,74 @@ const orderController = {
       return res.status(204).json(result);
     } catch (err) {
       // if error has occurred, send server error status and message
+      res.status(500).json({ message: 'Server Error' });
+    }
+  },
+
+  // order controller method to update the price of an order set from the database
+  updateOrderSetPrice: async (req, res) => {
+    try {
+      // update an order set from the database
+      const result = await OrderService.updateOrderSetPrice({
+        id: req.params.id,
+        price: req.body.price,
+      });
+
+      // send result back to the client to indicate success
+      return res.status(204).json(result);
+    } catch (err) {
+      // if error has occurred, send server error status and message
+      res.status(500).json({ message: 'Server Error' });
+    }
+  },
+
+  // order controller method to indicate that the order set has already been reported from the database
+  updateOrderSetReported: async (req, res) => {
+    try {
+      // indicate that order set has been reported to the database
+      const result = await OrderService.updateOrderSetReported({
+        id: req.params.id,
+        reported: req.body.status,
+      });
+
+      // send result back to the client to indicate success
+      res.status(204).json(result);
+    } catch (err) {
+      // if error has occurred, send server error status and message
+      res.status(500).json({ message: 'Server Error' });
+    }
+  },
+
+  // order controller method to update the status of an order from the database
+  updateOrderStatus: async (req, res) => {
+    try {
+      // update an order from the database
+      const result = await OrderService.updateOrderStatus({
+        id: req.params.id,
+        status: req.body.status,
+      });
+
+      // send result back to the client to indicate success
+      return res.status(204).json(result);
+    } catch (err) {
+      // if error has occured, send server error status and message
+      res.status(500).json({ message: 'Server Error' });
+    }
+  },
+
+  // order controller method to update the price of an order from the database
+  updateOrderPrice: async (req, res) => {
+    try {
+      // update an order from the database
+      const result = await OrderService.updateOrderPrice({
+        id: req.params.id,
+        price: req.body.price,
+      });
+
+      // send result back to the client to indicate success
+      return res.status(204).json(result);
+    } catch (err) {
+      // if error has occured, send server error status and message
       res.status(500).json({ message: 'Server Error' });
     }
   },

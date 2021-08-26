@@ -58,7 +58,7 @@ router.get('/details/:id', token.authenticateToken, reportController.getReport);
 router.post(
   '/add/new',
   token.authenticateToken,
-  reportImageUpload.single('report-file'),
+  reportImageUpload.any('report-file'),
   reportController.addReport
 );
 

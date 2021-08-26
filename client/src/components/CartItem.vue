@@ -2,7 +2,7 @@
   <div class="px-8 pt-3 pb-5">
     <div class="bg-light-blue rounded-xl p-4 mx-auto mb-0.5 h-30 cart-card">
       <div class="flex p-3">
-        <div class="flex items-center w-1/3">
+        <div class="flex items-center w-1/5">
           <img
             :src="`http://localhost:5000/order_images/${order.filename}`"
             onerror="this.onerror=null;this.src='http://localhost:5000/assets/nopreview.png'"
@@ -65,18 +65,50 @@
           <label for="quantity" class="text-md manrope-bold">Quantity</label>
           <p>{{ order.quantity }}</p>
         </div>
+        <div
+          class="w-1/6 flex flex-col justify-center text-center items-center"
+          @click="onDelete"
+        >
+          <span class="text-2xl manrope-bold text-primary-blue cursor-pointer">X</span>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { reactive } from 'vue';
+import { useStore } from 'vuex';
+import * as api from '../api';
+
 export default {
   name: 'CartItem',
   props: {
     order: {
       type: Object,
     },
+  },
+  setup(props) {
+    const store = useStore();
+
+    // to delete cart item
+    async function onDelete() {
+      // get orders
+      let orders = store.state.order.orders;
+
+      // delete specified cart item
+      for (let ctr = 0; ctr < orders.length; ctr++) {
+        if (props.order.id === orders[ctr].id) {
+          // delete cart item in local storage
+          store.dispatch('deleteOrder', ctr);
+        }
+      }
+
+      // delete cart item image from database
+      await api.deleteFromCart(props.order.filename);
+    }
+
+    return { onDelete };
   },
 };
 </script>

@@ -5,7 +5,7 @@
         <div class="my-auto pr-3 w-1/3">
           <span class="text-lg manrope-regular">Order #{{ order.id }}</span>
         </div>
-        <div class="flex items-center pl-8 w-1/3">
+        <div class="flex items-center pl-8 w-1/3 h-1/3">
           <!-- TODO: replace alt attribute with 'No Preview' asset image -->
           <img
             :src="`http://localhost:5000/order_images/${order.filename}`"
@@ -75,10 +75,16 @@
           <p>{{ order.quantity }}</p>
         </div>
         <div
-          v-if="order.price == -1"
+          v-if="order.price === -1"
           class="w-1/6 flex justify-center text-center items-center"
         >
           Pending Price
+        </div>
+        <div
+          v-else
+          class="w-1/6 flex justify-center text-center items-center"
+        >
+          ₱ {{ order.price }}
         </div>
       </div>
     </div>

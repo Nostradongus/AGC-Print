@@ -36,7 +36,7 @@
           type="number"
           class="manrope-regular input-text-field w-48"
           :class="{ 'border-red': v.width.$error }"
-          min="1"
+          @change="onChangeHeightWidth"
           v-model="state.width"
         />
         <label
@@ -58,7 +58,7 @@
           type="number"
           class="manrope-regular input-text-field w-48"
           :class="{ 'border-red': v.height.$error }"
-          min="1"
+          @change="onChangeHeightWidth"
           v-model="state.height"
         />
         <label
@@ -73,6 +73,13 @@
           {{ v.height.$errors[0].$message }}
         </p>
       </div>
+    </div>
+    <div v-if="!state.dimValidation" class="relative mt-2">
+      <p
+        class="text-red manrope-bold text-left text-sm"
+      >
+        Width and height cannot be both 64 inches!
+      </p>
     </div>
     <div class="relative mt-20">
       <select
@@ -244,7 +251,7 @@ import { useRouter } from 'vue-router';
 import { ref, reactive } from 'vue';
 import { useStore } from 'vuex';
 import useVuelidate from '@vuelidate/core';
-import { required, numeric } from '@vuelidate/validators';
+import { required, numeric, minValue, maxValue } from '@vuelidate/validators';
 import * as api from '../../api';
 
 export default {
@@ -268,16 +275,26 @@ export default {
       frameOptionValidation: null,
       frameFinishingValidation: null,
       frameEdgesValidation: null,
+      dimValidation: true,
     });
 
     const rules = {
       quantity: { required, numeric },
-      width: { required, numeric },
-      height: { required, numeric },
+      width: { required, numeric, minValue: minValue(6), maxValue: maxValue(64) },
+      height: { required, numeric, minValue: minValue(6), maxValue: maxValue(64) },
       type: { required },
     };
 
     const v = useVuelidate(rules, state);
+
+    function onChangeHeightWidth() {
+      // check if height and width are both 64 inches
+      if (parseInt(state.width) === 64 && parseInt(state.height) === 64) {
+        state.dimValidation = false;
+      } else {
+        state.dimValidation = true;
+      }
+    }
 
     function onSelectFile() {
       state.fileValidation = file.value.files.length == 0 ? false : true;
@@ -360,7 +377,7 @@ export default {
         state.frameValidation = state.frameOptionValidation;
       }
 
-      if(validated && state.fileValidation && state.fileTypeValidation && state.frameValidation){
+      if(validated && state.fileValidation && state.fileTypeValidation && state.frameValidation && state.dimValidation){
         // create FormData to store order data with uploaded file
         const formData = new FormData();
         formData.append('quantity', state.quantity);
@@ -392,6 +409,7 @@ export default {
       onSelectFrameOption,
       onSelectFrameFinishing,
       onSelectFrameEdges,
+      onChangeHeightWidth,
       addToCart,
       v,
     };

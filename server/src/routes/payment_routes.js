@@ -58,12 +58,25 @@ router.get(
   paymentController.getPayment
 );
 
+router.get(
+  '/:orderSetId/payments',
+  token.authenticateToken,
+  paymentController.getOrderSetIdPayments
+);
+
 // route for adding new payment receipt to database
 router.post(
   '/add/new',
   token.authenticateToken,
   paymentFileUpload.single('payment-file'),
   paymentController.addPayment
+);
+
+// route for updating payment account of a payment from database
+router.patch(
+  '/update/:id',
+  token.authenticateToken,
+  paymentController.updatePaymentAcc
 );
 
 // route for deleting a payment receipt from the database

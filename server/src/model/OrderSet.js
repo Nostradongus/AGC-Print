@@ -1,6 +1,7 @@
 // import mongoose module for schema modeling
 import mongoose from 'mongoose';
 
+// TODO: update with down payment attribute; confirmation
 // order set schema for a set of orders in the application
 const OrderSetSchema = new mongoose.Schema({
   // unique id of order set
@@ -16,11 +17,6 @@ const OrderSetSchema = new mongoose.Schema({
   // nth order set made by user
   userOrderNum: {
     type: String,
-    required: true,
-  },
-  // the set of orders (Order objects)
-  orders: {
-    type: Array,
     required: true,
   },
   // name of customer
@@ -64,6 +60,19 @@ const OrderSetSchema = new mongoose.Schema({
   status: {
     type: String,
     default: 'Pending',
+    required: true,
+  },
+  // indicator if report has already been sent to this order set
+  reported: {
+    type: Boolean,
+    default: false,
+    required: false,
+  },
+  // indicator if downpayment has already been paid by user
+  paidDownPayment: {
+    type: Boolean,
+    default: false,
+    required: false,
   },
   // when the order set was requested
   dateRequested: {
@@ -74,6 +83,11 @@ const OrderSetSchema = new mongoose.Schema({
   dateShipped: {
     type: String,
     default: null,
+  },
+  // when the order set was created in the database
+  timestamp: {
+    type: Date,
+    default: Date.now(),
   },
 });
 

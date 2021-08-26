@@ -9,6 +9,10 @@ export default {
       state.orders.push(payload);
       localStorage.setItem('order', JSON.stringify(state.orders));
     },
+    DELETE_ORDER(state, payload) {
+      state.orders.splice(payload, 1);
+      localStorage.setItem('order', JSON.stringify(state.orders));
+    },
     SET_ORDER_SET(state, payload) {
       state.orderSet = payload;
       localStorage.setItem('orderSet', JSON.stringify(state.orderSet));
@@ -31,6 +35,9 @@ export default {
   actions: {
     setOrder({ commit }, data) {
       commit('SET_ORDER', data);
+    },
+    deleteOrder({ commit }, data) {
+      commit('DELETE_ORDER', data);
     },
     setOrderSet({ commit }, data) {
       commit('SET_ORDER_SET', data);

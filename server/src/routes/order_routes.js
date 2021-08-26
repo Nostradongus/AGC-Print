@@ -58,16 +58,16 @@ router.get(
   orderController.getUserOrderSetsFiltered
 );
 
-// route for user's current orders
+// route for user's active orders
 router.get(
-  '/:username/current',
+  '/:username/active',
   token.authenticateToken,
-  orderController.getUserCurrentOrderSets
+  orderController.getUserActiveOrderSets
 );
 
 // route for all active orders of users
 router.get(
-  '/orders/active',
+  '/orders/actives',
   token.authenticateToken,
   orderController.getAllActiveOrderSets
 );
@@ -89,6 +89,13 @@ router.get(
   orderController.getOrderSet
 );
 
+// route for getting all orders of an order set from the database
+router.get(
+  '/orderSet/orders/:id',
+  token.authenticateToken,
+  orderController.getOrdersFromOrderSet
+);
+
 // route for adding new order to cart
 router.post(
   '/cart/add',
@@ -106,7 +113,7 @@ router.post(
 
 // route for deleting an order from cart
 router.delete(
-  '/cart/delete',
+  '/cart/delete/:filename',
   token.authenticateToken,
   orderController.deleteFromCart
 );
@@ -127,9 +134,37 @@ router.delete(
 
 // route for updating the status of an order set from the database
 router.patch(
-  '/update/orderSet/:id',
+  '/update/orderSet/status/:id',
   token.authenticateToken,
   orderController.updateOrderSetStatus
+);
+
+// route for updating the price of an order set from the database
+router.patch(
+  '/update/orderSet/price/:id',
+  token.authenticateToken,
+  orderController.updateOrderSetPrice
+);
+
+// route for updating the reported indicator of an order set from the database
+router.patch(
+  '/update/orderSet/reported/:id',
+  token.authenticateToken,
+  orderController.updateOrderSetReported
+);
+
+// route for updating the status of an order from the database
+router.patch(
+  '/update/order/status/:id',
+  token.authenticateToken,
+  orderController.updateOrderStatus
+);
+
+// route for updating the price of an order from the database
+router.patch(
+  '/update/order/price/:id',
+  token.authenticateToken,
+  orderController.updateOrderPrice
 );
 
 // export order routes
