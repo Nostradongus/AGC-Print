@@ -158,6 +158,7 @@ import {
   required,
   numeric,
   minValue,
+  maxValue
 } from '@vuelidate/validators';
 import * as api from '../../api';
 
@@ -180,8 +181,8 @@ export default {
 
     const rules = {
       quantity: {required, numeric},
-      width: {required, numeric, minValue: minValue(6)},
-      height: {required, numeric, minValue: minValue(6)},
+      width: {required, numeric, minValue: minValue(6), maxValue: maxValue(64)},
+      height: {required, numeric, minValue: minValue(6), maxValue: maxValue(64)},
     };
 
     const v = useVuelidate(rules,state);

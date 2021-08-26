@@ -17,6 +17,20 @@
     <p class="manrope-bold text-lg text-justify mt-5 mb-5">
       Sample Photos: 
     </p>
+    <div class="flex flex-row justify-center">
+      <img
+        src="../../assets/sticker_image1.jpg"
+        alt="Sticker Image 1"
+        class="w-1/3 mr-3"
+        border="0"
+      />
+      <img
+        src="../../assets/sticker_image2.jpg"
+        alt="Sticker Image 2"
+        class="w-1/2"
+        border="0"
+      />
+    </div>
   </div>
 </template>
 <script>

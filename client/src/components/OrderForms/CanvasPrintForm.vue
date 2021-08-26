@@ -251,7 +251,7 @@ import { useRouter } from 'vue-router';
 import { ref, reactive } from 'vue';
 import { useStore } from 'vuex';
 import useVuelidate from '@vuelidate/core';
-import { required, numeric, minValue } from '@vuelidate/validators';
+import { required, numeric, minValue, maxValue } from '@vuelidate/validators';
 import * as api from '../../api';
 
 export default {
@@ -280,8 +280,8 @@ export default {
 
     const rules = {
       quantity: { required, numeric },
-      width: { required, numeric, minValue: minValue(6) },
-      height: { required, numeric, minValue: minValue(6) },
+      width: { required, numeric, minValue: minValue(6), maxValue: maxValue(64) },
+      height: { required, numeric, minValue: minValue(6), maxValue: maxValue(64) },
       type: { required },
     };
 

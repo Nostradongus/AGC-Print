@@ -170,7 +170,7 @@ export default {
     const rules = {
       name: { required },
       email: { required, email },
-      contactNo: { required, numeric, minLength: minLength(10), maxLength: maxLength(10) },
+      contactNo: { required, numeric, minLength: minLength(9), maxLength: maxLength(10) },
       address: { required },
     };
 
