@@ -24,7 +24,7 @@ async function generateData() {
   const wlname = faker.name.lastName(1);
   const wuname = wfname + wlname;
   workers.push({
-    username: wuname,
+    username: wuname.toLowerCase(),
     password: hashedPassword,
     firstname: wfname,
     lastname: wlname,

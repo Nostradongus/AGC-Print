@@ -44,13 +44,10 @@ const OrderService = {
 
   // this method returns all past orders of users for the worker
   // from most recent to least recent
-  getAllPastOrderSets: async() =>
+  getAllPastOrderSets: async () =>
     OrderSet.find({
-      status:{
-        $in: [
-          'Complete',
-          'Cancelled',
-        ],
+      status: {
+        $in: ['Complete', 'Cancelled'],
       },
     }).sort({ createdAt: 'descending' }),
 

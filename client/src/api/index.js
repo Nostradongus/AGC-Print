@@ -5,7 +5,7 @@ const API = axios.create({ baseURL: 'http://localhost:5000' });
 // for user access token
 API.interceptors.request.use((req) => {
   req.withCredentials = true;
-  if (localStorage.getItem('user')) {
+  if (localStorage.getItem('user') || localStorage.getItem('worker')) {
     req.headers.Authorization = `Bearer ${localStorage.getItem('token')}`;
   }
   return req;

@@ -18,8 +18,9 @@
                 px-8
                 text-primary-blue
               "
-            >Orders are sorted by most recent to least recent</h1
             >
+              Orders are sorted by most recent to least recent
+            </h1>
           </div>
           <div class="flex flex-row items-center mr-10">
             <!-- status filter box label -->
@@ -33,10 +34,11 @@
                 px-3
                 text-primary-blue
               "
-            >Filter Orders By: </p
             >
+              Filter Orders By:
+            </p>
             <!-- status filter box -->
-            <select 
+            <select
               name="type"
               id="type"
               class="w-full md:w-60 md:h-1/2 dropdown-field mt-8"
@@ -49,18 +51,11 @@
           </div>
         </div>
         <p
-          class="
-            manrope-bold
-            left-0
-            -top-3.5
-            text-xl
-            pt-3
-            px-8
-            text-red
-          "
-          v-if="state.emptyStatus"
-        >No orders in "{{ state.status }}" status for now</p
+          class="manrope-bold left-0 -top-3.5 text-xl pt-3 px-8 text-red"
+          v-if="state.empty"
         >
+          No orders in "{{ state.status }}" status for now
+        </p>
         <div class="overflow-y-auto max-h-screen scrollbar-hidden">
           <OrderSetCard
             v-for="order in state.orders"
@@ -69,7 +64,6 @@
           />
         </div>
       </div>
-    
     </page-header>
   </div>
 </template>
@@ -100,10 +94,9 @@ export default {
       empty: true,
     });
 
-
     async function getAllActiveOrderSets() {
       try {
-        // get all user order sets at first 
+        // get all user order sets at first
         const result = await api.getAllActiveOrderSets();
         state.activeorders = result.data;
         if (state.activeorders.length !== 0) {
@@ -116,7 +109,7 @@ export default {
 
     async function getAllPastOrderSets() {
       try {
-        // get all user order sets at first 
+        // get all user order sets at first
         const result = await api.getAllPastOrderSets();
         state.pastorders = result.data;
         if (state.pastorders.length !== 0) {
@@ -128,23 +121,17 @@ export default {
     }
 
     function onSelectStatus() {
-
       if (state.status === 'Active') {
         state.shownorders = state.activeorders;
-        if (state.shownorders.length === 0) {
-          state.emptyStatus = true;
-        } else {
-          state.emptyStatus = false;
-        }
       } else {
         state.shownorders = state.pastorders;
 
         // if no orders on the list have the selected status
-        if (state.shownorders.length === 0) {
-          state.emptyStatus = true;
-        } else {
-          state.emptyStatus = false;
-        }
+        // if (state.shownorders.length === 0) {
+        //   state.emptyStatus = true;
+        // } else {
+        //   state.emptyStatus = false;
+        // }
       }
     }
 
@@ -160,7 +147,12 @@ export default {
     console.log(state.activeorders);
     console.log(state.pastorders);
 
-    return { state, getAllActiveOrderSets, getAllPastOrderSets, onSelectStatus };
+    return {
+      state,
+      getAllActiveOrderSets,
+      getAllPastOrderSets,
+      onSelectStatus,
+    };
   },
 };
 </script>
