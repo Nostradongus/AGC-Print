@@ -18,6 +18,7 @@
     </div>
     <div style="height: 65%">
       <router-link
+        v-if="state.username != null"
         class="
           text-primary-blue
           flex flex-row
@@ -53,6 +54,43 @@
         New Order</router-link
       >
       <router-link
+        v-if="state.worker != null"
+        class="
+          text-primary-blue
+          flex flex-row
+          justify-items-center
+          items-center
+          px-4
+          py-2
+          mt-2
+          text-xl
+          font-semibold
+          text-gray-900
+          rounded-lg
+          hover:bg-link-water
+          transition
+          duration-500
+          ease-in-out
+        "
+        to=""
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-10 w-10 pr-3"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+          <path
+            fill-rule="evenodd"
+            d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
+            clip-rule="evenodd"
+          />
+        </svg>
+        View Orders</router-link
+      >
+      <router-link
+        v-if="state.username != null"
         class="
           text-primary-blue
           flex flex-row
@@ -86,6 +124,41 @@
         >My Orders</router-link
       >
       <router-link
+        v-if="state.worker != null"
+        class="
+          text-primary-blue
+          flex flex-row
+          justify-items-center
+          items-center
+          px-4
+          py-2
+          mt-2
+          text-xl
+          font-semibold
+          text-gray-900
+          rounded-lg
+          hover:bg-link-water
+          transition
+          duration-500
+          ease-in-out
+        "
+        to=""
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-10 w-10 pr-3"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+            clip-rule="evenodd"
+          /></svg
+        >View Reports</router-link
+      >
+      <router-link
+        v-if="state.username != null"
         class="
           text-primary-blue
           flex flex-row
@@ -119,6 +192,7 @@
         >Profile</router-link
       >
       <router-link
+        v-if="state.username != null"
         class="
           text-primary-blue
           flex flex-row
@@ -201,14 +275,22 @@ export default {
     const router = useRouter();
     const store = useStore();
     const state = reactive({
-      username: store.state.user.user.username,
+      username: null,
+      worker: null,
       error: false,
     });
+
+    if (JSON.parse(localStorage.getItem('user')) != null) {
+      state.username = store.state.user.user.username
+    } else {
+      state.worker = store.state.worker.worker.username
+    }
 
     async function logoutUser() {
       try {
         await api.signOut();
         store.dispatch('logoutUser');
+        store.dispatch('logoutWorker');
         store.dispatch('resetOrder');
         router.push({ name: 'Login' });
       } catch (err) {

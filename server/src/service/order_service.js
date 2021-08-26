@@ -42,6 +42,18 @@ const OrderService = {
       },
     }).sort({ createdAt: 'descending' }),
 
+  // this method returns all past orders of users for the worker
+  // from most recent to least recent
+  getAllPastOrderSets: async() =>
+    OrderSet.find({
+      status:{
+        $in: [
+          'Complete',
+          'Cancelled',
+        ],
+      },
+    }).sort({ createdAt: 'descending' }),
+
   // this method returns all current orders of the users
   // from most recent to least recent
   getUserCurrentOrderSets: async (username) =>

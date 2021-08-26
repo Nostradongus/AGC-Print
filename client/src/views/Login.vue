@@ -96,7 +96,7 @@ export default {
           router.push({ name: 'MyOrders' });
         } else if (result.data.flag == 1) {
           store.dispatch('loginWorker', result.data);
-          router.push({ name: `ActiveOrders` });
+          router.push({ name: `StaffViewOrder` });
         }
         // else router.push({ name: `Error` });
       } catch (err) {
