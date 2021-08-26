@@ -8,9 +8,11 @@ import DeliveryInformation from '../views/DeliveryInformation.vue';
 import ViewCart from '../views/ViewCart.vue';
 import OrderHistory from '../views/OrderHistory.vue';
 import OrderConfirmed from '../views/OrderConfirmed.vue';
-import ActiveOrders from '../views/ActiveOrders.vue';
+import StaffViewOrder from '../views/StaffViewOrder.vue';
 import Payment from '../views/Payment.vue';
 import ReportOrder from '../views/ReportOrder.vue';
+import UserProfile from '../views/UserProfile.vue';
+import EditProfile from '../views/EditProfile.vue';
 
 const routes = [
   {
@@ -41,6 +43,22 @@ const routes = [
     path: '/view-cart',
     name: 'ViewCart',
     component: ViewCart,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/profile/:username',
+    name: 'UserProfile',
+    component: UserProfile,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/edit-profile/:username',
+    name: 'EditProfile',
+    component: EditProfile,
     meta: {
       requiresAuth: true,
     },
@@ -86,9 +104,9 @@ const routes = [
     },
   },
   {
-    path: '/active-orders',
-    name: 'ActiveOrders',
-    component: ActiveOrders,
+    path: '/view-order-list',
+    name: 'StaffViewOrder',
+    component: StaffViewOrder,
     meta: {
       hideForAuth: true,
     },

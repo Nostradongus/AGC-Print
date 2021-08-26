@@ -5,7 +5,7 @@ const API = axios.create({ baseURL: 'http://localhost:5000' });
 // for user access token
 API.interceptors.request.use((req) => {
   req.withCredentials = true;
-  if (localStorage.getItem('user')) {
+  if (localStorage.getItem('user') || localStorage.getItem('worker')) {
     req.headers.Authorization = `Bearer ${localStorage.getItem('token')}`;
   }
   return req;
@@ -47,6 +47,8 @@ export const updateOrderPrice = (id, price) =>
 // user data api methods
 export const getUsers = () => API.get('/users');
 export const getUser = (username) => API.get(`/users/${username}`);
+export const patchUser = (username, data) =>
+  API.patch(`/users/${username}`, data);
 
 // report data api methods
 export const getAllReports = () => API.get('/report');

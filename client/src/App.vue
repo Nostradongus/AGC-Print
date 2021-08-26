@@ -39,6 +39,10 @@ input:focus {
   font-weight: 800;
 }
 
+.text-field-error {
+  border-bottom-color: red !important;
+}
+
 /* web application's scrollbar */
 ::-webkit-scrollbar {
   width: 8px;

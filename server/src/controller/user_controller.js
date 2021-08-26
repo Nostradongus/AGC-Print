@@ -1,5 +1,8 @@
 // get user service static object from service folder
+import { validationResult } from 'express-validator';
+import logger from '../logger/index.js';
 import UserService from '../service/user_service.js';
+import bcrypt from 'bcrypt';
 
 // user controller object containing all user controller methods
 const userController = {
@@ -12,6 +15,7 @@ const userController = {
       return res.status(200).json(users);
     } catch (err) {
       // if error has occurred, send server error status and message
+      logger.info(err);
       res.status(500).json({ message: 'Server Error' });
     }
   },
@@ -31,6 +35,7 @@ const userController = {
       return res.status(404).json({ message: 'User not found!' });
     } catch (err) {
       // if error has occurred, send server error status and message
+      logger.info(err);
       res.status(500).json({ message: 'Server Error' });
     }
   },
@@ -44,7 +49,65 @@ const userController = {
       return res.status(201).json(user);
     } catch (err) {
       // if error has occurred, send server error status and message
+      logger.info(err);
       res.status(500).json({ message: 'Server Error' });
+    }
+  },
+
+  updateUser: async (req, res) => {
+    const validationError = validationResult(req);
+    const errors = {};
+
+    if (validationError.isEmpty()) {
+      try {
+        const userData = await UserService.getUser({
+          username: req.body.username,
+        });
+
+        const comparePass = await bcrypt.compare(
+          req.body.password,
+          userData.password
+        );
+
+        if (userData.email === req.body.email) {
+          const details = {
+            errorMsg: 'E-mail Already Exists!',
+            error: true,
+          };
+          errors.emailError = details;
+          // return res.status(400).json(details);
+        }
+
+        if (userData.contactNo === req.body.contactNo) {
+          const details = {
+            errorMsg: 'Please enter a new contact number',
+            error: true,
+          };
+          errors.contactError = details;
+          // return res.status(400).json(details);
+        }
+
+        if (comparePass) {
+          const details = {
+            errorMsg: 'Please enter a new password',
+            error: true,
+          };
+          errors.passwordError = details;
+        }
+
+        if (Object.entries(errors).length != 0) {
+          return res.status(400).json(errors);
+        }
+
+        await UserService.updateUser(req);
+        // Note status 204 does not return any response body
+        return res.status(204).send();
+      } catch (err) {
+        logger.info(err);
+        res.status(404).json({ message: 'User not found!' });
+      }
+    } else {
+      res.status(422).json({ message: 'Validation error!' });
     }
   },
 };

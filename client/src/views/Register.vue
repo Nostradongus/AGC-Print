@@ -154,7 +154,7 @@
         </div>
         <div class="relative mt-6">
           <div class="flex flex-row items-center justify-center">
-            <p class="absolute left-14 text-lg">+63</p>
+            <p class="absolute left-14 text-lg manrope-regular">+63</p>
             <input
               id="contactno"
               name="contactNo"
@@ -290,7 +290,6 @@ import {
   email,
   minLength,
   maxLength,
-  sameAs,
 } from '@vuelidate/validators';
 import * as api from '../api';
 export default {
@@ -314,7 +313,12 @@ export default {
       lastname: { required },
       username: { required },
       email: { required, email },
-      contactNo: { required, numeric, minLength: minLength(9), maxLength: maxLength(10) },
+      contactNo: {
+        required,
+        numeric,
+        minLength: minLength(9),
+        maxLength: maxLength(10),
+      },
       password: { required, minLength: minLength(8) },
       confirmPassword: { required },
     };
@@ -413,10 +417,6 @@ input[type='number'] {
   border-bottom-color: #c4c4c4;
   width: 12rem;
   height: 3rem;
-}
-
-.text-field-error {
-  border-bottom-color: red;
 }
 
 .login-btn {
