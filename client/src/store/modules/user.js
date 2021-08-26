@@ -24,6 +24,12 @@ export default {
       if (payload.email !== '') {
         state.user.email = payload.email;
       }
+      if (payload.firstname !== '') {
+        state.user.firstname = payload.firstname;
+      }
+      if (payload.lastname !== '') {
+        state.user.lastname = payload.lastname;
+      }
       localStorage.setItem('user', JSON.stringify({ ...state.user }));
     },
   },

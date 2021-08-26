@@ -33,7 +33,15 @@ const UserService = {
         username: data.params.username,
       });
 
-      const { contactNo, email, password } = data.body;
+      const { firstname, lastname, contactNo, email, password } = data.body;
+
+      if (firstname !== '') {
+        user.firstname = firstname;
+      }
+
+      if (lastname !== '') {
+        user.lastname = lastname;
+      }
 
       if (password !== '') {
         const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);

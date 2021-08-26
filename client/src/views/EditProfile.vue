@@ -27,6 +27,52 @@
             </h1>
           </div>
           <div class="p-4 flex">
+            <h1 class="manrope-regular text-xl w-64">Firstname</h1>
+            <div class="flex flex-col">
+              <input
+                id="firstname"
+                name="firstname"
+                type="text"
+                class="manrope-regular login-text-field"
+                :placeholder="state.firstname"
+                v-model="formData.firstname"
+                :class="{
+                  'text-field-error': state.firstnameError,
+                }"
+                @keyup.delete="() => (state.firstnameError = false)"
+              />
+              <p
+                class="text-red manrope-bold text-left text-sm"
+                v-if="state.firstnameError"
+              >
+                You've entered your current firstname
+              </p>
+            </div>
+          </div>
+          <div class="p-4 flex">
+            <h1 class="manrope-regular text-xl w-64">Lastname</h1>
+            <div class="flex flex-col">
+              <input
+                id="lastname"
+                name="lastname"
+                type="text"
+                class="manrope-regular login-text-field"
+                :placeholder="state.lastname"
+                v-model="formData.lastname"
+                :class="{
+                  'text-field-error': v.email.$error || state.lastnameError,
+                }"
+                @keyup.delete="() => (state.lastnameError = false)"
+              />
+              <p
+                class="text-red manrope-bold text-left text-sm"
+                v-if="state.lastnameError"
+              >
+                You've entered your current lastname
+              </p>
+            </div>
+          </div>
+          <div class="p-4 flex">
             <h1 class="manrope-regular text-xl w-64">E-mail</h1>
             <div class="flex flex-col">
               <input
@@ -210,13 +256,19 @@ export default {
       username: store.state.user.user.username,
       email: store.state.user.user.email,
       name: `${store.state.user.user.firstname} ${store.state.user.user.lastname}`,
+      firstname: store.state.user.user.firstname,
+      lastname: store.state.user.user.lastname,
       contact: '',
       emailError: false,
       contactError: false,
       passwordError: false,
+      firstnameError: false,
+      lastnameError: false,
     });
 
     const formData = reactive({
+      firstname: '',
+      lastname: '',
       email: '',
       contactNo: '',
       password: '',
@@ -250,6 +302,8 @@ export default {
 
     const isDisabled = computed(
       () =>
+        formData.firstname === '' &&
+        formData.lastname === '' &&
         formData.email === '' &&
         formData.contactNo === '' &&
         formData.password === ''
@@ -258,6 +312,8 @@ export default {
     async function updateUser() {
       const data = {
         username: state.username,
+        firstname: formData.firstname,
+        lastname: formData.lastname,
         email: formData.email,
         contactNo: formData.contactNo,
         password: formData.password,
@@ -280,6 +336,12 @@ export default {
           console.log(err);
           const { response } = err;
           console.log(response.data);
+          if (response.data.firstnameError != null) {
+            state.firstnameError = response.data.firstnameError;
+          }
+          if (response.data.lastnameError != null) {
+            state.lastnameError = response.data.lastnameError;
+          }
           if (response.data.emailError != null) {
             state.emailError = response.data.emailError;
           }

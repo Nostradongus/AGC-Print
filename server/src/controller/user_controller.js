@@ -69,6 +69,22 @@ const userController = {
           userData.password
         );
 
+        if (userData.firstname === req.body.firstname) {
+          const details = {
+            errorMsg: "You've entered your current firstname",
+            error: true,
+          };
+          errors.firstnameError = details;
+        }
+
+        if (userData.lastname === req.body.lastname) {
+          const details = {
+            errorMsg: "You've entered your current lastname",
+            error: true,
+          };
+          errors.lastnameError = details;
+        }
+
         if (userData.email === req.body.email) {
           const details = {
             errorMsg: 'E-mail Already Exists!',
