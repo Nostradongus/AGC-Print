@@ -36,13 +36,22 @@
                 class="manrope-regular login-text-field"
                 :placeholder="state.email"
                 v-model="formData.email"
-                :class="{ 'text-field-error': v.email.$error }"
+                :class="{
+                  'text-field-error': v.email.$error || state.emailError,
+                }"
+                @keyup.delete="() => (state.emailError = false)"
               />
               <p
                 class="text-red manrope-bold text-left text-sm"
                 v-if="v.email.$error"
               >
                 {{ v.email.$errors[0].$message }}
+              </p>
+              <p
+                class="text-red manrope-bold text-left text-sm"
+                v-else-if="state.emailError"
+              >
+                Email Already Exists!
               </p>
             </div>
           </div>
@@ -62,7 +71,11 @@
                   class="manrope-regular login-text-field pl-10 text-md"
                   :placeholder="state.contact"
                   v-model="formData.contactNo"
-                  :class="{ 'text-field-error': v.contactNo.$error }"
+                  :class="{
+                    'text-field-error':
+                      v.contactNo.$error || state.contactError,
+                  }"
+                  @keyup.delete="() => (state.contactError = false)"
                 />
               </div>
               <p
@@ -70,6 +83,12 @@
                 v-if="v.contactNo.$error"
               >
                 {{ v.contactNo.$errors[0].$message }}
+              </p>
+              <p
+                class="text-red manrope-bold text-left text-sm"
+                v-if="state.contactError"
+              >
+                Please enter a new contact number!
               </p>
             </div>
           </div>
@@ -85,13 +104,22 @@
                 type="password"
                 class="manrope-regular login-text-field"
                 v-model="formData.password"
-                :class="{ 'text-field-error': v.password.$error }"
+                :class="{
+                  'text-field-error': v.password.$error || state.passwordError,
+                }"
+                @keyup.delete="() => (state.passwordError = false)"
               />
               <p
                 class="text-red manrope-bold text-left text-sm"
                 v-if="v.password.$error"
               >
                 {{ v.password.$errors[0].$message }}
+              </p>
+              <p
+                class="text-red manrope-bold text-left text-sm"
+                v-if="state.passwordError"
+              >
+                Please enter a new password!
               </p>
             </div>
           </div>
@@ -183,6 +211,9 @@ export default {
       email: store.state.user.user.email,
       name: `${store.state.user.user.firstname} ${store.state.user.user.lastname}`,
       contact: '',
+      emailError: false,
+      contactError: false,
+      passwordError: false,
     });
 
     const formData = reactive({
@@ -226,6 +257,7 @@ export default {
 
     async function updateUser() {
       const data = {
+        username: state.username,
         email: formData.email,
         contactNo: formData.contactNo,
         password: formData.password,
@@ -244,11 +276,34 @@ export default {
           router.push(`/profile/${state.username}`);
         }
       } catch (err) {
-        console.log(err);
+        if (err.response != null) {
+          console.log(err);
+          const { response } = err;
+          console.log(response.data);
+          if (response.data.emailError != null) {
+            state.emailError = response.data.emailError;
+          }
+          if (response.data.contactError != null) {
+            state.contactError = response.data.contactError;
+          }
+          if (response.data.passwordError != null) {
+            console.log(response.data);
+            state.passwordError = response.data.passwordError;
+          }
+        } else {
+          console.log(err);
+        }
       }
     }
 
-    return { state, formData, updateUser, v, passwordConfirmed, isDisabled };
+    return {
+      state,
+      formData,
+      updateUser,
+      v,
+      passwordConfirmed,
+      isDisabled,
+    };
   },
 };
 </script>
