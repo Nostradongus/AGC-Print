@@ -127,6 +127,5 @@ const userController = {
     }
   },
 };
-
 // export user controller object for routing
 export default userController;
