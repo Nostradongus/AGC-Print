@@ -175,7 +175,7 @@
             v-if="state.reportSubmitted"
             class="text-primary-blue manrope-bold text-center text-sm"
           >
-            Report succesfully submitted!.
+            Report successfully submitted!.
           </p>
           <p
             v-if="state.alreadyReported && !state.reportSubmitted"

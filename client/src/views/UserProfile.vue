@@ -37,8 +37,8 @@
       </div>
       <div class="px-8">
         <div id="accountinformation">
-          <h1 class="manrope-regular text-2xl">Account Information</h1>
-          <hr class="border-3" />
+          <h1 class="manrope-bold text-2xl text-primary-blue">Account Information</h1>
+          <hr class="profile-border" />
           <div class="p-4 flex">
             <h1 class="manrope-regular text-xl w-64">Username</h1>
             <h1 class="manrope-regular text-xl" id="username">
@@ -53,8 +53,8 @@
           </div>
         </div>
         <div id="accountinformation">
-          <h1 class="manrope-regular text-2xl">Contact Details</h1>
-          <hr class="border-3" />
+          <h1 class="manrope-bold text-2xl text-primary-blue">Contact Details</h1>
+          <hr class="profile-border" />
           <div class="p-4 flex">
             <h1 class="manrope-regular text-xl w-64">Contact Number</h1>
             <h1 class="manrope-regular text-xl" id="contactno">
@@ -107,7 +107,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="postcss">
 .header {
   width: 100vw;
   height: 11rem;
@@ -151,5 +151,11 @@ export default {
 .manrope-extrabold {
   font-family: 'Manrope', sans-serif;
   font-weight: 800;
+}
+
+.profile-border {
+  border-style: solid;
+  @apply border-light-blue;
+  border-width: 2.5px;
 }
 </style>
