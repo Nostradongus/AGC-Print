@@ -57,11 +57,6 @@ const OrderService = {
       },
     }).sort({ timestamp: 'descending' }),
 
-  getAllCancelledOrderSets: async () =>
-    OrderSet.find({
-      status: 'Cancelled',
-    }).sort({ timestamp: 'descending' }),
-
   // this method retrieves and returns a specific order set data based on given order set id
   getOrderSet: async (id) => OrderSet.findOne(id),
 

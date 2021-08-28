@@ -148,7 +148,13 @@ import { useRouter } from 'vue-router';
 import { reactive } from 'vue';
 import { useStore } from 'vuex';
 import useVuelidate from '@vuelidate/core';
-import { required, numeric, email, minLength, maxLength } from '@vuelidate/validators';
+import {
+  required,
+  numeric,
+  email,
+  minLength,
+  maxLength,
+} from '@vuelidate/validators';
 import * as api from '../api';
 
 export default {
@@ -170,7 +176,12 @@ export default {
     const rules = {
       name: { required },
       email: { required, email },
-      contactNo: { required, numeric, minLength: minLength(9), maxLength: maxLength(10) },
+      contactNo: {
+        required,
+        numeric,
+        minLength: minLength(9),
+        maxLength: maxLength(10),
+      },
       address: { required },
     };
 
@@ -188,10 +199,13 @@ export default {
           email: state.email,
           contactNo: `63${state.contactNo}`,
           address: state.address,
-        }
+        };
 
         // confirm and add orders to the database
         const res = await api.addOrderSet(data);
+
+        // send email to client
+        await api.sendEmailOrderPlaced(res.data.id, data.name, data.email);
 
         store.dispatch('setOrderSet', res.data);
 

@@ -19,7 +19,26 @@ router.get('/:username', token.authenticateToken, workerController.getWorker);
 // route for adding a new worker to the database
 router.post('/add-worker', token.authenticateToken, workerController.addWorker);
 
-router.post('/sendUpdate', workerController.sendUpdate);
+// route for sending email about the client's project cost
+router.post(
+  '/sendEmailProjectCost',
+  token.authenticateToken,
+  workerController.sendEmailProjectCost
+);
+
+// route for sending email to inform the client that their order is being processed
+router.post(
+  '/sendEmailProcessingOrder',
+  token.authenticateToken,
+  workerController.sendEmailProcessingOrder
+);
+
+// route for sending email to inform the client that their order is complete
+router.post(
+  '/sendEmailOrderComplete',
+  token.authenticateToken,
+  workerController.sendEmailOrderComplete
+);
 
 // export worker routes
 export default router;
