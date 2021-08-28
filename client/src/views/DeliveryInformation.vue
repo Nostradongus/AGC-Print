@@ -217,13 +217,13 @@ export default {
         // confirm and add orders to the database
         const res = await api.addOrderSet(data);
 
-        // send email to client
-        await api.sendEmailOrderPlaced(res.data.id, data.name, data.email);
-
         store.dispatch('setOrderSet', res.data);
 
         // go to order details page
         router.push({ name: 'OrderConfirmed' });
+
+        // send email to client
+        await api.sendEmailOrderPlaced(res.data.id, data.name, data.email);
       }
     }
 
