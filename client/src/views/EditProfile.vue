@@ -18,8 +18,8 @@
       </div>
       <form @submit.prevent="updateUser" class="px-8">
         <div id="accountinformation">
-          <h1 class="manrope-regular text-2xl">Account Information</h1>
-          <hr class="border-3" />
+          <h1 class="manrope-bold text-2xl text-primary-blue">Account Information</h1>
+          <hr class="profile-border" />
           <div class="p-4 flex">
             <h1 class="manrope-regular text-xl w-64">Username</h1>
             <h1 class="manrope-regular text-xl" id="username">
@@ -105,8 +105,8 @@
           </div>
         </div>
         <div id="contactdetails">
-          <h1 class="manrope-regular text-2xl">Contact Details</h1>
-          <hr class="border-3" />
+          <h1 class="manrope-bold text-2xl text-primary-blue">Contact Details</h1>
+          <hr class="profile-border" />
           <div class="p-4 flex">
             <h1 class="manrope-regular text-xl w-64">Contact Number</h1>
             <div class="flex flex-col">
@@ -142,8 +142,8 @@
           </div>
         </div>
         <div id="password">
-          <h1 class="manrope-regular text-2xl">Password</h1>
-          <hr class="border-3" />
+          <h1 class="manrope-bold text-2xl text-primary-blue">Password</h1>
+          <hr class="profile-border" />
           <div class="p-4 flex">
             <h1 class="manrope-regular text-xl w-64">New Password</h1>
             <div class="flex flex-col">
@@ -385,12 +385,18 @@ export default {
 };
 </script>
 
-<style>
+<style lang="postcss">
 .login-text-field {
   outline: 0;
   border-width: 0 0 2px;
   border-bottom-color: #c4c4c4;
   width: 28rem;
   height: 2rem;
+}
+
+.profile-border {
+  border-style: solid;
+  @apply border-light-blue;
+  border-width: 2.5px;
 }
 </style>
