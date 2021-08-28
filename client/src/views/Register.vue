@@ -13,6 +13,7 @@
               type="text"
               class="manrope-regular name-text-field"
               v-model="state.firstname"
+              @keypress="isLetter"
               :class="{ 'text-field-error': v.firstname.$error }"
             />
             <label
@@ -43,6 +44,7 @@
               type="text"
               class="manrope-regular name-text-field"
               v-model="state.lastname"
+              @keypress="isLetter"
               :class="{ 'text-field-error': v.lastname.$error }"
             />
             <label
@@ -273,7 +275,7 @@
         </button>
       </div>
       <router-link class="manrope-bold text-primary-blue" to="/">
-        <span class="absolute bottom-10 right-16">Sign in instead</span>
+        <span class="absolute bottom-20 right-16">Sign in instead</span>
       </router-link>
     </div>
   </div>
@@ -329,6 +331,18 @@ export default {
       () => state.password === state.confirmPassword
     );
 
+    // to check if key inputted in first name and last name is a letter
+    function isLetter(evt) {
+      evt = (evt) ? evt : window.event;
+      var charCode = (evt.which) ? evt.which : evt.keyCode;
+      // if uppercase / lowercase letter or space
+      if ((charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122) || charCode === 32) {
+        return true;
+      } else {
+        evt.preventDefault();
+      }
+    }
+
     async function registerUser() {
       const data = {
         firstname: state.firstname,
@@ -359,7 +373,7 @@ export default {
       }
     }
 
-    return { state, registerUser, v, passwordConfirmed };
+    return { state, registerUser, isLetter, v, passwordConfirmed };
   },
 };
 </script>

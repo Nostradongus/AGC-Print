@@ -12,6 +12,7 @@
               class="manrope-regular input-text-field"
               :class="{ 'border-red': v.name.$error }"
               v-model="state.name"
+              @keypress="isLetter"
             />
             <label
               for="completename"
@@ -187,6 +188,18 @@ export default {
 
     const v = useVuelidate(rules, state);
 
+    // to check if key inputted in first name and last name is a letter
+    function isLetter(evt) {
+      evt = (evt) ? evt : window.event;
+      var charCode = (evt.which) ? evt.which : evt.keyCode;
+      // if uppercase / lowercase letter or space
+      if ((charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122) || charCode === 32) {
+        return true;
+      } else {
+        evt.preventDefault();
+      }
+    }
+
     async function confirmOrdersFromCart(e) {
       e.preventDefault();
       const validated = await v.value.$validate();
@@ -214,7 +227,7 @@ export default {
       }
     }
 
-    return { state, confirmOrdersFromCart, v };
+    return { state, confirmOrdersFromCart, isLetter, v };
   },
 };
 </script>

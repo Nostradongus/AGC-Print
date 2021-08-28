@@ -5,6 +5,8 @@ import UserService from '../service/user_service.js';
 
 import nodemailer from 'nodemailer';
 
+import logger from '../logger/index.js';
+
 const workerController = {
   // worker controller method to retrieve and return all workers from the database
   getWorkers: async (req, res) => {
@@ -105,7 +107,7 @@ const workerController = {
           '<p>[Please do not reply to this email. This is an auto-generated message]</p>',
       });
       // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-      console.log('Message sent: %s', emailFormat.messageId);
+      logger.info('Message sent: ' + emailFormat.messageId);
 
       return res
         .status(201)
@@ -162,7 +164,7 @@ const workerController = {
           '<p>[Please do not reply to this email. This is an auto-generated message]</p>',
       });
       // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-      console.log('Message sent: %s', emailFormat.messageId);
+      logger.info('Message sent: ' + emailFormat.messageId);
 
       return res
         .status(201)
@@ -221,7 +223,7 @@ const workerController = {
           '<p>[Please do not reply to this email. This is an auto-generated message]</p>',
       });
       // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-      console.log('Message sent: %s', emailFormat.messageId);
+      logger.info('Message sent: ' + emailFormat.messageId);
 
       return res
         .status(201)

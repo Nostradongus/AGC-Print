@@ -180,9 +180,9 @@ export default {
     });
 
     const rules = {
-      quantity: {required, numeric},
-      width: {required, numeric, minValue: minValue(6), maxValue: maxValue(64)},
-      height: {required, numeric, minValue: minValue(6), maxValue: maxValue(64)},
+      quantity: {required, numeric, maxValue: maxValue(1000)},
+      width: {required, numeric, minValue: minValue(6), maxValue: maxValue(120)},
+      height: {required, numeric, minValue: minValue(6), maxValue: maxValue(120)},
     };
 
     const v = useVuelidate(rules,state);

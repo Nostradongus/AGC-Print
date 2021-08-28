@@ -202,7 +202,7 @@ export default {
     });
 
     const rules = {
-      quantity: {required, numeric},
+      quantity: {required, numeric, maxValue: maxValue(1000)},
       width: {required, numeric, minValue: minValue(6), maxValue: maxValue(120)},
       height: {required, numeric, minValue: minValue(6), maxValue: maxValue(120)},
       eyelets: { required }

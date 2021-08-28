@@ -40,6 +40,7 @@
                   'text-field-error': state.firstnameError,
                 }"
                 @keyup.delete="() => (state.firstnameError = false)"
+                @keypress="isLetter"
               />
               <p
                 class="text-red manrope-bold text-left text-sm"
@@ -63,6 +64,7 @@
                   'text-field-error': v.email.$error || state.lastnameError,
                 }"
                 @keyup.delete="() => (state.lastnameError = false)"
+                @keypress="isLetter"
               />
               <p
                 class="text-red manrope-bold text-left text-sm"
@@ -283,6 +285,18 @@ export default {
 
     const v = useVuelidate(rules, formData);
 
+    // to check if key inputted in first name and last name is a letter
+    function isLetter(evt) {
+      evt = (evt) ? evt : window.event;
+      var charCode = (evt.which) ? evt.which : evt.keyCode;
+      // if uppercase / lowercase letter or space
+      if ((charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122) || charCode === 32) {
+        return true;
+      } else {
+        evt.preventDefault();
+      }
+    }
+
     onMounted(() => {
       getContactNumber();
     });
@@ -362,6 +376,7 @@ export default {
       state,
       formData,
       updateUser,
+      isLetter,
       v,
       passwordConfirmed,
       isDisabled,

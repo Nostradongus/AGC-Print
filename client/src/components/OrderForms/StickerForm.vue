@@ -199,7 +199,7 @@ export default {
     const router = useRouter();
     const store = useStore();
     const state = reactive({
-      quantity: 1,
+      quantity: 100,
       width: '',
       height: '',
       type: 'Sticker',
@@ -213,7 +213,7 @@ export default {
     });
 
     const rules = {
-      quantity: {required, numeric, minValue: minValue(100)},
+      quantity: {required, numeric, minValue: minValue(100), maxValue: maxValue(100000)},
       width: {required, numeric, minValue: minValue(0.5), maxValue: maxValue(64)},
       height: {required, numeric, minValue: minValue(0.5), maxValue: maxValue(64)},
     };

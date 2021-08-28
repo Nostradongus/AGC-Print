@@ -17,6 +17,9 @@ import UserService from '../service/user_service.js';
 // import nodemailer module for sending emails to clients
 import nodemailer from 'nodemailer';
 
+// import logger for terminal messages
+import logger from '../logger/index.js';
+
 // order controller object for order controller methods
 const orderController = {
   // order controller method to retrieve and return all order sets from the database
@@ -497,13 +500,13 @@ const orderController = {
           '<p>[Please do not reply to this email. This is an auto-generated message]</p>',
       });
       // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-      console.log('Message sent: %s', emailFormat.messageId);
+      logger.info('Message sent: ' + emailFormat.messageId);
 
       return res
         .status(201)
         .json('Order Placed E-mail Sent To ' + clientData.email + '!');
     } catch (err) {
-      console.log(err);
+      logger.info(err);
       res.status(500).json({ message: 'Server Error' });
     }
   },
