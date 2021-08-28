@@ -226,7 +226,8 @@ export default {
       // check if one of the dimension is less than or equal to 64
       // if yes, the another dimension can be greater than 64 as a special case
       if ((parseInt(state.width) <= 64 && parseInt(state.height) >= 64) ||
-          (parseInt(state.width) >= 64 && parseInt(state.height) <= 64)) {
+          (parseInt(state.width) >= 64 && parseInt(state.height) <= 64) ||
+          (parseInt(state.width) <= 64 && parseInt(state.height) <= 64)) {
         state.dimValidation = true;
       } else {
         state.dimValidation = false;

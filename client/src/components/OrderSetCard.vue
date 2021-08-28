@@ -3,7 +3,7 @@
     <div class="mx-auto mb-0.5 h-30 bg-light-blue rounded-xl p-3 order-card">
       <div class="flex p-1">
         <div class="my-auto pr-3 w-1/5">
-          <span class="text-lg manrope-regular">Order #{{ order.id }}</span>
+          <span class="text-md manrope-regular">Order #{{ order.id }}</span>
         </div>
         <div class="flex-1">
           <div class="space-y-1 ml-3 mt-1">

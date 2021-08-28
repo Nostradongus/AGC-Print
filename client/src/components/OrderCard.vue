@@ -3,7 +3,7 @@
     <div class="bg-light-blue rounded-xl p-4 mx-auto mb-0.5 h-30 cart-card">
       <div class="flex p-3">
         <div class="my-auto pr-3 w-1/3">
-          <span class="text-lg manrope-regular">Order #{{ order.id }}</span>
+          <span class="text-md manrope-regular">Order #{{ order.id }}</span>
         </div>
         <div class="flex items-center pl-8 w-1/3 h-1/3">
           <!-- TODO: replace alt attribute with 'No Preview' asset image -->
