@@ -80,7 +80,7 @@
       <p
         class="text-red manrope-bold text-left text-sm"
       >
-        Width and height cannot be both 64 inches!
+        Only one between width and height can be greater than 64!
       </p>
     </div>
     <div class="flex justify-start">
@@ -214,18 +214,22 @@ export default {
 
     const rules = {
       quantity: {required, numeric, minValue: minValue(100), maxValue: maxValue(100000)},
-      width: {required, numeric, minValue: minValue(0.5), maxValue: maxValue(64)},
-      height: {required, numeric, minValue: minValue(0.5), maxValue: maxValue(64)},
+      width: {required, numeric, minValue: minValue(0.5)},
+      height: {required, numeric, minValue: minValue(0.5)},
     };
 
     const v = useVuelidate(rules,state);
 
+    // for special case, one dimension can go greater than 64 if the other dimension
+    // is less than or equal to 64 (height extension case)
     function onChangeHeightWidth() {
-      // check if height and width are both 64 inches
-      if (parseInt(state.width) === 64 && parseInt(state.height) === 64) {
-        state.dimValidation = false;
-      } else {
+      // check if one of the dimension is less than or equal to 64
+      // if yes, the another dimension can be greater than 64 as a special case
+      if ((parseInt(state.width) <= 64 && parseInt(state.height) >= 64) ||
+          (parseInt(state.width) >= 64 && parseInt(state.height) <= 64)) {
         state.dimValidation = true;
+      } else {
+        state.dimValidation = false;
       }
     }
 
