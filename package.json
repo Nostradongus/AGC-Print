@@ -1,0 +1,19 @@
+{
+  "name": "agc-print",
+  "version": "1.0.0",
+  "description": "- Product Owner: Jacob Dy \r - Scrum Master: Heinze Moneda\r - Designer: Josh Chua\r - Developers: Joshue Jadie, Paolo Espiritu \r - QAs: Jason Alon-alon, Julian Li",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nostradongus/AGC-Print.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Nostradongus/AGC-Print/issues"
+  },
+  "homepage": "https://github.com/Nostradongus/AGC-Print#readme"
+}

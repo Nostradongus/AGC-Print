@@ -35,7 +35,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: ['http://localhost:3000', 'https://localhost:3000'],
+    origin: ['https://agcprint.netlify.app'],
     credentials: true,
   })
 );
