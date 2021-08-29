@@ -149,8 +149,15 @@
                 bg-primary-blue
               "
               @click="submitPayment"
+              v-if="!state.submitted"
               >Pay Now</button
             >
+            <p
+              v-else
+              class="mb-2 manrope-bold text-primary-blue text-lg text-right"
+            >
+              Submitting payment, please wait...
+            </p>
           </div>
         </div>
         <div class="flex items-end mt-1 mb-5">
@@ -196,6 +203,7 @@ export default {
       paymentFile: null,
       curDate: null,
       downPayment: null,
+      submitted: false,
     });
 
     onMounted(() => {
@@ -254,6 +262,9 @@ export default {
       state.fileValidation = file.value.files.length == 0 ? false : true;
 
       if (state.fileValidation && state.fileTypeValidation) {
+        // indicate that payment form has been submitted
+        state.submitted = true;
+
         // create FormData to store user payment receipt data with uploaded file
         const formData = new FormData();
         formData.append('orderSetId', route.params.id);
@@ -272,6 +283,7 @@ export default {
           state.payment = payments.data;
 
           // reset fields
+          state.submitted = false;
           state.fileValidation = null;
           state.fileTypeValidation = null;
           document.getElementById('payment-file').value = ''; // remove file

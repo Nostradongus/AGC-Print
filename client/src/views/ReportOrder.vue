@@ -166,9 +166,16 @@
               bg-primary-blue
               p-3
             "
+            v-if="!state.submitted"
           >
             Submit Report
           </button>
+          <p
+            v-else
+            class="mt-11 mb-2 manrope-bold text-primary-blue text-lg text-right"
+          >
+            Submitting report, please wait...
+          </p>
         </div>
         <div class="flex justify-end lg:mr-40">
           <p
@@ -215,6 +222,7 @@ export default {
       reportFile: null,
       reportSubmitted: false,
       alreadyReported: false,
+      submitted: false,
     });
 
     const rules = {
@@ -274,6 +282,7 @@ export default {
       try {
         const res = await api.getOrderSet(route.params.id);
         state.order = res.data;
+        state.alreadyReported = state.order.reported;
       } catch (err) {
         console.log(err);
       }
@@ -301,6 +310,9 @@ export default {
                       state.fileTypeValidation && !state.alreadyReported;
 
       if (isValid) {
+        // indicate that report form has been submitted
+        state.submitted = true;
+
         // create FormData to store user report data with uploaded file
         const formData = new FormData();
         formData.append('orderSetId', route.params.id);
@@ -315,14 +327,15 @@ export default {
 
         // if user report successfully submitted
         if (res.data != null && typeof res.data !== 'undefined') {
-          // confirm that order set has been already reported
-          await api.updateOrderSetReported(route.params.id, { status: true });
-
           // set indicator that user report was submitted successfully
           state.reportSubmitted = true;
           state.alreadyReported = true;
 
+          // confirm that order set has been already reported
+          await api.updateOrderSetReported(route.params.id, { status: true });
+
           // reset fields
+          state.submitted = false;
           state.fileValidation = null;
           state.fileTypeValidation = null;
           state.typeValidation = null;

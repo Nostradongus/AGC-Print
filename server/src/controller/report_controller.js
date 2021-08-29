@@ -1,7 +1,11 @@
 // get report service static object from service folder
 import ReportService from '../service/report_service.js';
 
+// import cloudinary for cloud storage file uploading
+import cloudinary from '../config/cloudinary.js';
+
 // import fs module for file manipulation
+// eslint-disable-next-line no-unused-vars
 import fs from 'fs';
 
 // import uniqid module for unique id generator
@@ -78,32 +82,54 @@ const reportController = {
       const files = [];
 
       for (let ctr = 0; ctr < req.files.length; ctr++) {
-        // get file extension and create filename format for uploaded order file
-        const ext = req.files[ctr].filename.substring(
-          req.files[ctr].filename.indexOf('.') + 1
+        /* NOTE: USE IF UPLOADING FROM LOCAL STORAGE ONLY */
+        // // get file extension and create filename format for uploaded report file
+        // const ext = req.files[ctr].filename.substring(
+        //   req.files[ctr].filename.indexOf('.') + 1
+        // );
+        // const filename = `report-${uniqueId}-${ctr}.${ext}`;
+        // // public subfolder directory where the order file will be transferred and uploaded
+        // let folder = 'report_images';
+        // // if uploaded order file is not an image format
+        // if (!imgExtensions.includes(ext)) {
+        //   // report file shall be transferred and uploaded to the report_docs public subfolder
+        //   folder = 'report_docs';
+        // }
+        // // old path and new path
+        // const origFilePath = `./src/public/${folder}/${req.files[ctr].filename}`;
+        // const newFilePath = `./src/public/${folder}/${filename}`;
+        // // rename uploaded report file
+        // fs.renameSync(origFilePath, newFilePath);
+        // // create new report image file object
+        // const file = {
+        //   filename: filename,
+        //   filePath: newFilePath,
+        // };
+
+        /* NOTE: USE IF UPLOADING WITH CLOUDINARY */
+        // get file extension and create designated filename format for uploaded report file
+        const ext = req.files[ctr].originalname.substring(
+          req.files[ctr].originalname.indexOf('.') + 1
         );
-        const filename = `report-${uniqueId}-${ctr}.${ext}`;
-
-        // public subfolder directory where the order file will be transferred and uploaded
+        const filename = `report-${uniqueId}-${ctr}`;
+        // cloudinary directory where the report file will be uploaded
         let folder = 'report_images';
-
-        // if uploaded order file is not an image format
+        // if report file is not in image format
         if (!imgExtensions.includes(ext)) {
-          // report file shall be transferred and uploaded to the report_docs public subfolder
           folder = 'report_docs';
         }
-
-        // old path and new path
-        const origFilePath = `./src/public/${folder}/${req.files[ctr].filename}`;
-        const newFilePath = `./src/public/${folder}/${filename}`;
-
-        // rename uploaded report file
-        fs.renameSync(origFilePath, newFilePath);
-
+        // upload to cloudinary
+        const result = await cloudinary.v2.uploader.upload(
+          req.files[ctr].path,
+          {
+            public_id: filename,
+            folder: folder,
+          }
+        );
         // create new report image file object
         const file = {
-          filename: filename,
-          filePath: newFilePath,
+          filename: result.public_id,
+          filePath: result.secure_url,
         };
 
         // store in list of files for the new report

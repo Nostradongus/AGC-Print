@@ -8,6 +8,7 @@ import OrderSet from '../model/OrderSet.js';
 import OrderService from '../service/order_service.js';
 
 // import fs module for file manipulation
+// eslint-disable-next-line no-unused-vars
 import fs from 'fs';
 
 // import cloudinary for cloud storage file uploading
@@ -349,20 +350,24 @@ const orderController = {
 
   // order controller method to delete uploaded temporary order file coming from the client user order cart
   deleteFromCart: async (req, res) => {
-    /* NOTE: USE IF DELETING FROM LOCAL STORAGE */
+    // NOTE: USE WHEN DELETING FROM LOCAL STORAGE
     // // image file extensions
     // const imgExtensions = ['png', 'jpg', 'jpeg', 'svg'];
+
     // // get cart order item file extension
     // const ext = req.params.filename.substring(
     //   req.params.filename.indexOf('.') + 1
     // );
+
     // let path = '';
+
     // // if image file
     // if (imgExtensions.includes(ext)) {
     //   path = `./src/public/order_images/${req.params.filename}`;
     // } else {
     //   path = `./src/public/order_docs/${req.params.filename}`;
     // }
+
     // // delete uploaded order file
     // await fs.unlink(path, function (err) {
     //   if (err) {
@@ -373,10 +378,16 @@ const orderController = {
     //   return res.status(202).json({ message: 'Successfully deleted' });
     // });
 
-    /* NOTE: USE IF DELETING FROM CLOUDINARY */
+    // NOTE: USE WHEN DELETING FROM CLOUDINARY
     const arr = req.params.filename.split('.');
     const publicId = arr[0] + '/' + arr[1];
-    await cloudinary.uploader.destroy(publicId);
+    await cloudinary.uploader.destroy(publicId, function (result) {
+      if (result.result === 'ok') {
+        return res.status(202).json({ message: 'Successfully deleted' });
+      }
+
+      return res.status(500).json({ message: 'Server Error' });
+    });
   },
 
   // order controller method to delete an order from the database

@@ -30,7 +30,8 @@ export const getOrder = (id) => API.get(`/order/details/${id}`);
 export const getOrderSet = (id) => API.get(`/order/details/orderSet/${id}`);
 export const getOrdersFromOrderSet = (id) =>
   API.get(`/order/orderSet/orders/${id}`);
-export const deleteFromCart = (filename) => API.delete(`/order/cart/delete/${filename}`);
+export const deleteFromCart = (filename) =>
+  API.delete(`/order/cart/delete/${filename}`);
 export const addToCart = (orderData) => API.post('/order/cart/add', orderData);
 export const addOrderSet = (orders) => API.post('/order/cart/confirm', orders);
 export const deleteOrder = (id) => API.delete(`/order/delete/${id}`);

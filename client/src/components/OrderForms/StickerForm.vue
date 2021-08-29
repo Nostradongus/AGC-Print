@@ -172,9 +172,17 @@
         bg-primary-blue
         p-2
       "
+      v-if="!state.submitted"
     >
       Next
     </button>
+    
+    <p
+      v-else
+      class="mt-8 mb-8 manrope-bold text-primary-blue text-lg text-left"
+    >
+      Adding to cart, please wait...
+    </p>
   </form>
   <!-- end sticker form -->
 </template>
@@ -210,6 +218,7 @@ export default {
       fileTypeValidation: null,
       diecutValidation: null,
       dimValidation: true,
+      submitted: false,
     });
 
     const rules = {
@@ -268,6 +277,9 @@ export default {
       }
 
       if(validated && state.fileValidation && state.fileTypeValidation && state.diecutValidation && state.dimValidation) {
+        // indicate that order form has been submitted
+        state.submitted = true;
+
         // create FormData to store order data
         const formData = new FormData();
         formData.append('quantity', state.quantity);
