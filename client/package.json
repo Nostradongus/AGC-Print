@@ -12,6 +12,7 @@
     "@vuelidate/core": "*",
     "@vuelidate/validators": "*",
     "axios": "^0.21.1",
+    "esbuild": "^0.12.24",
     "i": "^0.3.6",
     "lodash": "^4.17.21",
     "lodash.clonedeep": "^4.5.0",
