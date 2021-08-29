@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "start": "npm install && node ./node_modules/esbuild/install.js && npm run build"
   },
   "dependencies": {
     "@vue-hero-icons/outline": "^1.7.2",
