@@ -7,25 +7,25 @@ const OrderService = {
   // this method retrieves and returns all order data in the database
   // from most recent to least recent
   getAllOrderSets: async () =>
-    OrderSet.find({}).sort({ timestamp: 'descending' }),
+    OrderSet.find({}).sort({ createdAt: 'descending' }),
 
   // this method returns all orders of users for the worker to view according to filter option
   // from most recent to least recent
   getAllOrderSetsFiltered: async (status) =>
-    OrderSet.find({ status: status }).sort({ timestamp: 'descending' }),
+    OrderSet.find({ status: status }).sort({ createdAt: 'descending' }),
 
   // this method retrieves and returns all orders of a specific user
   // from most recent to least recent
   getUserOrderSets: async (username) =>
     OrderSet.find({ user: username }).sort({
-      timestamp: 'descending',
+      createdAt: 'descending',
     }),
 
   // this method returns all orders of a specific user according to filter option
   // from most recent to least recent
   getUserOrderSetsFiltered: async (username, status) =>
     OrderSet.find({ user: username, status: status }).sort({
-      timestamp: 'descending',
+      createdAt: 'descending',
     }),
 
   // this method returns all active orders of users for the worker to process
@@ -40,7 +40,7 @@ const OrderService = {
           'Ready for Delivery',
         ],
       },
-    }).sort({ timestamp: 'descending' }),
+    }).sort({ createdAt: 'descending' }),
 
   // this method returns all active orders of the users
   // from most recent to least recent
@@ -55,7 +55,7 @@ const OrderService = {
           'Ready for Delivery',
         ],
       },
-    }).sort({ timestamp: 'descending' }),
+    }).sort({ createdAt: 'descending' }),
 
   // this method retrieves and returns a specific order set data based on given order set id
   getOrderSet: async (id) => OrderSet.findOne(id),

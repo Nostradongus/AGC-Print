@@ -13,6 +13,7 @@
               :class="{ 'border-red': v.name.$error }"
               v-model="state.name"
               @keypress="isLetter"
+              @change="isName(state.name)"
             />
             <label
               for="completename"
@@ -30,6 +31,12 @@
               v-if="v.name.$error"
             >
               {{ v.name.$errors[0].$message }}
+            </p>
+            <p
+              class="text-red manrope-bold text-left text-sm"
+              v-if="!state.nameValidation"
+            >
+              Complete name must only contain letters!
             </p>
           </div>
           <div class="relative mt-12">
@@ -172,6 +179,7 @@ export default {
       email: '',
       contactNo: '',
       address: '',
+      nameValidation: true,
     });
 
     const rules = {
@@ -200,11 +208,38 @@ export default {
       }
     }
 
+    // to check if first name or last name does not contain numbers and special characters
+    function isName(name) {
+      const specialChars = "<>@!#$%^&*()_+[]{}?:;|'\"\\,./~`-=";
+      const numbers = "1234567890";
+
+      // default value
+      state.nameValidation = true;
+
+      // check if name contains special characters
+      for (let ctr = 0; ctr < specialChars.length && state.nameValidation; ctr++) {
+        if (name.indexOf(specialChars[ctr]) > -1) {
+          state.nameValidation = false;
+          return false;
+        }
+      }
+
+      // check if name contains numbers
+      for (let ctr = 0; ctr < numbers.length && state.nameValidation; ctr++) {
+        if (name.indexOf(numbers[ctr]) > -1) {
+          state.nameValidation = false;
+          return false;
+        }
+      }
+
+      return true;
+    }
+
     async function confirmOrdersFromCart(e) {
       e.preventDefault();
       const validated = await v.value.$validate();
 
-      if (validated) {
+      if (validated && isName(state.name)) {
         // get delivery information data together with the orders made
         const data = {
           orders: store.state.order.orders,
@@ -227,7 +262,7 @@ export default {
       }
     }
 
-    return { state, confirmOrdersFromCart, isLetter, v };
+    return { state, confirmOrdersFromCart, isLetter, isName, v };
   },
 };
 </script>

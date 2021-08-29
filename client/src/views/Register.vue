@@ -14,6 +14,7 @@
               class="manrope-regular name-text-field"
               v-model="state.firstname"
               @keypress="isLetter"
+              @change="isName(state.firstname)"
               :class="{ 'text-field-error': v.firstname.$error }"
             />
             <label
@@ -45,6 +46,7 @@
               class="manrope-regular name-text-field"
               v-model="state.lastname"
               @keypress="isLetter"
+              @change="isName(state.lastname)"
               :class="{ 'text-field-error': v.lastname.$error }"
             />
             <label
@@ -67,7 +69,18 @@
             <p v-else class="text-red manrope-bold text-left text-sm invisible">
               placeholder
             </p>
+            
           </div>
+        </div>
+
+        <!-- error message for first and last name input fields when numbers and special chars occur -->
+        <div class="relative">
+          <p
+            class="text-red manrope-bold text-center text-sm"
+            v-if="!state.nameValidation"
+          >
+            First and last names must only contain letters!
+          </p>
         </div>
 
         <div class="relative mt-6">
@@ -308,6 +321,7 @@ export default {
       password: '',
       confirmPassword: '',
       error: null,
+      nameValidation: true,
     });
 
     const rules = {
@@ -333,6 +347,7 @@ export default {
 
     // to check if key inputted in first name and last name is a letter
     function isLetter(evt) {
+      state.nameValidation = true;
       evt = (evt) ? evt : window.event;
       var charCode = (evt.which) ? evt.which : evt.keyCode;
       // if uppercase / lowercase letter or space
@@ -341,6 +356,33 @@ export default {
       } else {
         evt.preventDefault();
       }
+    }
+
+    // to check if first name or last name does not contain numbers and special characters
+    function isName(name) {
+      const specialChars = "<>@!#$%^&*()_+[]{}?:;|'\"\\,./~`-=";
+      const numbers = "1234567890";
+
+      // default value
+      state.nameValidation = true;
+
+      // check if name contains special characters
+      for (let ctr = 0; ctr < specialChars.length && state.nameValidation; ctr++) {
+        if (name.indexOf(specialChars[ctr]) > -1) {
+          state.nameValidation = false;
+          return false;
+        }
+      }
+
+      // check if name contains numbers
+      for (let ctr = 0; ctr < numbers.length && state.nameValidation; ctr++) {
+        if (name.indexOf(numbers[ctr]) > -1) {
+          state.nameValidation = false;
+          return false;
+        }
+      }
+
+      return true;
     }
 
     async function registerUser() {
@@ -357,7 +399,7 @@ export default {
         const validated = await v.value.$validate();
         console.log(v.value);
 
-        if (validated && passwordConfirmed.value) {
+        if (validated && passwordConfirmed.value && isName(state.firstname) && isName(state.lastname)) {
           await api.signUp(data);
           const loginData = {
             username: state.username,
@@ -373,7 +415,7 @@ export default {
       }
     }
 
-    return { state, registerUser, isLetter, v, passwordConfirmed };
+    return { state, registerUser, isLetter, isName, v, passwordConfirmed };
   },
 };
 </script>

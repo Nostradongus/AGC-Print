@@ -41,6 +41,7 @@
                 }"
                 @keyup.delete="() => (state.firstnameError = false)"
                 @keypress="isLetter"
+                @change="isName(formData.firstname)"
               />
               <p
                 class="text-red manrope-bold text-left text-sm"
@@ -65,6 +66,7 @@
                 }"
                 @keyup.delete="() => (state.lastnameError = false)"
                 @keypress="isLetter"
+                @change="isName(formData.lastname)"
               />
               <p
                 class="text-red manrope-bold text-left text-sm"
@@ -73,6 +75,14 @@
                 You've entered your current lastname
               </p>
             </div>
+          </div>
+          <div class="p-4 flex" v-if="!state.nameValidation">
+            <h1 class="manrope-regular text-xl w-64" />
+            <p
+              class="text-red manrope-bold text-left text-sm"
+            >
+              First and last names must only contain letters!
+            </p>
           </div>
           <div class="p-4 flex">
             <h1 class="manrope-regular text-xl w-64">E-mail</h1>
@@ -266,6 +276,7 @@ export default {
       passwordError: false,
       firstnameError: false,
       lastnameError: false,
+      nameValidation: true,
     });
 
     const formData = reactive({
@@ -295,6 +306,33 @@ export default {
       } else {
         evt.preventDefault();
       }
+    }
+
+    // to check if first name or last name does not contain numbers and special characters
+    function isName(name) {
+      const specialChars = "<>@!#$%^&*()_+[]{}?:;|'\"\\,./~`-=";
+      const numbers = "1234567890";
+
+      // default value
+      state.nameValidation = true;
+
+      // check if name contains special characters
+      for (let ctr = 0; ctr < specialChars.length && state.nameValidation; ctr++) {
+        if (name.indexOf(specialChars[ctr]) > -1) {
+          state.nameValidation = false;
+          return false;
+        }
+      }
+
+      // check if name contains numbers
+      for (let ctr = 0; ctr < numbers.length && state.nameValidation; ctr++) {
+        if (name.indexOf(numbers[ctr]) > -1) {
+          state.nameValidation = false;
+          return false;
+        }
+      }
+
+      return true;
     }
 
     onMounted(() => {
@@ -340,7 +378,7 @@ export default {
       try {
         const validated = await v.value.$validate();
 
-        if (validated && passwordConfirmed.value) {
+        if (validated && passwordConfirmed.value && isName(formData.firstname) && isName(formData.lastname)) {
           await api.patchUser(state.username, data);
           store.dispatch('updateUser', data);
           router.push(`/profile/${state.username}`);
@@ -377,6 +415,7 @@ export default {
       formData,
       updateUser,
       isLetter,
+      isName,
       v,
       passwordConfirmed,
       isDisabled,

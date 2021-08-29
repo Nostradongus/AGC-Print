@@ -6,7 +6,7 @@ const PaymentService = {
   // this method retrieves and returns all payment receipt data in the database
   // from most recent to least recent
   getAllPayments: async () =>
-    Payment.find({}).sort({ timestamp: 'descending' }),
+    Payment.find({}).sort({ createdAt: 'descending' }),
 
   // this method retrieves and returns a specific payment receipt data based on the given id
   getPayment: async (id) => Payment.findOne(id),
@@ -14,12 +14,12 @@ const PaymentService = {
   // this method retrieves and returns all payment receipts of a specific user
   // from most recent to least recent
   getUserPayments: async (username) =>
-    Payment.find({ user: username }).sort({ timestamp: 'descending' }),
+    Payment.find({ user: username }).sort({ createdAt: 'descending' }),
 
   // this method retrieves and returns all payment receipts for an order set
   // from most recent to least recent
   getOrderSetIdPayments: async (orderSetId) =>
-    Payment.find({ orderSetId: orderSetId }).sort({ timestamp: 'descending' }),
+    Payment.find({ orderSetId: orderSetId }).sort({ createdAt: 'descending' }),
 
   // this method adds a new payment receipt data to the Payment collection in the database
   addPayment: async (payment) => {
