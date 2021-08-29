@@ -13,33 +13,37 @@ import token from '../middleware/token.js';
 // get express router
 const router = express.Router();
 
+// NOTE: USE IF UPLOADING IN LOCAL FOLDERS ONLY
 // set up multer for uploading order images
-const orderImageStorage = multer.diskStorage({
-  // where the order files will be uploaded
-  destination: function (req, file, cb) {
-    // image extensions
-    const imgExtensions = ['png', 'jpg', 'jpeg', 'svg'];
+// const orderImageStorage = multer.diskStorage({
+//   // where the order files will be uploaded
+//   destination: function (req, file, cb) {
+//     // image extensions
+//     const imgExtensions = ['png', 'jpg', 'jpeg', 'svg'];
 
-    // get uploaded file's extension (file type)
-    const filename = file.originalname;
-    const ext = filename.substring(filename.indexOf('.') + 1);
+//     // get uploaded file's extension (file type)
+//     const filename = file.originalname;
+//     const ext = filename.substring(filename.indexOf('.') + 1);
 
-    // if uploaded order file is a png, jpg, or svg file
-    if (imgExtensions.includes(ext)) {
-      // upload to order images subfolder
-      cb(null, './src/public/order_images');
-    } else {
-      // upload to order documents subfolder
-      cb(null, './src/public/order_docs');
-    }
-  },
+//     // if uploaded order file is a png, jpg, or svg file
+//     if (imgExtensions.includes(ext)) {
+//       // upload to order images subfolder
+//       cb(null, './src/public/order_images');
+//     } else {
+//       // upload to order documents subfolder
+//       cb(null, './src/public/order_docs');
+//     }
+//   },
 
-  // filename format for order file
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  },
-});
-const orderImageUpload = multer({ storage: orderImageStorage });
+//   // filename format for order file
+//   filename: function (req, file, cb) {
+//     cb(null, file.originalname);
+//   },
+// });
+// const orderFileUpload = multer({ storage: orderImageStorage });
+
+// NOTE: USE IF UPLOADING WITH CLOUDINARY
+const orderFileUpload = multer({ storage: multer.diskStorage({}) });
 
 // route for getting all orders from the database
 router.get('/', token.authenticateToken, orderController.getAllOrderSets);
@@ -100,7 +104,7 @@ router.get(
 router.post(
   '/cart/add',
   token.authenticateToken,
-  orderImageUpload.single('order-file'),
+  orderFileUpload.single('order-file'),
   orderController.addToCart
 );
 

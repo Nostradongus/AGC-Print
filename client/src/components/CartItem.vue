@@ -3,8 +3,17 @@
     <div class="bg-light-blue rounded-xl p-4 mx-auto mb-0.5 h-30 cart-card">
       <div class="flex p-3">
         <div class="flex items-center w-1/5 h-1/5">
-          <img
+          <!-- NOTE: USE IF ACCESSING FILE FROM LOCAL STORAGE -->
+          <!-- <img
             :src="`http://localhost:5000/order_images/${order.filename}`"
+            onerror="this.onerror=null;this.src='http://localhost:5000/assets/nopreview.png'"
+            alt="Order Image" 
+            class="order-img"
+            border="0"
+          /> -->
+          <!-- NOTE: USE IF ACCESSING FILE WITH CLOUDINARY -->
+          <img
+            :src="order.filePath"
             onerror="this.onerror=null;this.src='http://localhost:5000/assets/nopreview.png'"
             alt="Order Image" 
             class="order-img"
@@ -104,8 +113,16 @@ export default {
         }
       }
 
+      /* NOTE: USE WHEN DELETING FROM LOCAL STORAGE */
+      // await api.deleteFromCart(props.order.filename);
+
+      /* NOTE: USE WHEN DELETING FROM CLOUDINARY */
       // delete cart item image from database
-      await api.deleteFromCart(props.order.filename);
+      const arr = props.order.filename.split('/');
+      const filename = arr[0] + '.' + arr[1];
+      console.log(filename);
+
+      const result = await api.deleteFromCart(filename);
     }
 
     return { onDelete };

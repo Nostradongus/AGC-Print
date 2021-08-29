@@ -10,6 +10,9 @@ import OrderService from '../service/order_service.js';
 // import fs module for file manipulation
 import fs from 'fs';
 
+// import cloudinary for cloud storage file uploading
+import cloudinary from '../config/cloudinary.js';
+
 // import uniqid module for unique id generator
 import uniqid from 'uniqid';
 import UserService from '../service/user_service.js';
@@ -227,7 +230,7 @@ const orderController = {
   },
 
   // order controller method to create a temporary order object for user client local cart
-  addToCart: (req, res) => {
+  addToCart: async (req, res) => {
     // generated unique order id
     const uniqueId = uniqid();
 
@@ -235,25 +238,59 @@ const orderController = {
     // image extensions
     const imgExtensions = ['png', 'jpg', 'jpeg', 'svg'];
 
-    // get file extension and create filename format for uploaded order file
-    const ext = req.file.filename.substring(req.file.filename.indexOf('.') + 1);
-    const filename = `order-${uniqueId}.${ext}`;
+    /* NOTE: USE IF UPLOADING ONLY TO LOCAL STORAGE */
+    // // get file extension and create filename format for uploaded order file
+    // const ext = req.file.filename.substring(req.file.filename.indexOf('.') + 1);
+    // const filename = `order-${uniqueId}.${ext}`;
+    // // public subfolder directory where the order file will be transferred and uploaded
+    // let folder = 'order_images';
+    // // if uploaded order file is not an image format
+    // if (!imgExtensions.includes(ext)) {
+    //   // order file shall be transferred and uploaded to the order_docs public subfolder
+    //   folder = 'order_docs';
+    // }
+    // // old path and new path
+    // const origFilePath = `./src/public/${folder}/${req.file.filename}`;
+    // const newFilePath = `./src/public/${folder}/${filename}`;
+    // // rename uploaded order file
+    // fs.renameSync(origFilePath, newFilePath);
+    // create new Order object using deep copy
+    // // create new Order object using deep copy
+    // const newOrder = new Order({
+    //   id: uniqueId,
+    //   user: req.user.username,
+    //   type: JSON.parse(JSON.stringify(req.body.type)),
+    //   quantity: JSON.parse(JSON.stringify(req.body.quantity)),
+    //   filename: filename,
+    //   filePath: newFilePath,
+    //   width: JSON.parse(JSON.stringify(req.body.width)),
+    //   height: JSON.parse(JSON.stringify(req.body.height)),
+    //   frameOption: null,
+    //   frameEdges: null,
+    //   frameFinishing: null,
+    //   eyelets: null,
+    //   diecut: null,
+    //   remarks: null,
+    // });
 
-    // public subfolder directory where the order file will be transferred and uploaded
+    /* NOTE: USE IF UPLOADING WITH CLOUDINARY */
+    // get uploaded file's extension and upload to cloudinary with designated filename format
+    const ext = req.file.originalname.substring(
+      req.file.originalname.indexOf('.') + 1
+    );
+    const filename = `order-${uniqueId}`;
+    // cloudinary directory where the order file will be uploaded
     let folder = 'order_images';
-
-    // if uploaded order file is not an image format
+    // if order file is not in image format
     if (!imgExtensions.includes(ext)) {
-      // order file shall be transferred and uploaded to the order_docs public subfolder
+      // order file shall be uploaded to order_docs cloudinary directory
       folder = 'order_docs';
     }
-
-    // old path and new path
-    const origFilePath = `./src/public/${folder}/${req.file.filename}`;
-    const newFilePath = `./src/public/${folder}/${filename}`;
-
-    // rename uploaded order file
-    fs.renameSync(origFilePath, newFilePath);
+    // upload to cloudinary
+    const result = await cloudinary.v2.uploader.upload(req.file.path, {
+      public_id: filename,
+      folder: folder,
+    });
 
     // create new Order object using deep copy
     const newOrder = new Order({
@@ -261,8 +298,8 @@ const orderController = {
       user: req.user.username,
       type: JSON.parse(JSON.stringify(req.body.type)),
       quantity: JSON.parse(JSON.stringify(req.body.quantity)),
-      filename: filename,
-      filePath: newFilePath,
+      filename: result.public_id,
+      filePath: result.secure_url,
       width: JSON.parse(JSON.stringify(req.body.width)),
       height: JSON.parse(JSON.stringify(req.body.height)),
       frameOption: null,
@@ -312,32 +349,34 @@ const orderController = {
 
   // order controller method to delete uploaded temporary order file coming from the client user order cart
   deleteFromCart: async (req, res) => {
-    // image file extensions
-    const imgExtensions = ['png', 'jpg', 'jpeg', 'svg'];
+    /* NOTE: USE IF DELETING FROM LOCAL STORAGE */
+    // // image file extensions
+    // const imgExtensions = ['png', 'jpg', 'jpeg', 'svg'];
+    // // get cart order item file extension
+    // const ext = req.params.filename.substring(
+    //   req.params.filename.indexOf('.') + 1
+    // );
+    // let path = '';
+    // // if image file
+    // if (imgExtensions.includes(ext)) {
+    //   path = `./src/public/order_images/${req.params.filename}`;
+    // } else {
+    //   path = `./src/public/order_docs/${req.params.filename}`;
+    // }
+    // // delete uploaded order file
+    // await fs.unlink(path, function (err) {
+    //   if (err) {
+    //     // if error has occurred, send server error status and message
+    //     return res.status(500).json({ message: 'Server Error' });
+    //   }
 
-    // get cart order item file extension
-    const ext = req.params.filename.substring(
-      req.params.filename.indexOf('.') + 1
-    );
+    //   return res.status(202).json({ message: 'Successfully deleted' });
+    // });
 
-    let path = '';
-
-    // if image file
-    if (imgExtensions.includes(ext)) {
-      path = `./src/public/order_images/${req.params.filename}`;
-    } else {
-      path = `./src/public/order_docs/${req.params.filename}`;
-    }
-
-    // delete uploaded order file
-    await fs.unlink(path, function (err) {
-      if (err) {
-        // if error has occurred, send server error status and message
-        return res.status(500).json({ message: 'Server Error' });
-      }
-
-      return res.status(202).json({ message: 'Successfully deleted' });
-    });
+    /* NOTE: USE IF DELETING FROM CLOUDINARY */
+    const arr = req.params.filename.split('.');
+    const publicId = arr[0] + '/' + arr[1];
+    await cloudinary.uploader.destroy(publicId);
   },
 
   // order controller method to delete an order from the database

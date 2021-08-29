@@ -6,9 +6,17 @@
           <span class="text-md manrope-regular">Order #{{ order.id }}</span>
         </div>
         <div class="flex items-center pl-8 w-1/3 h-1/3">
-          <!-- TODO: replace alt attribute with 'No Preview' asset image -->
-          <img
+          <!-- NOTE: USE IF ACCESSING FROM LOCAL STORAGE -->
+          <!-- <img
             :src="`http://localhost:5000/order_images/${order.filename}`"
+            onerror="this.onerror=null;this.src='http://localhost:5000/assets/nopreview.png'"
+            alt="Order Image"
+            class="order-img"
+            border="0"
+          /> -->
+          <!-- NOTE: USE IF ACCESSING FROM CLOUDINARY -->
+          <img
+            :src="order.filePath"
             onerror="this.onerror=null;this.src='http://localhost:5000/assets/nopreview.png'"
             alt="Order Image"
             class="order-img"
