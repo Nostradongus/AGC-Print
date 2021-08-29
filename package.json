@@ -4,7 +4,8 @@
   "description": "- Product Owner: Jacob Dy \r - Scrum Master: Heinze Moneda\r - Designer: Josh Chua\r - Developers: Joshue Jadie, Paolo Espiritu \r - QAs: Jason Alon-alon, Julian Li",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server/src/server"
   },
   "repository": {
     "type": "git",
