@@ -280,7 +280,7 @@
         </div>
         <button
           type="submit"
-          class="manrope-bold login-btn mt-6"
+          class="manrope-bold login-btn mt-6 transition duration-300 hover:bg-link-water hover:text-primary-blue"
           id="login-btn"
           @click="registerUser"
         >
