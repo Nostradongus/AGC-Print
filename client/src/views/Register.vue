@@ -286,6 +286,12 @@
         >
           Sign Up
         </button>
+        <p
+          v-if="state.submitted"
+          class="manrope-bold text-primary-blue text-md"
+        >
+          Creating account, please wait...
+        </p>
       </div>
       <router-link class="manrope-bold text-primary-blue" to="/">
         <span class="absolute bottom-20 right-16">Sign in instead</span>
@@ -322,6 +328,7 @@ export default {
       confirmPassword: '',
       error: null,
       nameValidation: true,
+      submitted: false,
     });
 
     const rules = {
@@ -400,18 +407,21 @@ export default {
         console.log(v.value);
 
         if (validated && passwordConfirmed.value && isName(state.firstname) && isName(state.lastname)) {
+          state.submitted = true;
           await api.signUp(data);
           const loginData = {
             username: state.username,
             password: state.password,
           };
           const result = await api.signIn(loginData);
+          state.submitted = false;
           store.dispatch('loginUser', result.data);
           router.push({ name: 'MyOrders' });
         }
       } catch (err) {
         console.log(err.response.data);
         state.error = err.response.data;
+        state.submitted = false;
       }
     }
 

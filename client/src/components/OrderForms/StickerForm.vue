@@ -13,7 +13,6 @@
         type="number"
         class="manrope-regular input-text-field w-48"
         :class="{ 'border-red': v.quantity.$error }"
-        min="1"
         v-model="state.quantity"
       />
       <label

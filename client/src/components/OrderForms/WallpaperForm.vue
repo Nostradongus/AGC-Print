@@ -13,7 +13,6 @@
         type="number"
         class="manrope-regular input-text-field w-48"
         :class="{ 'border-red': v.quantity.$error }"
-        min="1"
         v-model="state.quantity"
       />
       <label
@@ -179,7 +178,7 @@ export default {
     });
 
     const rules = {
-      quantity: {required, numeric, maxValue: maxValue(1000)},
+      quantity: {required, numeric, minValue: minValue(1), maxValue: maxValue(1000)},
       width: {required, numeric, minValue: minValue(6), maxValue: maxValue(120)},
       height: {required, numeric, minValue: minValue(6), maxValue: maxValue(120)},
     };

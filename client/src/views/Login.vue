@@ -54,13 +54,22 @@
               >Password</label
             >
           </div>
-          <button class="manrope-bold login-btn mt-10" id="login-btn">
+          <button 
+            class="manrope-bold login-btn mt-10 transition duration-300 hover:bg-link-water hover:text-primary-blue" 
+            id="login-btn"
+          >
             Sign in
           </button>
+          <p
+            v-if="state.submitted"
+            class="manrope-bold text-primary-blue text-md"
+          >
+            Signing in, please wait...
+          </p>
         </form>
       </div>
       <router-link class="manrope-bold text-primary-blue" to="/register">
-        <span class="absolute bottom-20 right-16">Don't have an account?</span>
+        <span class="absolute bottom-16 right-16">Don't have an account?</span>
       </router-link>
     </div>
   </div>
@@ -80,6 +89,7 @@ export default {
       username: '',
       password: '',
       error: false,
+      submitted: false,
     });
 
     async function loginUser() {
@@ -88,6 +98,7 @@ export default {
         password: state.password,
       };
       try {
+        state.submitted = true;
         const result = await api.signIn(data);
         console.log(result.data);
 
@@ -103,6 +114,7 @@ export default {
         console.log(err.response.data);
         state.error = true;
       }
+      state.submitted = false;
     }
 
     return { state, loginUser };

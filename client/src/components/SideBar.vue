@@ -246,6 +246,7 @@
           ease-in-out
         "
         @click="logoutUser"
+        v-if="!state.loggingOut"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -260,6 +261,12 @@
           /></svg
         >Logout
       </button>
+      <p
+        v-else
+        class="mt-2 px-4 py-4 manrope-bold text-primary-blue text-xl text-left"
+      >
+        Logging out...
+      </p>
     </div>
   </nav>
 </template>
@@ -278,6 +285,7 @@ export default {
       username: null,
       worker: null,
       error: false,
+      loggingOut: false,
     });
 
     if (JSON.parse(localStorage.getItem('user')) != null) {
@@ -287,6 +295,7 @@ export default {
     }
 
     async function logoutUser() {
+      state.loggingOut = true;
       try {
         await api.signOut();
         store.dispatch('logoutUser');
@@ -296,6 +305,7 @@ export default {
       } catch (err) {
         state.error = true;
       }
+      state.loggingOut = false;
     }
 
     return { state, logoutUser };

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="state.order">
+  <div>
     <side-bar />
     <page-header title="Payment Portal">
       <div class="pr-8 pl-8 pt-4">
@@ -37,8 +37,15 @@
           </div>
         </div>
 
+        <p 
+          class="manrope-bold text-2xl text-center text-primary-blue mt-8" 
+          v-if="state.empty"
+        >
+          Loading data, please wait...
+        </p>
+
         <!-- Payment System -->
-        <div class="flex">
+        <div v-if="!state.empty" class="flex">
           <div class="flex-1">
             <div class="bg-light-blue rounded-xl p-6 mx-auto mb-8 h-30">
               <div class="grid grid-cols-2">
@@ -101,7 +108,7 @@
             </p>
           </div>
         </div>
-        <div class="overflow-y-auto max-h-80 pt-2 pb-2">
+        <div v-if="state.payment != null" class="overflow-y-auto max-h-80 pt-2 pb-2">
           <!-- list of submitted payments by user -->
           <payment-card
             v-for="payment in state.payment"
@@ -131,7 +138,7 @@
               >Back</router-link
             >
           </div>
-          <div>
+          <div v-if="!state.empty">
             <button
               class="
                 manrope-regular
@@ -204,6 +211,7 @@ export default {
       curDate: null,
       downPayment: null,
       submitted: false,
+      empty: true,
     });
 
     onMounted(() => {
@@ -230,6 +238,7 @@ export default {
       } catch (err) {
         console.log(err);
       }
+      state.empty = false;
     }
 
     function onSelectFile() {
