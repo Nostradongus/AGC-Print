@@ -202,7 +202,7 @@ export default {
       quantity: {required, numeric, minValue: minValue(1), maxValue: maxValue(1000)},
       width: {required, numeric, minValue: minValue(6), maxValue: maxValue(120)},
       height: {required, numeric, minValue: minValue(6), maxValue: maxValue(120)},
-      eyelets: { required, minValue: minValue(0) }
+      eyelets: { required, minValue: minValue(0), maxValue: maxValue(100) }
     };
 
     const v = useVuelidate(rules,state);
