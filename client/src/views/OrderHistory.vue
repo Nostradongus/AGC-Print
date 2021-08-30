@@ -2,8 +2,14 @@
   <div>
     <side-bar />
     <page-header title="Order History">
+      <p 
+        class="manrope-bold text-2xl text-center text-primary-blue mt-8" 
+        v-if="state.empty == null"
+      >
+        Loading data, please wait...
+      </p>
       <!-- display all orders of user -->
-      <div v-if="!state.empty" class="h-full w-full">
+      <div v-if="state.empty != null && !state.empty" class="h-full w-full">
         <!-- message and status filter option box -->
         <div class="flex items-end mb-5">
           <div class="flex-1">

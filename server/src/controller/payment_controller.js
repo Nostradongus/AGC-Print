@@ -1,7 +1,11 @@
 // get payment service static object from service folder
 import PaymentService from '../service/payment_service.js';
 
+// import cloudinary for cloud storage file uploading
+import cloudinary from '../config/cloudinary.js';
+
 // import fs module for file manipulation
+// eslint-disable-next-line no-unused-vars
 import fs from 'fs';
 
 // import uniqid module for unique id generator
@@ -106,43 +110,63 @@ const paymentController = {
       // image extensions
       const imgExtensions = ['png', 'jpg', 'jpeg', 'svg'];
 
-      // get file extension and create filename format for uploaded payment file
-      const ext = req.file.filename.substring(
-        req.file.filename.indexOf('.') + 1
+      /* NOTE: USE IF UPLOADING ONLY TO LOCAL STORAGE */
+      // // get file extension and create filename format for uploaded payment file
+      // const ext = req.file.filename.substring(
+      //   req.file.filename.indexOf('.') + 1
+      // );
+      // const filename = `payment-${uniqueId}.${ext}`;
+
+      // // public subfolder directory where the payment file will be transferred and uploaded
+      // let folder = 'payment_images';
+
+      // // if uploaded payment file is not an image format
+      // if (!imgExtensions.includes(ext)) {
+      //   // payment file shall be transferred and uploaded to the payment_docs public subfolder
+      //   folder = 'payment_docs';
+      // }
+
+      // // old path and new path
+      // const origFilePath = `./src/public/${folder}/${req.file.filename}`;
+      // const newFilePath = `./src/public/${folder}/${filename}`;
+
+      // // rename uploaded report file
+      // fs.renameSync(origFilePath, newFilePath);
+
+      /* NOTE: USE IF UPLOADING WITH CLOUDINARY */
+      // get uploaded file's extension and upload to cloudinary with designated filename format
+      const ext = req.file.originalname.substring(
+        req.file.originalname.indexOf('.') + 1
       );
-      const filename = `payment-${uniqueId}.${ext}`;
-
-      // public subfolder directory where the payment file will be transferred and uploaded
+      const filename = `payment-${uniqueId}`;
+      // cloudinary directory where the order file will be uploaded
       let folder = 'payment_images';
-
-      // if uploaded payment file is not an image format
+      // if order file is not in image format
       if (!imgExtensions.includes(ext)) {
-        // payment file shall be transferred and uploaded to the payment_docs public subfolder
+        // order file shall be uploaded to order_docs cloudinary directory
         folder = 'payment_docs';
       }
-
-      // old path and new path
-      const origFilePath = `./src/public/${folder}/${req.file.filename}`;
-      const newFilePath = `./src/public/${folder}/${filename}`;
-
-      // rename uploaded report file
-      fs.renameSync(origFilePath, newFilePath);
+      // upload to cloudinary
+      const result = await cloudinary.v2.uploader.upload(req.file.path, {
+        public_id: filename,
+        folder: folder,
+      });
 
       // create new payment receipt object
       const payment = {
         id: uniqueId,
         orderSetId: req.body.orderSetId,
         user: req.user.username,
-        filename: filename,
-        filePath: newFilePath,
+        filename: result.public_id,
+        filePath: result.secure_url,
         dateUploaded: formattedDate,
       };
 
       // add new payment receipt to database
-      const result = await PaymentService.addPayment(payment);
+      const receipt = await PaymentService.addPayment(payment);
 
       // pass new payment receipt back to client
-      return res.status(201).json(result);
+      return res.status(201).json(receipt);
     } catch (err) {
       // if error has occurred, send server error status and message
       res.status(500).json({ message: 'Server Error' });

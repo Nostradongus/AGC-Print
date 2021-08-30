@@ -13,7 +13,6 @@
         type="number"
         class="manrope-regular input-text-field w-48"
         :class="{ 'border-red': v.quantity.$error }"
-        min="1"
         v-model="state.quantity"
       />
       <label
@@ -239,9 +238,17 @@
         bg-primary-blue
         p-2
       "
+      v-if="!state.submitted"
     >
       Next
     </button>
+
+    <p
+      v-else
+      class="mt-8 mb-8 manrope-bold text-primary-blue text-lg text-left"
+    >
+      Adding to cart, please wait...
+    </p>
   </form>
   <!-- end canvas print form -->
 </template>
@@ -276,10 +283,11 @@ export default {
       frameFinishingValidation: null,
       frameEdgesValidation: null,
       dimValidation: true,
+      submitted: false,
     });
 
     const rules = {
-      quantity: { required, numeric, maxValue: maxValue(1000) },
+      quantity: { required, numeric, minValue: minValue(1), maxValue: maxValue(1000) },
       width: { required, numeric, minValue: minValue(6) },
       height: { required, numeric, minValue: minValue(6) },
       type: { required },
@@ -383,6 +391,9 @@ export default {
       }
 
       if(validated && state.fileValidation && state.fileTypeValidation && state.frameValidation && state.dimValidation){
+        // indicate that order form has been submitted
+        state.submitted = true;
+
         // create FormData to store order data with uploaded file
         const formData = new FormData();
         formData.append('quantity', state.quantity);

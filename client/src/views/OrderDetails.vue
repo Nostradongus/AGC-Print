@@ -2,6 +2,12 @@
   <div>
     <side-bar />
     <page-header title="Order Details">
+      <p 
+        class="manrope-bold text-2xl text-center text-primary-blue mt-8" 
+        v-if="!state.order"
+      >
+        Loading data, please wait...
+      </p>
       <div class="p-8" v-if="state.order">
         <!-- Order Details -->
         <div class="flex">
@@ -67,7 +73,7 @@
       </div>
 
       <div class="flex mb-8">
-        <div class="flex-1">
+        <div class="flex-1" v-if="state.order">
           <router-link
             class="
               manrope-regular

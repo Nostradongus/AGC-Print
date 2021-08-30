@@ -13,33 +13,37 @@ import token from '../middleware/token.js';
 // get express router
 const router = express.Router();
 
-// set up multer for uploading report files
-const reportImageStorage = multer.diskStorage({
-  // where the report image files will be uploaded
-  destination: function (req, file, cb) {
-    // image extensions
-    const imgExtensions = ['png', 'jpg', 'jpeg', 'svg'];
+// NOTE: USE IF UPLOADING IN LOCAL FOLDERS ONLY
+// // set up multer for uploading report files
+// const reportImageStorage = multer.diskStorage({
+//   // where the report image files will be uploaded
+//   destination: function (req, file, cb) {
+//     // image extensions
+//     const imgExtensions = ['png', 'jpg', 'jpeg', 'svg'];
 
-    // get uploaded file's extension (file type)
-    const filename = file.originalname;
-    const ext = filename.substring(filename.indexOf('.') + 1);
+//     // get uploaded file's extension (file type)
+//     const filename = file.originalname;
+//     const ext = filename.substring(filename.indexOf('.') + 1);
 
-    // if uploaded order file is a png, jpg, or svg file
-    if (imgExtensions.includes(ext)) {
-      // upload to order images subfolder
-      cb(null, './src/public/report_images');
-    } else {
-      // upload to order documents subfolder
-      cb(null, './src/public/report_docs');
-    }
-  },
+//     // if uploaded order file is a png, jpg, or svg file
+//     if (imgExtensions.includes(ext)) {
+//       // upload to order images subfolder
+//       cb(null, './src/public/report_images');
+//     } else {
+//       // upload to order documents subfolder
+//       cb(null, './src/public/report_docs');
+//     }
+//   },
 
-  // filename format for report images
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  },
-});
-const reportImageUpload = multer({ storage: reportImageStorage });
+//   // filename format for report images
+//   filename: function (req, file, cb) {
+//     cb(null, file.originalname);
+//   },
+// });
+// const reportFileUpload = multer({ storage: reportImageStorage });
+
+// NOTE: USE IF UPLOADING WITH CLOUDINARY
+const reportFileUpload = multer({ storage: multer.diskStorage({}) });
 
 // route for getting all reports from the database
 router.get('/', token.authenticateToken, reportController.getAllReports);
@@ -58,7 +62,7 @@ router.get('/details/:id', token.authenticateToken, reportController.getReport);
 router.post(
   '/add/new',
   token.authenticateToken,
-  reportImageUpload.any('report-file'),
+  reportFileUpload.any('report-file'),
   reportController.addReport
 );
 

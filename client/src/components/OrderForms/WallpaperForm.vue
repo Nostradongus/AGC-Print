@@ -13,7 +13,6 @@
         type="number"
         class="manrope-regular input-text-field w-48"
         :class="{ 'border-red': v.quantity.$error }"
-        min="1"
         v-model="state.quantity"
       />
       <label
@@ -133,9 +132,17 @@
         bg-primary-blue
         p-2
       "
+      v-if="!state.submitted"
     >
       Next
     </button>
+    
+    <p
+      v-else
+      class="mt-8 mb-8 manrope-bold text-primary-blue text-lg text-left"
+    >
+      Adding to cart, please wait...
+    </p>
   </form>
   <!-- end wallpaper form -->
 </template>
@@ -167,10 +174,11 @@ export default {
       imageFile: null,
       remarks: '',
       fileValidation: null,
+      submitted: false,
     });
 
     const rules = {
-      quantity: {required, numeric, maxValue: maxValue(1000)},
+      quantity: {required, numeric, minValue: minValue(1), maxValue: maxValue(1000)},
       width: {required, numeric, minValue: minValue(6), maxValue: maxValue(120)},
       height: {required, numeric, minValue: minValue(6), maxValue: maxValue(120)},
     };
@@ -203,6 +211,9 @@ export default {
       state.fileValidation = file.value.files.length == 0 ? false : true;
 
       if(validated && state.fileValidation && state.fileTypeValidation){
+        // indicate that order form has been submitted
+        state.submitted = true;
+
         // create FormData to store order data
         const formData = new FormData();
         formData.append('quantity', state.quantity);
@@ -211,7 +222,7 @@ export default {
         formData.append('type', state.type);
         formData.append('remarks', state.remarks);
         formData.append('order-file', state.orderFile);
-        formData.append('user', store.state.user.user.username);
+        formData.append('user', store.state.user.user.username); 
 
         // add order data to cart and get generated order id
         const res = await api.addToCart(formData);
