@@ -120,7 +120,7 @@ const orderController = {
       if (orders != null) {
         return req.status(200).json(orders);
       }
-      return res.status(404).json({ message: 'No Orders Yet!' });
+      return res.status(404).json({ message: 'No Active Orders Yet!' });
     } catch (err) {
       res.status(500).json({ message: 'Server Error' });
     }
@@ -134,7 +134,7 @@ const orderController = {
       if (orders != null) {
         return req.status(200).json(orders);
       }
-      return res.status(404).json({ message: 'No Orders Yet!' });
+      return res.status(404).json({ message: 'No Past Orders Yet!' });
     } catch (err) {
       res.status(500).json({ message: 'Server Error' });
     }
