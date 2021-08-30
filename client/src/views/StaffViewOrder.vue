@@ -2,6 +2,12 @@
   <div>
     <side-bar />
     <page-header title="View Orders">
+      <p
+        class="manrope-bold text-2xl text-center text-primary-blue mt-8"
+        v-if="state.empty == null"
+      >
+        Loading data, please wait...
+      </p>
       <!-- display all orders of user -->
       <div class="h-full w-full">
         <!-- message and status filter option box -->
@@ -52,13 +58,16 @@
         </div>
         <p
           class="manrope-bold left-0 -top-3.5 text-xl pt-3 px-8 text-red"
-          v-if="state.empty"
+          v-if="
+            (state.status === 'Active' && state.activeorders === null) ||
+            (state.status === 'Past' && state.pastorders === null)
+          "
         >
           No orders in "{{ state.status }}" status for now
         </p>
         <div class="overflow-y-auto max-h-screen scrollbar-hidden">
           <OrderSetCard
-            v-for="order in state.orders"
+            v-for="order in state.shownorders"
             :key="order.id"
             :order="order"
           />
@@ -69,7 +78,7 @@
 </template>
 
 <script>
-import { reactive, onMounted } from 'vue';
+import { reactive, onBeforeMount } from 'vue';
 import { useStore } from 'vuex';
 import OrderSetCard from '../components/OrderSetCard.vue';
 import SideBar from '../components/SideBar.vue';
@@ -91,19 +100,33 @@ export default {
       pastorders: null,
       status: 'Active',
       emptyStatus: false,
-      empty: true,
+      empty: null,
     });
+
+    async function getInitUsersOrders() {
+      try {
+        // get all active orders of users
+        const result = await api.getAllActiveOrderSets();
+        state.activeorders = state.shownorders = result.data;
+        if (state.shownorders.length !== 0) {
+          state.empty = false;
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
 
     async function getAllActiveOrderSets() {
       try {
         // get all user order sets at first
         const result = await api.getAllActiveOrderSets();
         state.activeorders = result.data;
+        console.log(state.activeorders);
         if (state.activeorders.length !== 0) {
           state.empty = false;
         }
       } catch (err) {
-        console.log(err.response.data);
+        console.log(err);
       }
     }
 
@@ -116,7 +139,7 @@ export default {
           state.empty = false;
         }
       } catch (err) {
-        console.log(err.response.data);
+        console.log(err);
       }
     }
 
@@ -133,19 +156,18 @@ export default {
         //   state.emptyStatus = false;
         // }
       }
+
+      console.log(state.shownorders);
     }
 
-    onMounted(() => {
+    onBeforeMount(() => {
       // populate staff active orders page with active orders of clients
       if (store.state.worker.worker != null) {
-        getAllActiveOrderSets();
+        getInitUsersOrders();
       } else {
         state.empty = false;
       }
     });
-
-    console.log(state.activeorders);
-    console.log(state.pastorders);
 
     return {
       state,
