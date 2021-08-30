@@ -36,7 +36,7 @@ async function generateData() {
   connectDB();
 
   // insert data to database collections
-  Worker.insertMany(workers, (err) => {
+  Worker.insertOne(workers, (err) => {
     if (err) throw err;
 
     // disconnect database afterwards
