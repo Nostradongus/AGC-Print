@@ -22,8 +22,10 @@ export const getUserOrderSets = (username) => API.get(`/order/${username}`);
 export const getUserOrderSetsFiltered = (username, status) =>
   API.get(`/order/${username}/filter/${status}`);
 export const getUserActiveOrderSets = (username) =>
-  API.get(`/order/${username}/active`);
-export const getAllActiveOrderSets = () => API.get(`/order/orders/actives`);
+  API.get(`/order/${username}/user-active`);
+export const getAllActiveOrderSets = () =>
+  API.get(`/order/orders/users-active`);
+export const getAllPastOrderSets = () => API.get(`/order/orders/users-past`);
 export const getAllOrderSetsFiltered = (status) =>
   API.get(`/order/orders/filter/${status}`);
 export const getOrder = (id) => API.get(`/order/details/${id}`);

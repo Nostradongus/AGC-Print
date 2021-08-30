@@ -236,9 +236,16 @@
               bg-primary-blue
             "
             :disabled="isDisabled"
+            v-if="!state.submitted"
           >
             Save Changes
           </button>
+          <p
+            v-else
+            class="px-6 pt-2 manrope-bold text-primary-blue text-lg text-left"
+          >
+            Saving changes, please wait...
+          </p>
         </div>
       </form>
     </page-header>
@@ -277,6 +284,7 @@ export default {
       firstnameError: false,
       lastnameError: false,
       nameValidation: true,
+      submitted: false,
     });
 
     const formData = reactive({
@@ -379,11 +387,15 @@ export default {
         const validated = await v.value.$validate();
 
         if (validated && passwordConfirmed.value && isName(formData.firstname) && isName(formData.lastname)) {
+          // indicate that user update form has been submitted
+          state.submitted = true;
+
           await api.patchUser(state.username, data);
           store.dispatch('updateUser', data);
           router.push(`/profile/${state.username}`);
         }
       } catch (err) {
+        state.submitted = false;
         if (err.response != null) {
           console.log(err);
           const { response } = err;
@@ -408,6 +420,7 @@ export default {
           console.log(err);
         }
       }
+      state.submitted = false;
     }
 
     return {
