@@ -117,7 +117,7 @@
           />
         </div>
         <div class="flex items-end mt-8">
-          <div class="flex-1">
+          <div v-if="!state.empty" class="flex-1">
             <router-link
               class="
                 manrope-regular
