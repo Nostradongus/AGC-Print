@@ -79,7 +79,7 @@
       <p
         class="text-red manrope-bold text-left text-sm"
       >
-        Only one between width and height can be greater than 64!
+        Only one between width and height can be greater than 64 to 120 max!
       </p>
     </div>
     <div class="flex justify-start">
@@ -228,13 +228,13 @@ export default {
 
     const v = useVuelidate(rules,state);
 
-    // for special case, one dimension can go greater than 64 if the other dimension
+    // for special case, one dimension can go greater than 64 to 120 max if the other dimension
     // is less than or equal to 64 (height extension case)
     function onChangeHeightWidth() {
       // check if one of the dimension is less than or equal to 64
-      // if yes, the another dimension can be greater than 64 as a special case
-      if ((parseInt(state.width) <= 64 && parseInt(state.height) >= 64) ||
-          (parseInt(state.width) >= 64 && parseInt(state.height) <= 64) ||
+      // if yes, the another dimension can be greater than 64 to 120 max as a special case
+      if ((parseInt(state.width) <= 64 && parseInt(state.height) >= 64 && parseInt(state.height) <= 120) ||
+          (parseInt(state.width) >= 64 && parseInt(state.width) <= 120 && parseInt(state.height) <= 64) ||
           (parseInt(state.width) <= 64 && parseInt(state.height) <= 64)) {
         state.dimValidation = true;
       } else {

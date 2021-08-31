@@ -2,6 +2,14 @@
   <div>
     <side-bar />
     <page-header title="Report Order">
+
+      <p 
+        class="manrope-bold text-2xl text-center text-primary-blue mt-8" 
+        v-if="!state.order"
+      >
+        Loading data, please wait...
+      </p>
+
       <!-- Order Details -->
       <div
         class="
@@ -18,7 +26,7 @@
       >
         <div>
           <div class="mb-2">
-            <h3 class="manrope-bold">Order Number:</h3>
+            <h3 class="manrope-bold">Order Set Number:</h3>
             <p>{{ state.order.id }}</p>
           </div>
           <div class="mb-2">
@@ -39,10 +47,11 @@
         </div>
       </div>
       <!-- Report Form -->
-      <p class="text-red manrope-bold text-center text-sm">
+      <p v-if="state.order" class="text-red manrope-bold text-center text-sm">
          You may only submit a report once, multiple file uploads is allowed (Use CTRL or SHIFT key while choosing files). 
       </p>
       <form 
+        v-if="state.order"
         @submit.prevent="submitReport"
         class="flex flex-col m-8"
         enctype="multipart/form-data">
@@ -327,12 +336,12 @@ export default {
 
         // if user report successfully submitted
         if (res.data != null && typeof res.data !== 'undefined') {
+          // confirm that order set has been already reported
+          await api.updateOrderSetReported(route.params.id, { status: true });
+          
           // set indicator that user report was submitted successfully
           state.reportSubmitted = true;
           state.alreadyReported = true;
-
-          // confirm that order set has been already reported
-          await api.updateOrderSetReported(route.params.id, { status: true });
 
           // reset fields
           state.submitted = false;

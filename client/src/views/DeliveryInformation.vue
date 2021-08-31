@@ -46,7 +46,7 @@
               type="text"
               class="manrope-regular input-text-field"
               :class="{ 'border-red': v.email.$error }"
-              v-model="state.email"
+              v-model.trim="state.email"
             />
             <label
               for="email"
@@ -75,7 +75,7 @@
                 type="text"
                 class="manrope-regular input-text-field pl-10 pt-0.5 text-md"
                 :class="{ 'border-red': v.contactNo.$error }"
-                v-model="state.contactNo"
+                v-model.trim="state.contactNo"
               />
             </div>
             <label
@@ -140,9 +140,17 @@
               bg-primary-blue
               p-3
             "
+            v-if="!state.submitted"
           >
             <button @click="confirmOrdersFromCart">Place Order</button>
           </label>
+
+          <p
+            v-else
+            class="mb-8 mt-14 px-2 manrope-bold text-primary-blue text-lg text-left"
+          >
+            Submitting details, please wait...
+          </p>
         </form>
       </div>
     </page-header>
@@ -180,6 +188,7 @@ export default {
       contactNo: '',
       address: '',
       nameValidation: true,
+      submitted: false,
     });
 
     const rules = {
@@ -240,9 +249,12 @@ export default {
       const validated = await v.value.$validate();
 
       if (validated && isName(state.name)) {
+        // indicate that the delivery information form was submitted
+        state.submitted = true;
+
         // get delivery information data together with the orders made
         const data = {
-          orders: store.state.order.orders,
+          orders: JSON.parse(localStorage.getItem('order')),
           name: state.name,
           email: state.email,
           contactNo: `63${state.contactNo}`,
@@ -252,10 +264,13 @@ export default {
         // confirm and add orders to the database
         const res = await api.addOrderSet(data);
 
-        store.dispatch('setOrderSet', res.data);
+        store.dispatch('setOrderConfirmed', res.data);
 
         // go to order details page
         router.push({ name: 'OrderConfirmed' });
+
+        // reset field
+        state.submitted = false;
 
         // send email to client
         await api.sendEmailOrderPlaced(res.data.id, data.name, data.email);

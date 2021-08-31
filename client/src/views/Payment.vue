@@ -13,26 +13,26 @@
               <p class="text-lg manrope-bold">Banco De Oro:</p>
               <p class="text-lg manrope-regular">Account Name: AGC Print</p>
               <p class="text-lg manrope-regular">
-                Account Number: 000170007138
+                Account Number: 123456789012
               </p>
               <p class="text-lg manrope-regular">
                 Account Branch: BDO Kamagong
               </p>
             </div>
             <div>
-              <p class="text-lg manrope-bold">BDO:</p>
+              <p class="text-lg manrope-bold">BPI:</p>
               <p class="text-lg manrope-regular">
                 Account Name: Jem Nepomuceno
               </p>
-              <p class="text-lg manrope-regular">Account Number: 3719531236</p>
+              <p class="text-lg manrope-regular">Account Number: 123456789012</p>
               <p class="text-lg manrope-regular">Account Branch: BPI Dian</p>
             </div>
             <div>
-              <p class="text-lg manrope-bold">Gcash:</p>
+              <p class="text-lg manrope-bold">GCash:</p>
               <p class="text-lg manrope-regular">
                 Account Name: Jem Nepomuceno
               </p>
-              <p class="text-lg manrope-regular">Account Number: 09178170119</p>
+              <p class="text-lg manrope-regular">Account Number: 123456789012</p>
             </div>
           </div>
         </div>
@@ -51,7 +51,7 @@
               <div class="grid grid-cols-2">
                 <div>
                   <p class="text-lg manrope-regular">
-                    Order Number: {{ state.order.id }}
+                    Order Set Number: {{ state.order.id }}
                   </p>
                   <p class="text-lg manrope-regular">
                     Total Project Cost: ₱ {{ state.order.price }}
@@ -284,12 +284,12 @@ export default {
 
         // if user payment receipt successfully submitted
         if (res.data != null && typeof res.data !== 'undefined') {
-          // set indicator that user payment receipt was submitted successfully
-          state.paymentSubmitted = true;
-
           // update payment list of order set
           const payments = await api.getOrderSetIdPayments(route.params.id);
           state.payment = payments.data;
+
+          // set indicator that user payment receipt was submitted successfully
+          state.paymentSubmitted = true;
 
           // reset fields
           state.submitted = false;

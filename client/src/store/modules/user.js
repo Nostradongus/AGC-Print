@@ -19,6 +19,8 @@ export default {
       localStorage.removeItem('user');
       localStorage.removeItem('token');
       localStorage.removeItem('order');
+      localStorage.removeItem('orderSet');
+      localStorage.removeItem('confirmedOrders');
     },
     UPDATE_USER(state, payload) {
       if (payload.email !== '') {
