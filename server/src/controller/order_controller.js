@@ -118,10 +118,11 @@ const orderController = {
       const orders = await OrderService.getAllActiveOrderSets();
 
       if (orders != null) {
-        return req.status(200).json(orders);
+        return res.status(200).json(orders);
       }
       return res.status(404).json({ message: 'No Active Orders Yet!' });
     } catch (err) {
+      console.log(err);
       res.status(500).json({ message: 'Server Error' });
     }
   },
@@ -132,7 +133,7 @@ const orderController = {
       const orders = await OrderService.getAllPastOrderSets();
 
       if (orders != null) {
-        return req.status(200).json(orders);
+        return res.status(200).json(orders);
       }
       return res.status(404).json({ message: 'No Past Orders Yet!' });
     } catch (err) {

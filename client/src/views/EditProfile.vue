@@ -2,7 +2,15 @@
   <div>
     <side-bar />
     <page-header title="Edit Profile">
-      <div class="p-8 flex">
+
+      <p 
+        class="manrope-bold text-2xl text-center text-primary-blue mt-8" 
+        v-if="state.empty"
+      >
+        Loading data, please wait...
+      </p>
+
+      <div v-if="!state.empty" class="p-8 flex">
         <div class="img-container">
           <img src="../assets/logo.png" alt="" />
         </div>
@@ -16,7 +24,7 @@
           </h1>
         </div>
       </div>
-      <form @submit.prevent="updateUser" class="px-8">
+      <form v-if="!state.empty" @submit.prevent="updateUser" class="px-8">
         <div id="accountinformation">
           <h1 class="manrope-bold text-2xl text-primary-blue">Account Information</h1>
           <hr class="profile-border" />
@@ -285,6 +293,7 @@ export default {
       lastnameError: false,
       nameValidation: true,
       submitted: false,
+      empty: true,
     });
 
     const formData = reactive({
@@ -354,6 +363,7 @@ export default {
       } catch (err) {
         console.log(err);
       }
+      state.empty = false;
     }
 
     const passwordConfirmed = computed(

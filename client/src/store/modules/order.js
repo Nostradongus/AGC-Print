@@ -2,6 +2,7 @@ export default {
   state: {
     orders: [],
     orderSet: null,
+    confirmedOrders: null,
   },
   getters: {},
   mutations: {
@@ -13,9 +14,11 @@ export default {
       state.orders.splice(payload, 1);
       localStorage.setItem('order', JSON.stringify(state.orders));
     },
-    SET_ORDER_SET(state, payload) {
+    SET_ORDER_CONFIRMED(state, payload) {
       state.orderSet = payload;
+      state.confirmedOrders = JSON.parse(localStorage.getItem('order'));
       localStorage.setItem('orderSet', JSON.stringify(state.orderSet));
+      localStorage.setItem('confirmedOrders', JSON.stringify(state.confirmedOrders));
     },
     GET_ORDER(state) {
       const orders = localStorage.getItem('order');
@@ -29,7 +32,6 @@ export default {
       state.orders = [];
       localStorage.setItem('order', JSON.stringify(state.orders));
       localStorage.removeItem('order');
-      localStorage.removeItem('orderSet');
     },
   },
   actions: {
@@ -39,8 +41,8 @@ export default {
     deleteOrder({ commit }, data) {
       commit('DELETE_ORDER', data);
     },
-    setOrderSet({ commit }, data) {
-      commit('SET_ORDER_SET', data);
+    setOrderConfirmed({ commit }, data) {
+      commit('SET_ORDER_CONFIRMED', data);
     },
     getOrder({ commit }) {
       commit('GET_ORDER');
