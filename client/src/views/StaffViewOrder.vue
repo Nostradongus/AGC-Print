@@ -9,7 +9,7 @@
         Loading data, please wait...
       </p>
       <!-- display all orders of user -->
-      <div class="h-full w-full">
+      <div class="h-full w-full" v-if="state.empty != null">
         <!-- message and status filter option box -->
         <div class="flex items-end mb-5">
           <div class="flex-1">
@@ -148,13 +148,6 @@ export default {
         state.shownorders = state.activeorders;
       } else {
         state.shownorders = state.pastorders;
-
-        // if no orders on the list have the selected status
-        // if (state.shownorders.length === 0) {
-        //   state.emptyStatus = true;
-        // } else {
-        //   state.emptyStatus = false;
-        // }
       }
 
       console.log(state.shownorders);
