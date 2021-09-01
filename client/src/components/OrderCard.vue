@@ -84,10 +84,17 @@
           <label for="quantity" class="text-md manrope-bold">Quantity</label>
           <p>{{ order.quantity }}</p>
         </div>
-        <div
-          class="w-1/6 flex flex-col justify-center text-center items-center"
-        >
-          <div class="flex-1" v-if="isStaff">
+        <div class="w-1/6 grid grid-rows-1 justify-items-stretch text-center">
+          <div
+            class="flex justify-center items-center"
+            v-if="order.price === -1"
+          >
+            Pending Price
+          </div>
+          <div class="flex justify-center items-center" v-else>
+            ₱ {{ order.price }}
+          </div>
+          <div class="flex justify-self-end items-end" v-if="isStaff">
             <router-link
               class="
                 manrope-regular
@@ -96,11 +103,11 @@
                 transition
                 duration-300
                 ease-in-out
-                text-center text-lg
+                text-center text-md
                 hover:bg-link-water hover:text-primary-blue
-                w-32
+                w-20
                 mx-8
-                p-3
+                p-2
                 rounded-xl
                 bg-primary-blue
               "
@@ -108,8 +115,6 @@
               >Edit</router-link
             >
           </div>
-          <div class="flex-1" v-if="order.price === -1">Pending Price</div>
-          <div class="flex-1" v-else>₱ {{ order.price }}</div>
         </div>
       </div>
     </div>
