@@ -73,6 +73,23 @@
         </div>
       </div>
 
+      <div v-if="state.order">
+        <div class="px-8 pb-16" v-if="state.order.reported == true">
+          <span class="manrope-extrabold text-2xl">Report Details:</span>
+          <hr class="p-2"/>
+          <!-- Insert image here if possible -->
+          <span class="manrope-bold text-xl">Issue: </span>
+          <span class="manrope-regular text-xl">Issue here</span>
+          <br/>
+          <span class="manrope-bold text-xl">Description: </span>
+          <br/>
+          <div class="desc-paragraph">
+            <span class="manrope-regular text-xl">Detailed description here</span>
+          </div>
+        </div>
+      </div>
+      
+
       <div class="flex mb-8">
         <div class="flex-1" v-if="state.order">
           <router-link
@@ -95,6 +112,8 @@
             >Back</router-link
           >
         </div>
+        
+      
         <div v-if="state.order">
           <router-link
             v-if="
@@ -253,6 +272,10 @@ export default {
 .manrope-extrabold {
   font-family: 'Manrope', sans-serif;
   font-weight: 800;
+}
+
+.desc-paragraph {
+  text-indent: 5%;
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
