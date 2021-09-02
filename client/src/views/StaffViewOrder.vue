@@ -51,6 +51,7 @@
               v-model="state.status"
               @change="onSelectStatus"
             >
+              <option value="All">All</option>
               <option value="Active">Active</option>
               <option value="Past">Past</option>
             </select>
@@ -59,15 +60,21 @@
         <p
           class="manrope-bold left-0 -top-3.5 text-xl pt-3 px-8 text-red"
           v-if="
-            (state.status === 'Active' && state.activeorders === null) ||
-            (state.status === 'Past' && state.pastorders === null)
+            (state.status === 'Active' && state.shownOrders === null) ||
+            (state.status === 'Past' && state.shownOrders === null)
           "
         >
-          No orders in "{{ state.status }}" status for now
+          No orders in "{{ state.status }}" status for now.
+        </p>
+        <p
+          class="manrope-bold left-0 -top-3.5 text-xl pt-3 px-8 text-red"
+          v-if="state.status === 'All' && state.shownOrders === null"
+        >
+          There are no orders yet.
         </p>
         <div class="overflow-y-auto max-h-screen scrollbar-hidden">
           <OrderSetCard
-            v-for="order in state.shownorders"
+            v-for="order in state.shownOrders"
             :key="order.id"
             :order="order"
           />
@@ -95,20 +102,21 @@ export default {
   setup() {
     const store = useStore();
     const state = reactive({
-      shownorders: null,
-      activeorders: null,
-      pastorders: null,
-      status: 'Active',
-      emptyStatus: false,
+      shownOrders: null,
+      allOrders: null,
+      status: 'All',
       empty: null,
     });
 
     async function getInitUsersOrders() {
       try {
         // get all active orders of users
-        const result = await api.getAllActiveOrderSets();
-        state.activeorders = state.shownorders = result.data;
-        if (state.shownorders.length !== 0) {
+        const result = await api.getAllOrderSets();
+        state.shownOrders = state.allOrders = result.data;
+        if (state.shownOrders.length === 0) {
+          state.empty = true;
+          state.shownOrders = null;
+        } else {
           state.empty = false;
         }
       } catch (err) {
@@ -116,41 +124,67 @@ export default {
       }
     }
 
-    async function getAllActiveOrderSets() {
-      try {
-        // get all user order sets at first
-        const result = await api.getAllActiveOrderSets();
-        state.activeorders = result.data;
-        console.log(state.activeorders);
-        if (state.activeorders.length !== 0) {
-          state.empty = false;
+    function getAllActiveOrderSets() {
+      const active = [
+        'Pending',
+        'Waiting for Downpayment',
+        'Processing',
+        'Ready for Delivery',
+      ];
+
+      // new list of orders to display according to selected status filter
+      const filteredOrders = [];
+      console.log('A: ' + state.allOrders.length);
+      // get all orders according to selected status filter
+      for (let ctr = 0; ctr < state.allOrders.length; ctr++) {
+        if (active.includes(state.allOrders[ctr].status)) {
+          filteredOrders.push(state.allOrders[ctr]);
         }
-      } catch (err) {
-        console.log(err);
       }
+      // if no orders on the list have the selected status
+      if (filteredOrders.length === 0) {
+        state.shownOrders = null;
+        state.empty = true;
+      } else {
+        state.shownOrders = filteredOrders;
+        state.empty = false;
+      }
+
+      return filteredOrders;
     }
 
-    async function getAllPastOrderSets() {
-      try {
-        // get all user order sets at first
-        const result = await api.getAllPastOrderSets();
-        state.pastorders = result.data;
-        if (state.pastorders.length !== 0) {
-          state.empty = false;
+    function getAllPastOrderSets() {
+      const past = ['Complete', 'Cancelled'];
+
+      // new list of orders to display according to selected status filter
+      const filteredOrders = [];
+      console.log('A: ' + state.allOrders.length);
+      // get all orders according to selected status filter
+      for (let ctr = 0; ctr < state.allOrders.length; ctr++) {
+        if (past.includes(state.allOrders[ctr].status)) {
+          filteredOrders.push(state.allOrders[ctr]);
         }
-      } catch (err) {
-        console.log(err);
       }
+      // if no orders on the list have the selected status
+      if (filteredOrders.length === 0) {
+        state.shownOrders = null;
+        state.empty = true;
+      } else {
+        state.shownOrders = filteredOrders;
+        state.empty = false;
+      }
+
+      return filteredOrders;
     }
 
     function onSelectStatus() {
-      if (state.status === 'Active') {
-        state.shownorders = state.activeorders;
-      } else {
-        state.shownorders = state.pastorders;
+      if (state.status === 'All') {
+        state.shownOrders = state.allOrders;
+      } else if (state.status === 'Active') {
+        state.shownOrders = getAllActiveOrderSets();
+      } else if (state.status === 'Past') {
+        state.shownOrders = getAllPastOrderSets();
       }
-
-      console.log(state.shownorders);
     }
 
     onBeforeMount(() => {
@@ -164,8 +198,6 @@ export default {
 
     return {
       state,
-      getAllActiveOrderSets,
-      getAllPastOrderSets,
       onSelectStatus,
     };
   },
