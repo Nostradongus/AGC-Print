@@ -68,6 +68,7 @@
             v-for="order in state.orders"
             :key="order.id"
             :order="order"
+            :isStaff="state.isStaff"
           />
         </div>
       </div>
@@ -90,13 +91,19 @@
               rounded-xl
               bg-primary-blue
             "
-            to="/my-orders"
+            :to="state.isStaff ? `/view-order-list` : `/my-orders`"
             >Back</router-link
           >
         </div>
+        
+      
         <div v-if="state.order">
           <router-link
-            v-if="state.order.status === 'Complete' && state.order.reported != true"
+            v-if="
+              state.order.status === 'Complete' &&
+              state.order.reported != true &&
+              state.isStaff != true
+            "
             class="
               manrope-regular
               text-white
@@ -115,7 +122,12 @@
             >Report Order</router-link
           >
           <router-link
-            v-if="state.order.price !== -1 && state.order.status !== 'Complete' && state.order.status !== 'Pending'"
+            v-if="
+              state.order.price !== -1 &&
+              state.order.status !== 'Complete' &&
+              state.order.status !== 'Pending' &&
+              state.isStaff != true
+            "
             class="
               manrope-regular
               text-white
@@ -143,9 +155,8 @@
 <script>
 import SideBar from '../components/SideBar.vue';
 import PageHeader from '../components/PageHeader.vue';
-import { useRouter, useRoute } from 'vue-router';
-import { ref, reactive, watchEffect, onMounted } from 'vue';
-import { useStore } from 'vuex';
+import { useRoute } from 'vue-router';
+import { reactive, onMounted } from 'vue';
 import OrderCard from '../components/OrderCard.vue';
 import * as api from '../api';
 
@@ -153,18 +164,17 @@ export default {
   name: 'OrderDetails',
   components: { SideBar, PageHeader, OrderCard },
   setup() {
-    const router = useRouter();
     const route = useRoute();
-    const store = useStore();
     const state = reactive({
       order: null,
       orders: null,
       empty: true,
+      isStaff: false,
     });
 
     onMounted(() => {
-      console.log('test');
       loadOrder();
+      isStaff();
     });
 
     async function loadOrder() {
@@ -182,6 +192,17 @@ export default {
         console.log(err);
 
         state.empty = false;
+      }
+    }
+
+    async function isStaff() {
+      try {
+        const staff = JSON.parse(localStorage.getItem('worker'));
+        if (staff) {
+          state.isStaff = true;
+        }
+      } catch (err) {
+        console.log(err);
       }
     }
     return { state, route };
@@ -239,6 +260,10 @@ export default {
 .manrope-extrabold {
   font-family: 'Manrope', sans-serif;
   font-weight: 800;
+}
+
+.desc-paragraph {
+  text-indent: 5%;
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */

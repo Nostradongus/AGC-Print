@@ -71,7 +71,9 @@
               {{ order.diecut }}
             </div>
             <div class="text-md manrope-regular">
-              <span v-if="order.remarks !== ''" class="text-md manrope-bold">Remarks:</span>
+              <span v-if="order.remarks !== ''" class="text-md manrope-bold"
+                >Remarks:</span
+              >
               {{ order.remarks }}
             </div>
           </div>
@@ -83,16 +85,33 @@
           <p>{{ order.quantity }}</p>
         </div>
         <div
-          v-if="order.price === -1"
-          class="w-1/6 flex justify-center text-center items-center"
+          class="w-1/6 flex flex-col justify-center text-center items-center"
         >
-          Pending Price
-        </div>
-        <div
-          v-else
-          class="w-1/6 flex justify-center text-center items-center"
-        >
-          ₱ {{ order.price }}
+          <div class="flex" v-if="order.price === -1">Pending Price</div>
+          <div class="flex" v-else>₱ {{ order.price }}</div>
+          <div class="flex" v-if="isStaff">
+            <router-link
+              class="
+                manrope-regular
+                text-white
+                inline-block
+                transition
+                duration-300
+                ease-in-out
+                text-center text-xs
+                hover:bg-link-water hover:text-primary-blue
+                w-20
+                h-6
+                mx-8
+                mt-2
+                p-1
+                rounded-xl
+                bg-primary-blue
+              "
+              :to="isStaff ? `/view-order-list` : `/my-orders`"
+              >Edit</router-link
+            >
+          </div>
         </div>
       </div>
     </div>
@@ -105,6 +124,9 @@ export default {
   props: {
     order: {
       type: Object,
+    },
+    isStaff: {
+      type: Boolean,
     },
   },
 };

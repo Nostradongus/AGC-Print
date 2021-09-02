@@ -78,3 +78,6 @@ export const getOrderSetIdPayments = (orderSetId) =>
 export const getPayment = (id) => API.get(`/report/details/${id}`);
 export const addPayment = (payment) => API.post('/payment/add/new', payment);
 export const deletePayment = (id) => API.delete(`/report/delete/${id}`);
+
+// worker data api methods
+export const getWorker = (username) => API.get(`/workers/${username}`);
