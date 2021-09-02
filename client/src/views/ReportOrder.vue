@@ -32,7 +32,7 @@
           <div class="mb-2">
             <h3 class="manrope-bold">Total Project Cost:</h3>
             <p v-if="state.order.price === -1">Pending Price</p>
-            <p v-else>{{ state.order.price }}</p>
+            <p v-else>₱ {{ state.order.price }}</p>
           </div>
         </div>
         <div>
@@ -210,7 +210,7 @@ import SideBar from '../components/SideBar.vue';
 import PageHeader from '../components/PageHeader.vue';
 import { ref, reactive, onMounted } from 'vue';
 import * as api from '../api';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import useVuelidate from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 
@@ -220,6 +220,7 @@ export default {
   setup() {
     let file = ref(null);
     const route = useRoute();
+    const router = useRouter();
     let state = reactive({
       order: null,
       type: 'placeholder',
@@ -351,6 +352,9 @@ export default {
           state.type = 'placeholder';
           state.description = '';
           document.getElementById('report-file').value = ''; // remove recently uploaded file
+
+          // go back to order details page afterwards
+          router.push({ path: `/order-details/${route.params.id}`});
         }
       }
     }

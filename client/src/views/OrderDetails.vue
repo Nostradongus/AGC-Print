@@ -4,11 +4,11 @@
     <page-header title="Order Details">
       <p 
         class="manrope-bold text-2xl text-center text-primary-blue mt-8" 
-        v-if="!state.order"
+        v-if="state.empty"
       >
         Loading data, please wait...
       </p>
-      <div class="p-8" v-if="state.order">
+      <div class="p-8" v-if="!state.empty">
         <!-- Order Details -->
         <div class="flex">
           <div class="flex-1">
@@ -72,7 +72,7 @@
         </div>
       </div>
 
-      <div class="flex mb-8">
+      <div class="flex mb-8" v-if="!state.empty">
         <div class="flex-1" v-if="state.order">
           <router-link
             class="
@@ -159,6 +159,7 @@ export default {
     const state = reactive({
       order: null,
       orders: null,
+      empty: true,
     });
 
     onMounted(() => {
@@ -175,8 +176,12 @@ export default {
         // get orders of order set
         const orders = await api.getOrdersFromOrderSet(route.params.id);
         state.orders = orders.data;
+
+        state.empty = false;
       } catch (err) {
         console.log(err);
+
+        state.empty = false;
       }
     }
     return { state, route };

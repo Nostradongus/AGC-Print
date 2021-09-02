@@ -46,7 +46,7 @@
 
         <!-- Payment System -->
         <div v-if="!state.empty" class="flex">
-          <div class="flex-1">
+          <div class="w-11/12">
             <div class="bg-light-blue rounded-xl p-6 mx-auto mb-8 h-30">
               <div class="grid grid-cols-2">
                 <div>
@@ -72,7 +72,7 @@
               </div>
             </div>
           </div>
-          <div class="p-4">
+          <div class="p-4 w-4/12">
             <p class="manrope-bold text-md mb-3">Upload Payment Receipt Here:</p>
             <input
               id="payment-file"
@@ -106,6 +106,41 @@
             >
               File must be in .jpg, .png, or .pdf format.
             </p>
+            <p
+              v-if="state.paymentSubmitted"
+              class="text-primary-blue manrope-bold text-left text-sm mt-2"
+            >
+              Receipt Uploaded!
+            </p>
+          </div>
+          <div class="w-2/12 mt-8">
+            <div>
+              <button
+                class="
+                  manrope-regular
+                  text-white
+                  inline-block
+                  transition
+                  duration-300
+                  ease-in-out
+                  text-center text-sm
+                  hover:bg-link-water hover:text-primary-blue
+                  w-32
+                  p-3
+                  rounded-xl
+                  bg-primary-blue
+                "
+                @click="submitPayment"
+                v-if="!state.submitted"
+                >Upload Receipt</button
+              >
+              <p
+                v-else
+                class="mt-3 manrope-bold text-primary-blue text-sm text-left"
+              >
+                Uploading receipt...
+              </p>
+            </div>
           </div>
         </div>
         <div v-if="state.payment != null" class="overflow-y-auto max-h-80 pt-2 pb-2">
@@ -116,7 +151,7 @@
             :payment="payment"
           />
         </div>
-        <div class="flex items-end mt-8">
+        <div class="flex items-end mt-8 mb-8">
           <div v-if="!state.empty" class="flex-1">
             <router-link
               class="
@@ -138,43 +173,6 @@
               >Back</router-link
             >
           </div>
-          <div v-if="!state.empty">
-            <button
-              class="
-                manrope-regular
-                text-white
-                inline-block
-                transition
-                duration-300
-                ease-in-out
-                text-center text-lg
-                hover:bg-link-water hover:text-primary-blue
-                w-32
-                mx-8
-                p-3
-                rounded-xl
-                bg-primary-blue
-              "
-              @click="submitPayment"
-              v-if="!state.submitted"
-              >Pay Now</button
-            >
-            <p
-              v-else
-              class="mb-2 manrope-bold text-primary-blue text-lg text-right"
-            >
-              Submitting payment, please wait...
-            </p>
-          </div>
-        </div>
-        <div class="flex items-end mt-1 mb-5">
-          <div class="flex-1" />
-          <p
-            v-if="state.paymentSubmitted"
-            class="text-primary-blue manrope-bold text-center text-sm mr-7"
-          >
-            Payment Submitted!
-          </p>
         </div>
       </div>
     </page-header>
