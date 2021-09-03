@@ -24,7 +24,9 @@
               <p class="text-lg manrope-regular">
                 Account Name: Jem Nepomuceno
               </p>
-              <p class="text-lg manrope-regular">Account Number: 123456789012</p>
+              <p class="text-lg manrope-regular">
+                Account Number: 123456789012
+              </p>
               <p class="text-lg manrope-regular">Account Branch: BPI Dian</p>
             </div>
             <div>
@@ -32,13 +34,15 @@
               <p class="text-lg manrope-regular">
                 Account Name: Jem Nepomuceno
               </p>
-              <p class="text-lg manrope-regular">Account Number: 123456789012</p>
+              <p class="text-lg manrope-regular">
+                Account Number: 123456789012
+              </p>
             </div>
           </div>
         </div>
 
-        <p 
-          class="manrope-bold text-2xl text-center text-primary-blue mt-8" 
+        <p
+          class="manrope-bold text-2xl text-center text-primary-blue mt-8"
           v-if="state.empty"
         >
           Loading data, please wait...
@@ -59,7 +63,10 @@
                 </div>
                 <div>
                   <!-- TODO: to be updated -->
-                  <p v-if="!state.order.paidDownPayment" class="text-lg manrope-regular">
+                  <p
+                    v-if="!state.order.paidDownPayment"
+                    class="text-lg manrope-regular"
+                  >
                     Downpayment: ₱ {{ state.downPayment }}
                   </p>
                   <p v-else class="text-lg manrope-regular">
@@ -73,7 +80,9 @@
             </div>
           </div>
           <div class="p-4 w-4/12">
-            <p class="manrope-bold text-md mb-3">Upload Payment Receipt Here:</p>
+            <p class="manrope-bold text-md mb-3">
+              Upload Payment Receipt Here:
+            </p>
             <input
               id="payment-file"
               name="payment-file"
@@ -101,7 +110,9 @@
               Please upload your payment receipt.
             </p>
             <p
-              v-if="state.fileTypeValidation != null && !state.fileTypeValidation"
+              v-if="
+                state.fileTypeValidation != null && !state.fileTypeValidation
+              "
               class="text-red manrope-bold text-left text-xs mt-2"
             >
               File must be in .jpg, .png, or .pdf format.
@@ -132,8 +143,9 @@
                 "
                 @click="submitPayment"
                 v-if="!state.submitted"
-                >Upload Receipt</button
               >
+                Upload Receipt
+              </button>
               <p
                 v-else
                 class="mt-3 manrope-bold text-primary-blue text-sm text-left"
@@ -143,7 +155,10 @@
             </div>
           </div>
         </div>
-        <div v-if="state.payment != null" class="overflow-y-auto max-h-80 pt-2 pb-2">
+        <div
+          v-if="state.payment != null"
+          class="overflow-y-auto max-h-80 pt-2 pb-2"
+        >
           <!-- list of submitted payments by user -->
           <payment-card
             v-for="payment in state.payment"
@@ -223,7 +238,7 @@ export default {
         state.order = res.data;
 
         // calculate down payment value
-        state.downPayment = state.order.price * 0.50;
+        state.downPayment = state.order.price * 0.5;
       } catch (err) {
         console.log(err);
       }
@@ -251,7 +266,9 @@ export default {
         const extensions = ['png', 'jpg', 'jpeg', 'pdf'];
 
         // get uploaded file's extension
-        const fileExtension = state.paymentFile.name.substring(state.paymentFile.name.indexOf('.') + 1);
+        const fileExtension = state.paymentFile.name.substring(
+          state.paymentFile.name.indexOf('.') + 1
+        );
 
         // check if uploaded file contains valid file type extension
         state.fileTypeValidation = extensions.includes(fileExtension);
@@ -299,7 +316,7 @@ export default {
     }
 
     return { state, file, onSelectFile, submitPayment, route };
-  }
+  },
 };
 </script>
 
