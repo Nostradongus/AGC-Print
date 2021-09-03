@@ -459,6 +459,7 @@ export default {
 .profile-border {
   border-style: solid;
   @apply border-light-blue;
+  @apply bg-light-blue;
   border-width: 2.5px;
 }
 </style>

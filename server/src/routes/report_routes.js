@@ -58,6 +58,13 @@ router.get(
 // route for getting a specific report from the database
 router.get('/details/:id', token.authenticateToken, reportController.getReport);
 
+// route for getting a specific report from the database given order set id
+router.get(
+  '/details/orderSet/:id',
+  token.authenticateToken,
+  reportController.getOrderSetReport
+);
+
 // route for adding new report to database
 router.post(
   '/add/new',

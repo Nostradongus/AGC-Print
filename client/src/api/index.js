@@ -66,6 +66,7 @@ export const patchUser = (username, data) =>
 export const getAllReports = () => API.get('/report');
 export const getUserReports = (username) => API.get(`/report/${username}`);
 export const getReport = (id) => API.get(`/report/details/${id}`);
+export const getOrderSetReport = (id) => API.get(`/report/details/orderSet/${id}`);
 export const addReport = (report) => API.post('/report/add/new', report);
 export const deleteReport = (id) => API.delete(`/report/delete/${id}`);
 export const updateReportStatus = (id) => API.patch(`/report/update/${id}`);

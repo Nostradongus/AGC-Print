@@ -71,6 +71,61 @@
             :isStaff="state.isStaff"
           />
         </div>
+
+        <!-- TODO: complete report details -->
+        <div v-if="state.order.reported" class="mb-2">
+          <h1 
+            class="manrope-bold text-lg mt-5 text-primary-blue"
+          >
+            You have submitted a report to this order set.
+          </h1>
+
+          <div class="mt-2">
+            <h1 class="manrope-extrabold text-xl"> Report Details: </h1>
+            <hr class="border-2 border-solid background-black mb-2" />
+
+            <div class="flex flex-row mb-2">
+              <p class="manrope-bold text-lg">Date of Issue: </p>
+              <p class="text-lg pl-1"> {{ state.report.dateRequested }} </p>
+            </div>
+
+            <div class="flex flex-row mb-2">
+              <p class="manrope-bold text-lg">Status: </p>
+              <p class="text-lg pl-1"> {{ state.report.status }} </p>
+            </div>
+            
+            <div class="flex flex-row mb-2">
+              <p class="manrope-bold text-lg">Type of Issue: </p>
+              <p class="text-lg pl-1"> {{ state.report.type }} </p>
+            </div>
+
+            <div class="flex flex-row mb-2">
+              <p class="manrope-bold text-lg">Description: </p>
+              <br>
+              <p class="text-lg pl-1 text-justify"> 
+                {{ state.report.description }}
+              </p>
+            </div>
+
+            <p class="manrope-bold text-lg mb-4">Images: </p>
+            <div class="flex flex-row overflow-x-scroll">
+              <div 
+                v-for="image in state.report.files" 
+                :key="image.filename" 
+                class="flex items-center pl-10 w-1/3 h-1/3"
+              >
+                <!-- NOTE: USE IF ACCESSING FROM CLOUDINARY -->
+                <img
+                  :src="image.filePath"
+                  onerror="this.onerror=null;this.src='http://localhost:5000/assets/nopreview.png'"
+                  alt="Order Image"
+                  class="order-img"
+                  border="0"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="flex mb-8" v-if="!state.empty">
@@ -168,6 +223,7 @@ export default {
     const state = reactive({
       order: null,
       orders: null,
+      report: null,
       empty: true,
       isStaff: false,
     });
@@ -186,6 +242,12 @@ export default {
         // get orders of order set
         const orders = await api.getOrdersFromOrderSet(route.params.id);
         state.orders = orders.data;
+
+        // if order set has been reported by client
+        if (state.order.reported) {
+          const report = await api.getOrderSetReport(route.params.id);
+          state.report = report.data;
+        }
 
         state.empty = false;
       } catch (err) {
@@ -217,6 +279,10 @@ export default {
   border-bottom-color: #c4c4c4;
   width: 48rem;
   height: 3rem;
+}
+
+.background-black {
+  background-color: black;
 }
 
 .next-btn {
