@@ -80,34 +80,34 @@
             You have submitted a report to this order set.
           </h1>
 
-          <div class="mt-2">
-            <h1 class="manrope-extrabold text-xl"> Report Details: </h1>
-            <hr class="border-2 border-solid background-black mb-2" />
+          <div class="mt-5">
+            <h1 class="manrope-bold text-2xl text-primary-blue"> Report Details: </h1>
+            <hr class="report-border" />
 
-            <div class="flex flex-row mb-2">
-              <p class="manrope-bold text-lg">Date of Issue: </p>
+            <div class="flex flex-row mt-3 mb-2">
+              <p class="manrope-bold text-lg text-primary-blue">Date of Issue: </p>
               <p class="text-lg pl-1"> {{ state.report.dateRequested }} </p>
             </div>
 
             <div class="flex flex-row mb-2">
-              <p class="manrope-bold text-lg">Status: </p>
+              <p class="manrope-bold text-lg text-primary-blue">Status: </p>
               <p class="text-lg pl-1"> {{ state.report.status }} </p>
             </div>
             
             <div class="flex flex-row mb-2">
-              <p class="manrope-bold text-lg">Type of Issue: </p>
+              <p class="manrope-bold text-lg text-primary-blue">Type of Issue: </p>
               <p class="text-lg pl-1"> {{ state.report.type }} </p>
             </div>
 
             <div class="flex flex-row mb-2">
-              <p class="manrope-bold text-lg">Description: </p>
+              <p class="manrope-bold text-lg text-primary-blue">Description: </p>
               <br>
               <p class="text-lg pl-1 text-justify"> 
                 {{ state.report.description }}
               </p>
             </div>
 
-            <p class="manrope-bold text-lg mb-4">Images: </p>
+            <p class="manrope-bold text-lg mb-4 text-primary-blue">Images: </p>
             <div class="flex flex-row overflow-x-scroll items-center justify-center">
               <div 
                 v-for="image in state.report.files" 
@@ -272,7 +272,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="postcss">
 .input-text-field {
   outline: 0;
   border-width: 0 0 2px;
@@ -341,5 +341,12 @@ export default {
 .scrollbar-hidden {
   -ms-overflow-style: none;
   scrollbar-width: none; /* Firefox */
+}
+
+.report-border {
+  border-style: solid;
+  @apply border-light-blue;
+  @apply bg-light-blue;
+  border-width: 2.5px;
 }
 </style>
