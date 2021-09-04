@@ -35,9 +35,10 @@
       <!-- Start of Modal -->
       <ReceiptModal :showModal="showModal" @close="toggleModal">
         <div class="receipt-content flex flex-col justify-center items-center">
-          <h3 class="text-lg leading-6 font-medium flex-grow-0 mb-5 self-start">
+          <!-- TODO: reference number to be updated soon -->
+          <!-- <h3 class="text-lg leading-6 font-medium flex-grow-0 mb-5 self-start">
             Ref# {{ payment.refNumber }}
-          </h3>
+          </h3> -->
 
           <img
             :src="payment.filePath"
@@ -96,7 +97,11 @@ export default {
 
         const link = document.createElement('a');
         link.href = url;
-        link.setAttribute('download', 'image.jpg');
+        
+        // get filename
+        const filename = props.payment.filename.substring(props.payment.filename.indexOf('/') + 1) + ".jpg";
+
+        link.setAttribute('download', filename);
         document.body.appendChild(link);
 
         link.click();

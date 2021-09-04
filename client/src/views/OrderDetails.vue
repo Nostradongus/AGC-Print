@@ -73,7 +73,7 @@
         </div>
 
         <!-- TODO: complete report details -->
-        <div v-if="state.order.reported" class="mb-2">
+        <div v-if="state.report != null" class="mb-2">
           <h1 
             class="manrope-bold text-lg mt-5 text-primary-blue"
           >
@@ -108,11 +108,11 @@
             </div>
 
             <p class="manrope-bold text-lg mb-4">Images: </p>
-            <div class="flex flex-row overflow-x-scroll">
+            <div class="flex flex-row overflow-x-scroll items-center justify-center">
               <div 
                 v-for="image in state.report.files" 
                 :key="image.filename" 
-                class="flex items-center pl-10 w-1/3 h-1/3"
+                class="flex items-center pl-10 w-1/4 h-1/4"
               >
                 <!-- NOTE: USE IF ACCESSING FROM CLOUDINARY -->
                 <img
