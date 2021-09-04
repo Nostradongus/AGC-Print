@@ -4,11 +4,11 @@
     <page-header title="Order Details">
       <p 
         class="manrope-bold text-2xl text-center text-primary-blue mt-8" 
-        v-if="!state.order"
+        v-if="state.empty"
       >
         Loading data, please wait...
       </p>
-      <div class="p-8" v-if="state.order">
+      <div class="p-8" v-if="!state.empty">
         <!-- Order Details -->
         <div class="flex">
           <div class="flex-1">
@@ -68,11 +68,67 @@
             v-for="order in state.orders"
             :key="order.id"
             :order="order"
+            :isStaff="state.isStaff"
           />
+        </div>
+
+        <!-- TODO: complete report details -->
+        <div v-if="state.report != null" class="mb-2">
+          <h1 
+            class="manrope-bold text-lg mt-5 text-primary-blue"
+          >
+            You have submitted a report to this order set.
+          </h1>
+
+          <div class="mt-2">
+            <h1 class="manrope-extrabold text-xl"> Report Details: </h1>
+            <hr class="border-2 border-solid background-black mb-2" />
+
+            <div class="flex flex-row mb-2">
+              <p class="manrope-bold text-lg">Date of Issue: </p>
+              <p class="text-lg pl-1"> {{ state.report.dateRequested }} </p>
+            </div>
+
+            <div class="flex flex-row mb-2">
+              <p class="manrope-bold text-lg">Status: </p>
+              <p class="text-lg pl-1"> {{ state.report.status }} </p>
+            </div>
+            
+            <div class="flex flex-row mb-2">
+              <p class="manrope-bold text-lg">Type of Issue: </p>
+              <p class="text-lg pl-1"> {{ state.report.type }} </p>
+            </div>
+
+            <div class="flex flex-row mb-2">
+              <p class="manrope-bold text-lg">Description: </p>
+              <br>
+              <p class="text-lg pl-1 text-justify"> 
+                {{ state.report.description }}
+              </p>
+            </div>
+
+            <p class="manrope-bold text-lg mb-4">Images: </p>
+            <div class="flex flex-row overflow-x-scroll items-center justify-center">
+              <div 
+                v-for="image in state.report.files" 
+                :key="image.filename" 
+                class="flex items-center pl-10 w-1/4 h-1/4"
+              >
+                <!-- NOTE: USE IF ACCESSING FROM CLOUDINARY -->
+                <img
+                  :src="image.filePath"
+                  onerror="this.onerror=null;this.src='http://localhost:5000/assets/nopreview.png'"
+                  alt="Order Image"
+                  class="order-img"
+                  border="0"
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="flex mb-8">
+      <div class="flex mb-8" v-if="!state.empty">
         <div class="flex-1" v-if="state.order">
           <router-link
             class="
@@ -90,13 +146,19 @@
               rounded-xl
               bg-primary-blue
             "
-            to="/my-orders"
+            :to="state.isStaff ? `/view-order-list` : `/my-orders`"
             >Back</router-link
           >
         </div>
+        
+      
         <div v-if="state.order">
           <router-link
-            v-if="state.order.status === 'Complete' && state.order.reported != true"
+            v-if="
+              state.order.status === 'Complete' &&
+              state.order.reported != true &&
+              state.isStaff != true
+            "
             class="
               manrope-regular
               text-white
@@ -115,7 +177,12 @@
             >Report Order</router-link
           >
           <router-link
-            v-if="state.order.price !== -1 && state.order.status !== 'Complete' && state.order.status !== 'Pending'"
+            v-if="
+              state.order.price !== -1 &&
+              state.order.status !== 'Complete' &&
+              state.order.status !== 'Pending' &&
+              state.isStaff != true
+            "
             class="
               manrope-regular
               text-white
@@ -143,9 +210,8 @@
 <script>
 import SideBar from '../components/SideBar.vue';
 import PageHeader from '../components/PageHeader.vue';
-import { useRouter, useRoute } from 'vue-router';
-import { ref, reactive, watchEffect, onMounted } from 'vue';
-import { useStore } from 'vuex';
+import { useRoute } from 'vue-router';
+import { reactive, onMounted } from 'vue';
 import OrderCard from '../components/OrderCard.vue';
 import * as api from '../api';
 
@@ -153,17 +219,18 @@ export default {
   name: 'OrderDetails',
   components: { SideBar, PageHeader, OrderCard },
   setup() {
-    const router = useRouter();
     const route = useRoute();
-    const store = useStore();
     const state = reactive({
       order: null,
       orders: null,
+      report: null,
+      empty: true,
+      isStaff: false,
     });
 
     onMounted(() => {
-      console.log('test');
       loadOrder();
+      isStaff();
     });
 
     async function loadOrder() {
@@ -175,6 +242,27 @@ export default {
         // get orders of order set
         const orders = await api.getOrdersFromOrderSet(route.params.id);
         state.orders = orders.data;
+
+        // if order set has been reported by client
+        if (state.order.reported) {
+          const report = await api.getOrderSetReport(route.params.id);
+          state.report = report.data;
+        }
+
+        state.empty = false;
+      } catch (err) {
+        console.log(err);
+
+        state.empty = false;
+      }
+    }
+
+    async function isStaff() {
+      try {
+        const staff = JSON.parse(localStorage.getItem('worker'));
+        if (staff) {
+          state.isStaff = true;
+        }
       } catch (err) {
         console.log(err);
       }
@@ -191,6 +279,10 @@ export default {
   border-bottom-color: #c4c4c4;
   width: 48rem;
   height: 3rem;
+}
+
+.background-black {
+  background-color: black;
 }
 
 .next-btn {
@@ -234,6 +326,10 @@ export default {
 .manrope-extrabold {
   font-family: 'Manrope', sans-serif;
   font-weight: 800;
+}
+
+.desc-paragraph {
+  text-indent: 5%;
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */

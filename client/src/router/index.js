@@ -108,7 +108,7 @@ const routes = [
     name: 'StaffViewOrder',
     component: StaffViewOrder,
     meta: {
-      hideForAuth: true,
+      requiresAuth: true,
     },
   },
   {
@@ -138,14 +138,15 @@ router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
   const hideForAuth = to.matched.some((record) => record.meta.hideForAuth);
   const user = localStorage.getItem('user');
+  const worker = localStorage.getItem('worker');
   if (requiresAuth) {
-    if (user != null) {
+    if (user != null || worker != null) {
       next();
     } else {
       next({ name: 'Login' });
     }
   } else if (hideForAuth) {
-    if (user != null) {
+    if (user != null || worker != null) {
       next({ name: 'Order' });
     } else {
       next();

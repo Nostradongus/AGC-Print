@@ -66,6 +66,7 @@ export const patchUser = (username, data) =>
 export const getAllReports = () => API.get('/report');
 export const getUserReports = (username) => API.get(`/report/${username}`);
 export const getReport = (id) => API.get(`/report/details/${id}`);
+export const getOrderSetReport = (id) => API.get(`/report/details/orderSet/${id}`);
 export const addReport = (report) => API.post('/report/add/new', report);
 export const deleteReport = (id) => API.delete(`/report/delete/${id}`);
 export const updateReportStatus = (id) => API.patch(`/report/update/${id}`);
@@ -78,3 +79,6 @@ export const getOrderSetIdPayments = (orderSetId) =>
 export const getPayment = (id) => API.get(`/report/details/${id}`);
 export const addPayment = (payment) => API.post('/payment/add/new', payment);
 export const deletePayment = (id) => API.delete(`/report/delete/${id}`);
+
+// worker data api methods
+export const getWorker = (username) => API.get(`/workers/${username}`);

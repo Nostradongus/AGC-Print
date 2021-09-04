@@ -2,8 +2,8 @@
   <div>
     <side-bar />
     <page-header title="Order History">
-      <p 
-        class="manrope-bold text-2xl text-center text-primary-blue mt-8" 
+      <p
+        class="manrope-bold text-2xl text-center text-primary-blue mt-8"
         v-if="state.empty == null"
       >
         Loading data, please wait...
@@ -24,8 +24,9 @@
                 px-8
                 text-primary-blue
               "
-            >Orders are sorted by most recent to least recent</h1
             >
+              Orders are sorted by most recent to least recent
+            </h1>
           </div>
           <div class="flex flex-row items-center mr-10">
             <!-- status filter box label -->
@@ -39,10 +40,11 @@
                 px-3
                 text-primary-blue
               "
-            >Filter Orders By Status: </p
             >
+              Filter Orders By Status:
+            </p>
             <!-- status filter box -->
-            <select 
+            <select
               name="type"
               id="type"
               class="w-full md:w-60 md:h-1/2 dropdown-field mt-8"
@@ -51,7 +53,9 @@
             >
               <option value="All">All</option>
               <option value="Pending">Pending</option>
-              <option value="Waiting for Downpayment">Waiting for Downpayment</option>
+              <option value="Waiting for Downpayment">
+                Waiting for Downpayment
+              </option>
               <option value="Processing">Processing</option>
               <option value="Ready for Delivery">Ready for Delivery</option>
               <option value="Complete">Complete</option>
@@ -60,18 +64,11 @@
           </div>
         </div>
         <p
-          class="
-            manrope-bold
-            left-0
-            -top-3.5
-            text-xl
-            pt-3
-            px-8
-            text-red
-          "
+          class="manrope-bold left-0 -top-3.5 text-xl pt-3 px-8 text-red"
           v-if="state.emptyStatus"
-        >No orders in "{{ state.status }}" status for now</p
         >
+          No orders in "{{ state.status }}" status for now.
+        </p>
         <div class="overflow-y-auto max-h-screen scrollbar-hidden">
           <OrderSetCard
             v-for="order in state.orders"
@@ -139,7 +136,7 @@ export default {
 
     async function getInitUserOrders() {
       try {
-        // get all user order sets at first 
+        // get all user order sets at first
         const result = await api.getUserOrderSets(state.username);
         state.orders = result.data;
         state.ordersBackup = result.data;
@@ -161,7 +158,7 @@ export default {
         state.orders = state.ordersBackup;
         state.emptyStatus = false;
       } else {
-        // new list of orders to display according to selected status filter 
+        // new list of orders to display according to selected status filter
         const filteredOrders = [];
 
         // get all orders according to selected status filter
