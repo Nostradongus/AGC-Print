@@ -20,11 +20,15 @@
         <button
           class="
             text-primary-blue
-            manrope-regular
-            rounded-sm
+            manrope-bold
+            rounded-md
+            pt-0.5
+            pl-2
+            pr-2
             focus:outline-none
             bg-gray-500
             mr-5
+            transition duration-100 ease-in-out hover:bg-light-gray
           "
           @click="toggleModal"
           type="button"
@@ -32,7 +36,8 @@
           View Details >
         </button>
       </div>
-      <!-- Start of Modal -->
+
+      <!-- receipt image view -->
       <ReceiptModal :showModal="showModal" @close="toggleModal">
         <div class="receipt-content flex flex-col justify-center items-center">
           <!-- TODO: reference number to be updated soon -->
