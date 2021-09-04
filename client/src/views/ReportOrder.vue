@@ -2,6 +2,14 @@
   <div>
     <side-bar />
     <page-header title="Report Order">
+
+      <p 
+        class="manrope-bold text-2xl text-center text-primary-blue mt-8" 
+        v-if="!state.order"
+      >
+        Loading data, please wait...
+      </p>
+
       <!-- Order Details -->
       <div
         class="
@@ -18,13 +26,13 @@
       >
         <div>
           <div class="mb-2">
-            <h3 class="manrope-bold">Order Number:</h3>
+            <h3 class="manrope-bold">Order Set Number:</h3>
             <p>{{ state.order.id }}</p>
           </div>
           <div class="mb-2">
             <h3 class="manrope-bold">Total Project Cost:</h3>
             <p v-if="state.order.price === -1">Pending Price</p>
-            <p v-else>{{ state.order.price }}</p>
+            <p v-else>₱ {{ state.order.price }}</p>
           </div>
         </div>
         <div>
@@ -39,10 +47,11 @@
         </div>
       </div>
       <!-- Report Form -->
-      <p class="text-red manrope-bold text-center text-sm">
+      <p v-if="state.order" class="text-red manrope-bold text-center text-sm">
          You may only submit a report once, multiple file uploads is allowed (Use CTRL or SHIFT key while choosing files). 
       </p>
       <form 
+        v-if="state.order"
         @submit.prevent="submitReport"
         class="flex flex-col m-8"
         enctype="multipart/form-data">
@@ -201,7 +210,7 @@ import SideBar from '../components/SideBar.vue';
 import PageHeader from '../components/PageHeader.vue';
 import { ref, reactive, onMounted } from 'vue';
 import * as api from '../api';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import useVuelidate from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 
@@ -211,6 +220,7 @@ export default {
   setup() {
     let file = ref(null);
     const route = useRoute();
+    const router = useRouter();
     let state = reactive({
       order: null,
       type: 'placeholder',
@@ -327,12 +337,12 @@ export default {
 
         // if user report successfully submitted
         if (res.data != null && typeof res.data !== 'undefined') {
+          // confirm that order set has been already reported
+          await api.updateOrderSetReported(route.params.id, { status: true });
+          
           // set indicator that user report was submitted successfully
           state.reportSubmitted = true;
           state.alreadyReported = true;
-
-          // confirm that order set has been already reported
-          await api.updateOrderSetReported(route.params.id, { status: true });
 
           // reset fields
           state.submitted = false;
@@ -342,6 +352,9 @@ export default {
           state.type = 'placeholder';
           state.description = '';
           document.getElementById('report-file').value = ''; // remove recently uploaded file
+
+          // go back to order details page afterwards
+          router.push({ path: `/order-details/${route.params.id}`});
         }
       }
     }

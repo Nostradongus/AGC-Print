@@ -43,6 +43,26 @@ const reportController = {
     }
   },
 
+  // report controller method to retrieve and return a specific report from the database
+  // given order set id
+  getOrderSetReport: async (req, res) => {
+    try {
+      // retrieve a specific report from the database given the id data from the request
+      const report = await ReportService.getReport({
+        orderSetId: req.params.id,
+      });
+      // if report exists in the database, send the data back to the client
+      if (report != null) {
+        return res.status(200).json(report);
+      }
+      // if report does not exist, send error status and message
+      return res.status(404).json({ message: 'Report not found!' });
+    } catch (err) {
+      // if error has occurred, send server error status and message
+      res.status(500).json({ message: 'Server Error' });
+    }
+  },
+
   // report controller method to retrieve and return all reports of a user from the database
   getUserReports: async (req, res) => {
     try {

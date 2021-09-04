@@ -13,32 +13,36 @@
               <p class="text-lg manrope-bold">Banco De Oro:</p>
               <p class="text-lg manrope-regular">Account Name: AGC Print</p>
               <p class="text-lg manrope-regular">
-                Account Number: 000170007138
+                Account Number: 123456789012
               </p>
               <p class="text-lg manrope-regular">
                 Account Branch: BDO Kamagong
               </p>
             </div>
             <div>
-              <p class="text-lg manrope-bold">BDO:</p>
+              <p class="text-lg manrope-bold">BPI:</p>
               <p class="text-lg manrope-regular">
                 Account Name: Jem Nepomuceno
               </p>
-              <p class="text-lg manrope-regular">Account Number: 3719531236</p>
+              <p class="text-lg manrope-regular">
+                Account Number: 123456789012
+              </p>
               <p class="text-lg manrope-regular">Account Branch: BPI Dian</p>
             </div>
             <div>
-              <p class="text-lg manrope-bold">Gcash:</p>
+              <p class="text-lg manrope-bold">GCash:</p>
               <p class="text-lg manrope-regular">
                 Account Name: Jem Nepomuceno
               </p>
-              <p class="text-lg manrope-regular">Account Number: 09178170119</p>
+              <p class="text-lg manrope-regular">
+                Account Number: 123456789012
+              </p>
             </div>
           </div>
         </div>
 
-        <p 
-          class="manrope-bold text-2xl text-center text-primary-blue mt-8" 
+        <p
+          class="manrope-bold text-2xl text-center text-primary-blue mt-8"
           v-if="state.empty"
         >
           Loading data, please wait...
@@ -46,12 +50,12 @@
 
         <!-- Payment System -->
         <div v-if="!state.empty" class="flex">
-          <div class="flex-1">
+          <div class="w-11/12">
             <div class="bg-light-blue rounded-xl p-6 mx-auto mb-8 h-30">
               <div class="grid grid-cols-2">
                 <div>
                   <p class="text-lg manrope-regular">
-                    Order Number: {{ state.order.id }}
+                    Order Set Number: {{ state.order.id }}
                   </p>
                   <p class="text-lg manrope-regular">
                     Total Project Cost: ₱ {{ state.order.price }}
@@ -59,7 +63,10 @@
                 </div>
                 <div>
                   <!-- TODO: to be updated -->
-                  <p v-if="!state.order.paidDownPayment" class="text-lg manrope-regular">
+                  <p
+                    v-if="!state.order.paidDownPayment"
+                    class="text-lg manrope-regular"
+                  >
                     Downpayment: ₱ {{ state.downPayment }}
                   </p>
                   <p v-else class="text-lg manrope-regular">
@@ -72,8 +79,10 @@
               </div>
             </div>
           </div>
-          <div class="p-4">
-            <p class="manrope-bold text-md mb-3">Upload Payment Receipt Here:</p>
+          <div class="p-4 w-4/12">
+            <p class="manrope-bold text-md mb-3">
+              Upload Payment Receipt Here:
+            </p>
             <input
               id="payment-file"
               name="payment-file"
@@ -101,14 +110,55 @@
               Please upload your payment receipt.
             </p>
             <p
-              v-if="state.fileTypeValidation != null && !state.fileTypeValidation"
+              v-if="
+                state.fileTypeValidation != null && !state.fileTypeValidation
+              "
               class="text-red manrope-bold text-left text-xs mt-2"
             >
               File must be in .jpg, .png, or .pdf format.
             </p>
+            <p
+              v-if="state.paymentSubmitted"
+              class="text-primary-blue manrope-bold text-left text-sm mt-2"
+            >
+              Receipt Uploaded!
+            </p>
+          </div>
+          <div class="w-2/12 mt-8">
+            <div>
+              <button
+                class="
+                  manrope-regular
+                  text-white
+                  inline-block
+                  transition
+                  duration-300
+                  ease-in-out
+                  text-center text-sm
+                  hover:bg-link-water hover:text-primary-blue
+                  w-32
+                  p-3
+                  rounded-xl
+                  bg-primary-blue
+                "
+                @click="submitPayment"
+                v-if="!state.submitted"
+              >
+                Upload Receipt
+              </button>
+              <p
+                v-else
+                class="mt-3 manrope-bold text-primary-blue text-sm text-left"
+              >
+                Uploading receipt...
+              </p>
+            </div>
           </div>
         </div>
-        <div v-if="state.payment != null" class="overflow-y-auto max-h-80 pt-2 pb-2">
+        <div
+          v-if="state.payment != null"
+          class="overflow-y-auto max-h-80 pt-2 pb-2"
+        >
           <!-- list of submitted payments by user -->
           <payment-card
             v-for="payment in state.payment"
@@ -116,7 +166,7 @@
             :payment="payment"
           />
         </div>
-        <div class="flex items-end mt-8">
+        <div class="flex items-end mt-8 mb-8">
           <div v-if="!state.empty" class="flex-1">
             <router-link
               class="
@@ -138,43 +188,6 @@
               >Back</router-link
             >
           </div>
-          <div v-if="!state.empty">
-            <button
-              class="
-                manrope-regular
-                text-white
-                inline-block
-                transition
-                duration-300
-                ease-in-out
-                text-center text-lg
-                hover:bg-link-water hover:text-primary-blue
-                w-32
-                mx-8
-                p-3
-                rounded-xl
-                bg-primary-blue
-              "
-              @click="submitPayment"
-              v-if="!state.submitted"
-              >Pay Now</button
-            >
-            <p
-              v-else
-              class="mb-2 manrope-bold text-primary-blue text-lg text-right"
-            >
-              Submitting payment, please wait...
-            </p>
-          </div>
-        </div>
-        <div class="flex items-end mt-1 mb-5">
-          <div class="flex-1" />
-          <p
-            v-if="state.paymentSubmitted"
-            class="text-primary-blue manrope-bold text-center text-sm mr-7"
-          >
-            Payment Submitted!
-          </p>
         </div>
       </div>
     </page-header>
@@ -225,7 +238,7 @@ export default {
         state.order = res.data;
 
         // calculate down payment value
-        state.downPayment = state.order.price * 0.50;
+        state.downPayment = state.order.price * 0.5;
       } catch (err) {
         console.log(err);
       }
@@ -253,7 +266,9 @@ export default {
         const extensions = ['png', 'jpg', 'jpeg', 'pdf'];
 
         // get uploaded file's extension
-        const fileExtension = state.paymentFile.name.substring(state.paymentFile.name.indexOf('.') + 1);
+        const fileExtension = state.paymentFile.name.substring(
+          state.paymentFile.name.indexOf('.') + 1
+        );
 
         // check if uploaded file contains valid file type extension
         state.fileTypeValidation = extensions.includes(fileExtension);
@@ -284,12 +299,12 @@ export default {
 
         // if user payment receipt successfully submitted
         if (res.data != null && typeof res.data !== 'undefined') {
-          // set indicator that user payment receipt was submitted successfully
-          state.paymentSubmitted = true;
-
           // update payment list of order set
           const payments = await api.getOrderSetIdPayments(route.params.id);
           state.payment = payments.data;
+
+          // set indicator that user payment receipt was submitted successfully
+          state.paymentSubmitted = true;
 
           // reset fields
           state.submitted = false;
@@ -301,7 +316,7 @@ export default {
     }
 
     return { state, file, onSelectFile, submitPayment, route };
-  }
+  },
 };
 </script>
 

@@ -3,7 +3,8 @@
   <side-bar/>
   <page-header title="Order Confirmed">
       <!-- confirmation message -->
-      <h1
+      <div v-if="state.orders">
+        <h1
         class="
           manrope-bold
           left-0
@@ -11,77 +12,78 @@
           text-gray-600 text-md
           pt-8
           px-8
-        "
-        >Thank you for ordering! Here are the details of your orders:</h1
-      >
+          "
+          >Thank you for ordering! Here are the details of your orders:</h1
+        >
 
-      <!-- delivery information details -->
-      <h1
-        class="
-          manrope-bold
-          left-0
-          -top-3.5
-          text-gray-600 text-md
-          pt-8
-          px-8
-        "
-        >Name: {{ state.orderSet.name }} </h1
-      >
-      <h1
-        class="
-          manrope-bold
-          left-0
-          text-gray-600 text-md
-          pt-2
-          px-8
-        "
-        >E-mail Address: {{ state.orderSet.email }} </h1
-      >
-      <h1
-        class="
-          manrope-bold
-          left-0
-          text-gray-600 text-md
-          pt-2
-          px-8
-        "
-        >Contact Number: {{ state.orderSet.contactNo }} </h1
-      >
-      <h1
-        class="
-          manrope-bold
-          left-0
-          text-gray-600 text-md
-          pt-2
-          px-8
-        "
-        >Delivery Address: {{ state.orderSet.address }} </h1
-      >
+        <!-- delivery information details -->
+        <h1
+          class="
+            manrope-bold
+            left-0
+            -top-3.5
+            text-gray-600 text-md
+            pt-8
+            px-8
+          "
+          >Name: {{ state.orderSet.name }} </h1
+        >
+        <h1
+          class="
+            manrope-bold
+            left-0
+            text-gray-600 text-md
+            pt-2
+            px-8
+          "
+          >E-mail Address: {{ state.orderSet.email }} </h1
+        >
+        <h1
+          class="
+            manrope-bold
+            left-0
+            text-gray-600 text-md
+            pt-2
+            px-8
+          "
+          >Contact Number: {{ state.orderSet.contactNo }} </h1
+        >
+        <h1
+          class="
+            manrope-bold
+            left-0
+            text-gray-600 text-md
+            pt-2
+            px-8
+          "
+          >Delivery Address: {{ state.orderSet.address }} </h1
+        >
 
-      <!-- display all recently placed orders of user -->
-      <div class="overflow-y-auto max-h-screen scrollbar-hidden pt-2 pb-2">
-        <OrderCard v-for="order in state.orders" :key="order.id" :order="order"/>
+        <!-- display all recently placed orders of user -->
+        <div class="overflow-y-auto max-h-screen scrollbar-hidden pt-2 pb-2">
+          <OrderCard v-for="order in state.orders" :key="order.id" :order="order"/>
+        </div>
+        
+        <!-- go back button -->
+        <router-link
+          class="
+            manrope-regular
+            text-white
+            transition
+            duration-300
+            inline-block
+            ease-in-out
+            text-center text-md
+            hover:bg-link-water hover:text-primary-blue
+            p-2
+            px-5
+            mb-8
+            mt-8
+            ml-8
+            rounded-xl
+            bg-primary-blue"
+            to="/order">Go Back</router-link>
       </div>
-      
-      <!-- go back button -->
-      <router-link
-        class="
-          manrope-regular
-          text-white
-          transition
-          duration-300
-          inline-block
-          ease-in-out
-          text-center text-md
-          hover:bg-link-water hover:text-primary-blue
-          p-2
-          px-5
-          mb-8
-          mt-8
-          ml-8
-          rounded-xl
-          bg-primary-blue"
-          to="/order">Go Back</router-link>
   </page-header>
 </div>
 </template>
@@ -110,10 +112,10 @@ export default {
 
     async function getPlacedOrders() {
       // get recently placed orders
-      state.orders = store.state.order.orders;
+      state.orders = JSON.parse(localStorage.getItem('confirmedOrders'));
 
       // get delivery information details from order set
-      state.orderSet = store.state.order.orderSet;
+      state.orderSet = JSON.parse(localStorage.getItem('orderSet'));
       
       // reset or empty cart after getting the data for display
       store.dispatch('resetOrder');
