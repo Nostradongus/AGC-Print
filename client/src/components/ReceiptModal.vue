@@ -7,18 +7,7 @@
           class="modal-inner flex flex-col justify-center items-center"
         >
           <i @click="close" class="far fa-times-circle"></i>
-
-          <button
-            class="
-              manrope-bold
-              dowload-btn
-              transition
-              duration-300
-              hover:bg-link-water hover:text-primary-blue
-            "
-          >
-            Download Receipt
-          </button>
+          <i class="far fa-images fa-3x"></i>
 
           <slot />
         </div>
@@ -47,41 +36,38 @@ export default {
   position: fixed;
   top: 0;
   left: 0;
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color: rgba(113, 113, 122, 0.75);
+  transition-property: opacity;
 }
 
 .modal-inner {
   position: relative;
   max-width: 640px;
-  width: 30%;
-  height: 70%;
+  width: 40%;
+  height: 75%;
   border-radius: 10px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
   background-color: #fff;
   padding: 16px 16px;
 
-  i {
+  .fa-times-circle {
     position: absolute;
     top: 10px;
     right: 15px;
     font-size: 20px;
     cursor: pointer;
+    color: #c52e14;
 
     &:hover {
       color: #0f4c81;
     }
   }
-}
 
-.dowload-btn {
-  position: absolute;
-  background-color: #0f4c81;
-  color: white;
-  border-radius: 20px;
-  bottom: 15px;
-  width: 50%;
-  height: 3rem;
-  vertical-align: middle;
+  .fa-images {
+    position: absolute;
+    top: 20px;
+    color: #0f4c81;
+  }
 }
 </style>

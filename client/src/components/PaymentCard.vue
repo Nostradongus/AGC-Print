@@ -34,7 +34,30 @@
       </div>
       <!-- Start of Modal -->
       <ReceiptModal :showModal="showModal" @close="toggleModal">
-        <div class="receipt-content justify-self-start">Ref#</div>
+        <div class="receipt-content flex flex-col justify-center items-center">
+          <h3 class="text-lg leading-6 font-medium flex-grow-0 mb-5 self-start">
+            Ref# {{ payment.refNumber }}
+          </h3>
+
+          <img
+            :src="payment.filePath"
+            alt="Payment receipt image"
+            class="flex-grow receipt-img self-center"
+          />
+          <button
+            class="
+              manrope-bold
+              dowload-btn
+              transition
+              duration-300
+              hover:bg-link-water hover:text-primary-blue
+              flex-shrink
+            "
+            @click="downloadImg"
+          >
+            Download Receipt
+          </button>
+        </div>
       </ReceiptModal>
       <!-- End of Modal -->
     </div>
@@ -44,6 +67,7 @@
 <script>
 import ReceiptModal from './ReceiptModal.vue';
 import { ref } from 'vue';
+import axios from 'axios';
 export default {
   name: 'PaymentCard',
   components: {
@@ -55,14 +79,30 @@ export default {
       required: true,
     },
   },
-  setup() {
+  setup(props) {
     const showModal = ref(false);
 
-    const toggleModal = () => {
+    function toggleModal() {
       showModal.value = !showModal.value;
-    };
+    }
 
-    return { showModal, toggleModal };
+    function downloadImg() {
+      axios({
+        url: props.payment.filePath,
+        method: 'GET',
+        responseType: 'blob',
+      }).then((response) => {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'image.jpg');
+        document.body.appendChild(link);
+
+        link.click();
+      });
+    }
+    return { showModal, toggleModal, downloadImg };
   },
 };
 </script>
@@ -84,6 +124,25 @@ export default {
 
 .receipt-content {
   height: 90%;
+  width: 100%;
+  margin-top: 10px;
   margin-bottom: 45px;
+}
+
+.dowload-btn {
+  position: absolute;
+  background-color: #0f4c81;
+  color: white;
+  border-radius: 20px;
+  bottom: 15px;
+  width: 50%;
+  height: 3rem;
+  vertical-align: middle;
+  outline: none;
+}
+
+.receipt-img {
+  max-width: 100%;
+  max-height: 75%;
 }
 </style>
