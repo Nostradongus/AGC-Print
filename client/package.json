@@ -7,6 +7,7 @@
     "serve": "vite preview"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.4",
     "@vue-hero-icons/outline": "^1.7.2",
     "@vue-hero-icons/solid": "^1.7.2",
     "@vuelidate/core": "*",
@@ -30,6 +31,7 @@
     "eslint-plugin-vue": "^7.14.0",
     "postcss": "^8.3.6",
     "prettier": "^2.3.2",
+    "sass": "^1.39.0",
     "tailwindcss": "^2.2.7",
     "vite": "^2.4.3"
   }
