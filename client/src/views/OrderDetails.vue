@@ -63,7 +63,7 @@
           </div>
         </div>
 
-        <div class="overflow-y-auto max-h-96 pt-2 pb-2 mt-5">
+        <div class="overflow-y-auto max-h-screen pt-2 pb-2 mt-5">
           <order-card
             v-for="order in state.orders"
             :key="order.id"

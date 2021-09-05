@@ -5,7 +5,7 @@
         <div class="my-auto pr-3 w-1/3">
           <span class="text-md manrope-regular">Order #{{ order.id }}</span>
         </div>
-        <div class="flex items-center pl-8 w-1/3 h-1/3">
+        <div class="flex items-center pl-8 w-80 max-h-52">
           <!-- NOTE: USE IF ACCESSING FROM LOCAL STORAGE -->
           <!-- <img
             :src="`http://localhost:5000/order_images/${order.filename}`"
@@ -19,7 +19,7 @@
             :src="order.filePath"
             onerror="this.onerror=null;this.src='http://localhost:5000/assets/nopreview.png'"
             alt="Order Image"
-            class="order-img"
+            class="order-img h-full w-full object-contain"
             border="0"
           />
         </div>
