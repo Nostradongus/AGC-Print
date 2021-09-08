@@ -72,6 +72,37 @@
           duration-500
           ease-in-out
         "
+        to="/view-user-list"
+      >
+        <svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          class="h-10 w-10 pr-3" 
+          viewBox="0 0 20 20" 
+          fill="currentColor">
+          <path 
+            d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
+        </svg>
+        View Users</router-link
+      >
+      <router-link
+        v-if="state.worker != null"
+        class="
+          text-primary-blue
+          flex flex-row
+          justify-items-center
+          items-center
+          px-4
+          py-2
+          mt-2
+          text-xl
+          font-semibold
+          text-gray-900
+          rounded-lg
+          hover:bg-link-water
+          transition
+          duration-500
+          ease-in-out
+        "
         to="/view-order-list"
       >
         <svg

@@ -14,6 +14,7 @@ import Payment from '../views/Payment.vue';
 import ReportOrder from '../views/ReportOrder.vue';
 import UserProfile from '../views/UserProfile.vue';
 import EditProfile from '../views/EditProfile.vue';
+import StaffViewUser from '../views/StaffViewUser.vue';
 
 const routes = [
   {
@@ -116,6 +117,14 @@ const routes = [
     path: '/view-report-list',
     name: 'StaffViewReport',
     component: StaffViewReport,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/view-user-list',
+    name: 'StaffViewUser',
+    component: StaffViewUser,
     meta: {
       requiresAuth: true,
     },
