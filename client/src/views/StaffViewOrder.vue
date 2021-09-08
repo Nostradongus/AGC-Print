@@ -1,7 +1,7 @@
 <template>
   <div>
     <side-bar />
-    <page-header title="View Orders">
+    <page-header title="View Orders" @search="searchOrders">
       <p
         class="manrope-bold text-2xl text-center text-primary-blue mt-8"
         v-if="state.empty == null"
@@ -57,7 +57,7 @@
             </select>
           </div>
         </div>
-        
+
         <p
           class="manrope-bold left-0 -top-3.5 text-xl pt-3 px-8 text-red"
           v-if="
@@ -86,7 +86,7 @@
 </template>
 
 <script>
-import { reactive, onBeforeMount } from 'vue';
+import { reactive, onBeforeMount, computed } from 'vue';
 import { useStore } from 'vuex';
 import OrderSetCard from '../components/OrderSetCard.vue';
 import SideBar from '../components/SideBar.vue';
@@ -107,6 +107,7 @@ export default {
       allOrders: null,
       status: 'All',
       empty: null,
+      search: null,
     });
 
     async function getInitUsersOrders() {
@@ -188,6 +189,14 @@ export default {
       }
     }
 
+    function searchOrders(search) {
+      state.shownOrders = computed(() => {
+        return state.allOrders.filter((order) => {
+          return order.id.match(search);
+        });
+      });
+    }
+
     onBeforeMount(() => {
       // populate staff active orders page with active orders of clients
       if (store.state.worker.worker != null) {
@@ -200,6 +209,7 @@ export default {
     return {
       state,
       onSelectStatus,
+      searchOrders,
     };
   },
 };
