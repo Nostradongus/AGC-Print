@@ -23,6 +23,7 @@
             Client
           </h1>
           <router-link
+            v-if="state.worker == null"
             class="
               manrope-regular
               text-primary-blue text-xl
@@ -71,13 +72,35 @@
           </div>
         </div>
       </div>
+      <div v-if="state.worker != null" class=" px-8">
+          <h1 class="manrope-bold text-2xl text-primary-blue">All Orders</h1>
+          <hr class="profile-border" />
+          <p
+          class="manrope-bold left-0 -top-3.5 text-xl pt-3 px-8 text-red"
+          v-if="
+            state.orders == null
+          "
+        >
+          This user has not yet made any orders.
+        </p>
+        <div class="overflow-y-auto max-h-screen scrollbar-hidden">
+          <OrderSetCard
+            v-for="order in state.orders"
+            :key="order.id"
+            :order="order"
+          />
+        </div>
+          
+        </div>
     </page-header>
   </div>
 </template>
 
 <script>
+import { useRoute } from 'vue-router';
 import SideBar from '../components/SideBar.vue';
 import PageHeader from '../components/PageHeader.vue';
+import OrderSetCard from '../components/OrderSetCard.vue';
 import { onMounted, reactive } from 'vue';
 import { useStore } from 'vuex';
 import * as api from '../api';
@@ -87,24 +110,35 @@ export default {
   components: {
     SideBar,
     PageHeader,
+    OrderSetCard,
   },
   setup() {
+    const route = useRoute();
     const store = useStore();
     const state = reactive({
-      username: store.state.user.user.username,
-      email: store.state.user.user.email,
-      name: `${store.state.user.user.firstname} ${store.state.user.user.lastname}`,
-      contact: '',
+      username: route.params.username,
+      worker: null,
+      orders: null,
+      email: null,
+      name: null,
+      contact: null,
       empty: true,
     });
 
     onMounted(() => {
-      getContactNumber();
+      getUserDetails();
+      getUserOrders();
     });
 
-    async function getContactNumber() {
+    if (JSON.parse(localStorage.getItem('user')) == null) {
+      state.worker = store.state.worker.worker.username
+    }
+
+    async function getUserDetails() {
       try {
         const result = await api.getUser(state.username);
+        state.email = result.data.email;
+        state.name = result.data.firstname + " " + result.data.lastname;
         state.contact = result.data.contactNo;
       } catch (err) {
         console.log(err);
@@ -112,6 +146,14 @@ export default {
       state.empty = false;
     }
 
+    async function getUserOrders() {
+      try {
+        const result = await api.getUserOrderSets(state.username);
+        state.orders = result.data;
+      } catch (err) {
+        console.log(err);
+      }
+    }
     return { state };
   },
 };
