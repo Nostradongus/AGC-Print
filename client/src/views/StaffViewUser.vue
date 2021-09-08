@@ -1,16 +1,18 @@
 <template>
   <div>
     <side-bar />
-    <page-header title="View Users">
-      <UserCard v-for="user in state.users"
-      :key="user.username"
-      :user="user"/>
+    <page-header title="View Users" @search="searchUsers">
+      <UserCard
+        v-for="user in state.allUsers"
+        :key="user.username"
+        :user="user"
+      />
     </page-header>
   </div>
 </template>
 
 <script>
-import { reactive, onBeforeMount } from 'vue';
+import { reactive, onBeforeMount, computed } from 'vue';
 import { useStore } from 'vuex';
 import SideBar from '../components/SideBar.vue';
 import PageHeader from '../components/PageHeader.vue';
@@ -28,24 +30,33 @@ export default {
     const store = useStore();
     const state = reactive({
       users: null,
+      allUsers: null,
     });
 
     async function getInitUsers() {
-      try{
+      try {
         const res = await api.getUsers();
-        state.users = res.data;
+        state.users = state.allUsers = res.data;
       } catch (err) {
         console.log(err);
       }
     }
 
+    function searchUsers(search) {
+      state.allUsers = computed(() => {
+        return state.users.filter((user) => {
+          return user.username.match(search);
+        });
+      });
+    }
+
     onBeforeMount(() => {
-      if(store.state.worker.worker != null) {
+      if (store.state.worker.worker != null) {
         getInitUsers();
-      } 
+      }
     });
 
-    return { state };
+    return { state, searchUsers };
   },
 };
 </script>
