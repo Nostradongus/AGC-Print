@@ -142,7 +142,7 @@
           duration-500
           ease-in-out
         "
-        to=""
+        to="/view-report-list"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

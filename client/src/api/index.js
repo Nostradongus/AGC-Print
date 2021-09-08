@@ -64,6 +64,7 @@ export const patchUser = (username, data) =>
 
 // report data api methods
 export const getAllReports = () => API.get('/report');
+export const getFilteredReports = (status) => API.get(`/report/filter/${status}`);
 export const getUserReports = (username) => API.get(`/report/${username}`);
 export const getReport = (id) => API.get(`/report/details/${id}`);
 export const getOrderSetReport = (id) => API.get(`/report/details/orderSet/${id}`);

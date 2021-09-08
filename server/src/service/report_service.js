@@ -7,6 +7,11 @@ const ReportService = {
   // from most recent to least recent
   getAllReports: async () => Report.find({}).sort({ createdAt: 'descending' }),
 
+  // this method retrieves and returns all report data in the database according to given status
+  // from most recent to least recent
+  getFilteredReports: async (status) =>
+    Report.find({ status: status }).sort({ createdAt: 'descending' }),
+
   // this method retrieves and returns a specific report data based on the given report id
   getReport: async (id) => Report.findOne(id),
 

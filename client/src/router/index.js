@@ -9,6 +9,7 @@ import ViewCart from '../views/ViewCart.vue';
 import OrderHistory from '../views/OrderHistory.vue';
 import OrderConfirmed from '../views/OrderConfirmed.vue';
 import StaffViewOrder from '../views/StaffViewOrder.vue';
+import StaffViewReport from '../views/StaffViewReport.vue';
 import Payment from '../views/Payment.vue';
 import ReportOrder from '../views/ReportOrder.vue';
 import UserProfile from '../views/UserProfile.vue';
@@ -107,6 +108,14 @@ const routes = [
     path: '/view-order-list',
     name: 'StaffViewOrder',
     component: StaffViewOrder,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/view-report-list',
+    name: 'StaffViewReport',
+    component: StaffViewReport,
     meta: {
       requiresAuth: true,
     },

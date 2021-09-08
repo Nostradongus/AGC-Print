@@ -18,6 +18,21 @@ const reportController = {
     try {
       // retrieve all reports from the database
       const reports = await ReportService.getAllReports();
+
+      // send array of reports back to client
+      return res.status(200).json(reports);
+    } catch (err) {
+      // if error has occurred, send server error status and message
+      res.status(500).json({ message: 'Server Error' });
+    }
+  },
+
+  // report controller method to retrieve and return all reports from the database according to given status
+  getFilteredReports: async (req, res) => {
+    try {
+      // retrieve all reports from the database according to given status
+      const reports = await ReportService.getFilteredReports(req.params.status);
+
       // send the array of reports back to the client
       return res.status(200).json(reports);
     } catch (err) {

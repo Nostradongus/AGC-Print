@@ -51,7 +51,7 @@ const orderController = {
         req.params.status
       );
 
-      if (orders == null && orders.length != 0) {
+      if (orders != null && orders.length != 0) {
         return res.status(200).json(orders);
       }
 
@@ -80,12 +80,12 @@ const orderController = {
   // according to filter option
   getUserOrderSetsFiltered: async (req, res) => {
     try {
-      const orders = await OrderService.getUserPastOrderSets(
+      const orders = await OrderService.getUserOrderSetsFiltered(
         req.params.username,
         req.params.status
       );
 
-      if (orders == null && orders.length != 0) {
+      if (orders != null && orders.length != 0) {
         return res.status(200).json(orders);
       }
 
@@ -117,12 +117,12 @@ const orderController = {
     try {
       const orders = await OrderService.getAllActiveOrderSets();
 
-      if (orders != null) {
+      if (orders != null && orders.length != 0) {
         return res.status(200).json(orders);
       }
+
       return res.status(404).json({ message: 'No Active Orders Yet!' });
     } catch (err) {
-      console.log(err);
       res.status(500).json({ message: 'Server Error' });
     }
   },
@@ -132,9 +132,10 @@ const orderController = {
     try {
       const orders = await OrderService.getAllPastOrderSets();
 
-      if (orders != null) {
+      if (orders != null && orders.length != 0) {
         return res.status(200).json(orders);
       }
+
       return res.status(404).json({ message: 'No Past Orders Yet!' });
     } catch (err) {
       res.status(500).json({ message: 'Server Error' });

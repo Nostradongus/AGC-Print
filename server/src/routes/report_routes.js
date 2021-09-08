@@ -48,6 +48,13 @@ const reportFileUpload = multer({ storage: multer.diskStorage({}) });
 // route for getting all reports from the database
 router.get('/', token.authenticateToken, reportController.getAllReports);
 
+// route for getting all reports from the database according to given status
+router.get(
+  '/filter/:status',
+  token.authenticateToken,
+  reportController.getFilteredReports
+);
+
 // route for getting all reports of a user from the database
 router.get(
   '/:username',
