@@ -16,6 +16,7 @@ import Payment from '../views/Payment.vue';
 import ReportOrder from '../views/ReportOrder.vue';
 import UserProfile from '../views/UserProfile.vue';
 import EditProfile from '../views/EditProfile.vue';
+import DeliverySchedule from '../views/DeliverySchedule.vue';
 
 const routes = [
   {
@@ -150,6 +151,14 @@ const routes = [
     path: '/report-order/:id',
     name: 'ReportOrder',
     component: ReportOrder,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/delivery-schedule',
+    name: 'DeliverySchedule',
+    component: DeliverySchedule,
     meta: {
       requiresAuth: true,
     },
