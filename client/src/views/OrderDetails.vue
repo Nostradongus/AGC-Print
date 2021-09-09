@@ -72,26 +72,89 @@
           />
         </div>
 
-        <!-- TODO: complete report details -->
         <div v-if="state.report != null" class="mb-2">
           <h1 
+            v-if="state.worker == null"
             class="manrope-bold text-lg mt-5 text-primary-blue"
           >
             You have submitted a report to this order set.
           </h1>
 
           <div class="mt-5">
-            <h1 class="manrope-bold text-2xl text-primary-blue"> Report Details: </h1>
-            <hr class="report-border" />
+            <div class="flex flex-row">
+              <h1 class="manrope-bold text-2xl text-primary-blue flex-1"> 
+                Report Details: 
+              </h1>
+              <button
+                v-if="state.worker"
+                class="
+                  manrope-regular
+                  text-white
+                  inline-block
+                  transition
+                  duration-300
+                  ease-in-out
+                  text-center text-sm
+                  ml-2
+                  hover:bg-link-water hover:text-primary-blue w-28
+                  max-h-xs
+                  rounded-xl
+                  bg-primary-blue
+                "
+                >View Notes</button
+              >
+              <button
+                v-if="state.worker"
+                class="
+                  manrope-regular
+                  text-white
+                  inline-block
+                  transition
+                  duration-300
+                  ease-in-out
+                  text-center text-sm
+                  hover:bg-link-water hover:text-primary-blue w-28
+                  max-h-xs
+                  ml-2
+                  rounded-xl
+                  bg-primary-blue
+                "
+                >Add Note +</button
+              >
+              <button
+                v-if="state.worker && state.report.status !== 'Resolved'"
+                class="
+                  manrope-regular
+                  text-white
+                  inline-block
+                  transition
+                  duration-300
+                  ease-in-out
+                  ml-2
+                  text-center text-sm
+                  hover:bg-link-water hover:text-primary-blue w-28
+                  max-h-xs
+                  rounded-xl
+                  bg-primary-blue
+                "
+                >Resolve Issue</button
+              >
+            </div>
+            <hr class="report-border mt-1" />
 
             <div class="flex flex-row mt-3 mb-2">
-              <p class="manrope-bold text-lg text-primary-blue">Date of Issue: </p>
-              <p class="text-lg pl-1"> {{ state.report.dateRequested }} </p>
+              <p class="manrope-bold text-lg text-primary-blue">Status: </p>
+              <p class="text-lg pl-1"> {{ state.report.status }} </p>
             </div>
 
             <div class="flex flex-row mb-2">
-              <p class="manrope-bold text-lg text-primary-blue">Status: </p>
-              <p class="text-lg pl-1"> {{ state.report.status }} </p>
+              <p class="manrope-bold text-lg text-primary-blue">Issued by: </p>
+              <p class="text-lg pl-1"> {{ state.report.user }} ({{ state.report.userFullName }}) </p>
+            </div>
+
+            <div class="flex flex-row mb-2">
+              <p class="manrope-bold text-lg text-primary-blue">Date of Issue: </p>
+              <p class="text-lg pl-1"> {{ state.report.dateRequested }} </p>
             </div>
             
             <div class="flex flex-row mb-2">
@@ -115,13 +178,15 @@
                 class="flex items-center pl-10 w-1/4 h-1/4"
               >
                 <!-- NOTE: USE IF ACCESSING FROM CLOUDINARY -->
-                <img
-                  :src="image.filePath"
-                  onerror="this.onerror=null;this.src='http://localhost:5000/assets/nopreview.png'"
-                  alt="Order Image"
-                  class="order-img"
-                  border="0"
-                />
+                <a :href="image.filePath" target="_blank">
+                  <img
+                    :src="image.filePath"
+                    onerror="this.onerror=null;this.src='http://localhost:5000/assets/nopreview.png'"
+                    alt="Order Image"
+                    class="order-img"
+                    border="0"
+                  />
+                </a>
               </div>
             </div>
           </div>
@@ -211,6 +276,7 @@
 import SideBar from '../components/SideBar.vue';
 import PageHeader from '../components/PageHeader.vue';
 import { useRoute } from 'vue-router';
+import { useStore } from 'vuex';
 import { reactive, onMounted } from 'vue';
 import OrderCard from '../components/OrderCard.vue';
 import * as api from '../api';
@@ -220,13 +286,19 @@ export default {
   components: { SideBar, PageHeader, OrderCard },
   setup() {
     const route = useRoute();
+    const store = useStore();
     const state = reactive({
+      worker: null,
       order: null,
       orders: null,
       report: null,
       empty: true,
       isStaff: false,
     });
+
+    if (JSON.parse(localStorage.getItem('user')) == null) {
+      state.worker = store.state.worker.worker.username;
+    }
 
     onMounted(() => {
       loadOrder();
