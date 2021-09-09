@@ -107,7 +107,7 @@
 </template>
 
 <script>
-import OrderPreviewModal from './OrderPreviewModal.vue';
+import OrderPreviewModal from './Modals/OrderPreviewModal.vue';
 import { reactive, ref, onBeforeMount } from 'vue';
 import * as api from '../api/index.js';
 

@@ -55,6 +55,13 @@ router.get(
   paymentController.getUserPayments
 );
 
+// route for getting all payment receipts from the database according to given status
+router.get(
+  '/filter/:status',
+  token.authenticateToken,
+  paymentController.getFilteredPayments
+);
+
 // route for getting a specific payment receipt from the database
 router.get(
   '/details/:id',

@@ -1,6 +1,6 @@
 <template>
   <div class="bg-light-blue rounded-xl p-4 mx-auto mb-2 h-30 payment-card">
-    <div class="grid grid-flow-col grid-cols auto-cols-5 justify-items-stretch">
+    <div class="grid grid-flow-col grid-cols auto-cols-5 justify-items-stretch items-center">
       <div v-if="!payment.confirmed" class="flex-auto">
         <p class="text-lg manrope-regular">{{ payment.dateUploaded }}</p>
       </div>
@@ -16,7 +16,7 @@
       <div v-if="payment.confirmed" class="flex-auto">
         <p class="text-lg manrope-regular">₱ {{ payment.amount }}</p>
       </div>
-      <div v-if="payment.filename" class="flex-auto justify-self-end">
+      <div v-if="payment.filename" class="flex flex-col justify-self-end text-center items-center">
         <button
           class="
             text-primary-blue
@@ -33,12 +33,32 @@
           @click="toggleModal"
           type="button"
         >
-          View Details >
+          View Receipt >
         </button>
+        <button
+          v-if="state.worker && !payment.confirmed"
+          class="
+            manrope-regular
+            text-white
+            inline-block
+            transition
+            duration-300
+            ease-in-out
+            text-center text-xs
+            hover:bg-link-water hover:text-primary-blue
+            w-20
+            h-6
+            mt-2
+            mr-7
+            rounded-xl
+            bg-primary-blue
+          "
+          >Verify</button
+        >
       </div>
 
-      <!-- receipt image view -->
-      <ReceiptModal :showModal="showModal" @close="toggleModal">
+      <!-- Start of Modal; receipt image view -->
+      <ImageModal :showModal="showModal" @close="toggleModal">
         <div class="receipt-content flex flex-col justify-center items-center">
           <!-- TODO: reference number to be updated soon -->
           <!-- <h3 class="text-lg leading-6 font-medium flex-grow-0 mb-5 self-start">
@@ -47,6 +67,7 @@
 
           <img
             :src="payment.filePath"
+            onerror="this.onerror=null;this.src='http://localhost:5000/assets/nopreview.png'"
             alt="Payment receipt image"
             class="flex-grow receipt-img self-center"
           />
@@ -64,20 +85,21 @@
             Download Receipt
           </button>
         </div>
-      </ReceiptModal>
+      </ImageModal>
       <!-- End of Modal -->
     </div>
   </div>
 </template>
 
 <script>
-import ReceiptModal from './ReceiptModal.vue';
-import { ref } from 'vue';
+import ImageModal from './Modals/ImageModal.vue';
+import { reactive, ref } from 'vue';
+import { useStore } from 'vuex';
 import axios from 'axios';
 export default {
   name: 'PaymentCard',
   components: {
-    ReceiptModal,
+    ImageModal,
   },
   props: {
     payment: {
@@ -86,7 +108,15 @@ export default {
     },
   },
   setup(props) {
+    const state = reactive({
+      worker: null,
+    });
+    const store = useStore();
     const showModal = ref(false);
+
+    if (JSON.parse(localStorage.getItem('user')) == null) {
+      state.worker = store.state.worker.worker.username
+    }
 
     function toggleModal() {
       showModal.value = !showModal.value;
@@ -103,8 +133,9 @@ export default {
         const link = document.createElement('a');
         link.href = url;
         
-        // get filename
-        const filename = props.payment.filename.substring(props.payment.filename.indexOf('/') + 1) + ".jpg";
+        // get filename and file type
+        const fileType = props.payment.filePath.substring(props.payment.filePath.lastIndexOf('.'));
+        const filename = props.payment.filename.substring(props.payment.filename.indexOf('/') + 1) + fileType;
 
         link.setAttribute('download', filename);
         document.body.appendChild(link);
@@ -112,7 +143,7 @@ export default {
         link.click();
       });
     }
-    return { showModal, toggleModal, downloadImg };
+    return { state, showModal, toggleModal, downloadImg };
   },
 };
 </script>

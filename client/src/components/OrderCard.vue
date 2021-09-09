@@ -1,6 +1,30 @@
 <template>
   <div class="px-8 pt-3 pb-5">
     <div class="bg-light-blue rounded-xl p-4 mx-auto mb-0.5 h-30 cart-card">
+      <!-- order image view modal -->
+      <ImageModal :showModal="showModal" @close="toggleModal">
+        <div class="image-content flex flex-col justify-center items-center">
+          <img
+            :src="order.filePath"
+            onerror="this.onerror=null;this.src='http://localhost:5000/assets/nopreview.png'"
+            alt="Order Image"
+            class="flex-grow content-img self-center"
+          />
+          <button
+            class="
+              manrope-bold
+              dowload-btn
+              transition
+              duration-300
+              hover:bg-link-water hover:text-primary-blue
+              flex-shrink
+            "
+            @click="downloadImg"
+          >
+            Download File
+          </button>
+        </div>
+      </ImageModal>
       <div class="flex p-3">
         <div class="my-auto pr-3 w-1/3">
           <span class="text-md manrope-regular">Order #{{ order.id }}</span>
@@ -19,8 +43,9 @@
             :src="order.filePath"
             onerror="this.onerror=null;this.src='http://localhost:5000/assets/nopreview.png'"
             alt="Order Image"
-            class="order-img h-full w-full object-contain"
+            class="order-img h-full w-full object-contain cursor-pointer"
             border="0"
+            @click="toggleModal"
           />
         </div>
         <div class="w-1/3 flex flex-col justify-center items-center">
@@ -70,7 +95,7 @@
               <span class="text-md manrope-bold">Die-cut:</span>
               {{ order.diecut }}
             </div>
-            <div class="text-md manrope-regular">
+            <div class="text-md manrope-regular truncate w-52">
               <span v-if="order.remarks !== ''" class="text-md manrope-bold"
                 >Remarks:</span
               >
@@ -119,8 +144,14 @@
 </template>
 
 <script>
+import ImageModal from './Modals/ImageModal.vue';
+import { reactive, ref } from 'vue';
+import axios from 'axios';
 export default {
   name: 'OrderCard',
+  components: {
+    ImageModal,
+  },
   props: {
     order: {
       type: Object,
@@ -129,6 +160,36 @@ export default {
       type: Boolean,
     },
   },
+  setup(props) {
+    const showModal = ref(false);
+
+    function toggleModal() {
+      showModal.value = !showModal.value;
+    }
+
+    function downloadImg() {
+      axios({
+        url: props.order.filePath,
+        method: 'GET',
+        responseType: 'blob',
+      }).then((response) => {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+
+        const link = document.createElement('a');
+        link.href = url;
+        
+        // get filename and file type
+        const fileType = props.order.filePath.substring(props.order.filePath.lastIndexOf('.'));
+        const filename = props.order.filename.substring(props.order.filename.indexOf('/') + 1) + fileType;
+
+        link.setAttribute('download', filename);
+        document.body.appendChild(link);
+
+        link.click();
+      });
+    }
+    return { showModal, toggleModal, downloadImg };
+  }
 };
 </script>
 
@@ -144,6 +205,35 @@ export default {
 
 .order-img {
   max-width: 75%;
+  max-height: 75%;
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.image-content {
+  height: 90%;
+  width: 100%;
+  margin-top: 10px;
+  margin-bottom: 45px;
+}
+
+.dowload-btn {
+  position: absolute;
+  background-color: #0f4c81;
+  color: white;
+  border-radius: 20px;
+  bottom: 15px;
+  width: 50%;
+  height: 3rem;
+  vertical-align: middle;
+  outline: none;
+}
+
+.content-img {
+  max-width: 100%;
   max-height: 75%;
 }
 </style>

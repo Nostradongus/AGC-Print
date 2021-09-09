@@ -1,6 +1,9 @@
 // get payment service static object from service folder
 import PaymentService from '../service/payment_service.js';
 
+// get user service static object from service folder
+import UserService from '../service/user_service.js';
+
 // import cloudinary for cloud storage file uploading
 import cloudinary from '../config/cloudinary.js';
 
@@ -18,6 +21,27 @@ const paymentController = {
     try {
       // retrieve all payment receipts from the database
       const payments = await PaymentService.getAllPayments();
+
+      // if there are existing payment receipt data from the database
+      if (payments != null && payments.length != 0) {
+        return res.status(200).json(payments);
+      }
+
+      // send the array of payments back to the client
+      return res.status(404).json({ message: 'No Payment Data Found!' });
+    } catch (err) {
+      // if error has occurred, send server error status and message
+      res.status(500).json({ message: 'Server Error' });
+    }
+  },
+
+  // payment receipt controller method to retrieve and return all payment receipts from the database with the given status
+  getFilteredPayments: async (req, res) => {
+    try {
+      // retrieve all payment receipts from the database according to given status
+      const payments = await PaymentService.getFilteredPayments(
+        req.params.status
+      );
 
       // if there are existing payment receipt data from the database
       if (payments != null && payments.length != 0) {
@@ -152,11 +176,15 @@ const paymentController = {
         folder: folder,
       });
 
+      // get first and last name of user
+      const user = await UserService.getUser({ username: req.user.username });
+
       // create new payment receipt object
       const payment = {
         id: uniqueId,
         orderSetId: req.body.orderSetId,
         user: req.user.username,
+        userFullName: user.firstname + ' ' + user.lastname,
         filename: result.public_id,
         filePath: result.secure_url,
         dateUploaded: formattedDate,

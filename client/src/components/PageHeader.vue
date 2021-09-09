@@ -36,15 +36,11 @@
 </template>
 
 <script>
-import UserCard from '../components/UserCard.vue';
 import { reactive } from 'vue';
 import { useStore } from 'vuex';
 
 export default {
   name: 'PageHeader',
-  components: {
-    UserCard,
-  },
   props: {
     title: {
       type: String,

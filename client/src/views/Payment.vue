@@ -3,7 +3,7 @@
     <side-bar />
     <page-header title="Payment Portal">
       <div class="pr-8 pl-8 pt-4">
-        <div class="bg-light-blue rounded-xl p-6 mx-auto mb-8 h-30">
+        <div v-if="state.worker == null" class="bg-light-blue rounded-xl p-6 mx-auto mb-8 h-30">
           <p class="text-lg manrope-bold">
             You can pay through the following channels:
           </p>
@@ -79,7 +79,16 @@
               </div>
             </div>
           </div>
-          <div class="p-4 w-4/12">
+          <div v-if="state.worker" class="p-4 w-6/12">
+            <div class="bg-light-blue rounded-xl p-6 mx-auto mb-8 h-30">
+              <div class="flex flex-row items-center justify-center">
+                <p class="text-md manrope-bold truncate max-w-xs">
+                  Uploaded by: {{ state.order.userFullName }}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div v-if="state.worker == null" class="p-4 w-4/12">
             <p class="manrope-bold text-md mb-3">
               Upload Payment Receipt Here:
             </p>
@@ -124,7 +133,7 @@
               Receipt Uploaded!
             </p>
           </div>
-          <div class="w-2/12 mt-8">
+          <div v-if="state.worker == null" class="w-2/12 mt-8">
             <div>
               <button
                 class="
@@ -157,7 +166,7 @@
         </div>
         <div
           v-if="state.payment != null"
-          class="overflow-y-auto max-h-80 pt-2 pb-2"
+          class="overflow-y-auto max-h-screen pt-2 pb-2"
         >
           <!-- list of submitted payments by user -->
           <payment-card
@@ -213,19 +222,24 @@ export default {
   },
   setup() {
     let file = ref(null);
+    const store = useStore();
     const route = useRoute();
     let state = reactive({
+      worker: null,
       order: null,
       payment: null,
       fileValidation: null,
       fileTypeValidation: null,
       paymentSubmitted: false,
       paymentFile: null,
-      curDate: null,
       downPayment: null,
       submitted: false,
       empty: true,
     });
+
+    if (JSON.parse(localStorage.getItem('user')) == null) {
+      state.worker = store.state.worker.worker.username
+    }
 
     onMounted(() => {
       getOrderDetails();

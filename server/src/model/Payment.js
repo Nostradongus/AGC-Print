@@ -25,6 +25,11 @@ const PaymentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    // full name (first and last name) of user who made the report
+    userFullName: {
+      type: String,
+      required: true,
+    },
     // filename of the uploaded payment receipt
     filename: {
       type: String,

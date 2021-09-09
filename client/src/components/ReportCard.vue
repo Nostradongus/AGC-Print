@@ -13,7 +13,7 @@
             <div class="manrope-extrabold">Order Set #: {{ report.orderSetId }}</div>
             <div class="text-sm manrope-regular">
               <span class="text-md manrope-bold">User:</span>
-              {{ report.user }}
+              {{ report.user }} ({{ report.userFullName }})
             </div>
             <div class="text-sm manrope-regular">
               <span class="text-sm manrope-bold"> Type of Issue:</span>

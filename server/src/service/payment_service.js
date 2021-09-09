@@ -8,6 +8,11 @@ const PaymentService = {
   getAllPayments: async () =>
     Payment.find({}).sort({ createdAt: 'descending' }),
 
+  // this method retrieves and returns all payment data in the database according to given status
+  // from most recent to least recent
+  getFilteredPayments: async (status) =>
+    Payment.find({ status: status }).sort({ createdAt: 'descending' }),
+
   // this method retrieves and returns a specific payment receipt data based on the given id
   getPayment: async (id) => Payment.findOne(id),
 

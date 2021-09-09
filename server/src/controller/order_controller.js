@@ -102,7 +102,7 @@ const orderController = {
         req.params.username
       );
 
-      if (orders == null && orders.length != 0) {
+      if (orders != null && orders.length != 0) {
         return res.status(200).json(orders);
       }
 
@@ -211,15 +211,15 @@ const orderController = {
         req.body.orders[ctr].orderSetId = uniqueId;
       }
 
-      // get number of orders made by user
-      const orderNum = (
-        await UserService.getUser({ username: req.user.username })
-      ).orderNum;
+      // get number of orders made by user and user's first name and last name
+      const user = await UserService.getUser({ username: req.user.username });
+      const orderNum = user.orderNum;
 
       // add generated unique id and date to order set
       const orderSet = new OrderSet({
         id: uniqueId,
         user: req.user.username,
+        userFullName: user.firstname + ' ' + user.lastname,
         userOrderNum: orderNum.toString(),
         name: req.body.name,
         email: req.body.email,

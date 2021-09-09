@@ -1,19 +1,19 @@
 <template>
   <div>
     <side-bar />
-    <page-header title="View Reports">
+    <page-header title="View Payments">
       <p
         class="manrope-bold text-2xl text-center text-primary-blue mt-8"
         v-if="state.empty == null"
       >
         Loading data, please wait...
       </p>
-      <!-- display all user reports -->
+      <!-- display all user payments -->
       <div class="h-full w-full" v-if="state.empty != null">
         <!-- message and status filter option box -->
         <div class="flex items-end mb-5">
           <div class="flex-1">
-            <!-- report sort message -->
+            <!-- payment sort message -->
             <h1
               class="
                 manrope-bold
@@ -25,7 +25,7 @@
                 text-primary-blue
               "
             >
-              Reports are sorted by most recent to least recent
+              Payments are sorted by most recent to least recent
             </h1>
           </div>
           <div class="flex flex-row items-center mr-10">
@@ -41,7 +41,7 @@
                 text-primary-blue
               "
             >
-              Filter Reports By:
+              Filter Payments By:
             </p>
             <!-- status filter box -->
             <select
@@ -52,9 +52,10 @@
               @change="onSelectStatus"
             >
               <option value="All">All</option>
-              <option value="Not Yet Resolved">Not Yet Resolved</option>
-              <option value="Resolved">Resolved</option>
-              <option value="Cancelled">Cancelled</option>
+              <option value="Payment Pending Verification">
+                Payment Pending Verification
+              </option>
+              <option value="Verified">Verified</option>
             </select>
           </div>
         </div>
@@ -64,19 +65,19 @@
             state.status !== 'All' && state.emptyStatus
           "
         >
-          No reports in "{{ state.status }}" status for now.
+          No payments in "{{ state.status }}" status for now.
         </p>
         <p
           class="manrope-bold left-0 -top-3.5 text-xl pt-3 px-8 text-red"
           v-if="state.status === 'All' && state.emptyStatus"
         >
-          There are no reports yet.
+          There are no payments yet.
         </p>
         <div class="overflow-y-auto max-h-screen scrollbar-hidden">
-          <ReportCard
-            v-for="report in state.reports"
-            :key="report.id"
-            :report="report"
+          <PaymentDetailsCard
+            v-for="payment in state.payments"
+            :key="payment.id"
+            :payment="payment"
           />
         </div>
       </div>
@@ -87,36 +88,36 @@
 <script>
 import { reactive, onBeforeMount } from 'vue';
 import { useStore } from 'vuex';
-import ReportCard from '../components/ReportCard.vue';
+import PaymentDetailsCard from '../components/PaymentDetailsCard.vue';
 import SideBar from '../components/SideBar.vue';
 import PageHeader from '../components/PageHeader.vue';
 import * as api from '../api';
 
 export default {
-  name: 'StaffViewReport',
+  name: 'StaffViewPayment',
   components: {
-    ReportCard,
+    PaymentDetailsCard,
     SideBar,
     PageHeader,
   },
   setup() {
     const store = useStore();
     const state = reactive({
-      reports: null,
-      reportsBackup: null,
+      payments: null,
+      paymentsBackup: null,
       status: 'All',
       empty: null,
       emptyStatus: false,
     });
 
-    async function getInitUsersReports() {
+    async function getInitUserPayments() {
       try {
         // get all active orders of users
-        const result = await api.getAllReports();
-        state.reports = state.reportsBackup = result.data;
+        const result = await api.getAllPayments();
+        state.payments = state.paymentsBackup = result.data;
 
         // check if reports list is empty
-        state.empty = state.reports.length === 0;
+        state.empty = state.payments.length === 0;
       } catch (err) {
         console.log(err);
       }
@@ -124,24 +125,25 @@ export default {
 
     function onSelectStatus() {
       if (state.status === 'All') {
-        state.reports = state.reportsBackup;
+        state.payments = state.paymentsBackup;
         state.emptyStatus = false;
       } else {
         // new list of reports to display according to selected status filter
-        const filteredReports = [];
+        const filteredPayments = [];
 
         // get all reports according to selected status filter
-        for (let ctr = 0; ctr < state.reportsBackup.length; ctr++) {
-          if (state.reportsBackup[ctr].status === state.status) {
-            filteredReports.push(state.reportsBackup[ctr]);
-          }
+        for (let ctr = 0; ctr < state.paymentsBackup.length; ctr++) {
+          if (state.paymentsBackup[ctr].confirmed && state.status === 'Verified' ||
+              !state.paymentsBackup[ctr].confirmed && state.status === 'Payment Pending Verification') {
+            filteredPayments.push(state.paymentsBackup[ctr]);
+          } 
         }
 
         // set filtered reports list
-        state.reports = filteredReports;
+        state.payments = filteredPayments;
 
         // if no reports on the list have the selected status
-        if (state.reports.length === 0) {
+        if (state.payments.length === 0) {
           state.emptyStatus = true;
         } else {
           state.emptyStatus = false;
@@ -152,7 +154,7 @@ export default {
     onBeforeMount(() => {
       // populate staff active orders page with active orders of clients
       if (store.state.worker.worker != null) {
-        getInitUsersReports();
+        getInitUserPayments();
       } else {
         state.empty = false;
       }

@@ -74,6 +74,7 @@ export const updateReportStatus = (id) => API.patch(`/report/update/${id}`);
 
 // payment receipt data api methods
 export const getAllPayments = () => API.get('/payment');
+export const getFilteredPayments = (status) => API.get(`/payment/filter/${status}`);
 export const getUserPayments = (username) => API.get(`/payment/${username}`);
 export const getOrderSetIdPayments = (orderSetId) =>
   API.get(`/payment/${orderSetId}/payments`);

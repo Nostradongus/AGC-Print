@@ -1,6 +1,9 @@
 // get report service static object from service folder
 import ReportService from '../service/report_service.js';
 
+// get user service static object from service folder
+import UserService from '../service/user_service.js';
+
 // import cloudinary for cloud storage file uploading
 import cloudinary from '../config/cloudinary.js';
 
@@ -171,12 +174,16 @@ const reportController = {
         files.push(file);
       }
 
+      // get user's first name and last name
+      const user = await UserService.getUser({ username: req.user.username });
+
       // create new report object
       const report = {
         id: uniqueId,
         orderSetId: req.body.orderSetId,
         type: req.body.type,
         user: req.user.username,
+        userFullName: user.firstname + ' ' + user.lastname,
         description: req.body.description,
         files: files,
         status: 'Not Yet Resolved',
