@@ -72,11 +72,11 @@
           </div>
         </div>
       </div>
-      <div v-if="state.worker != null" class=" px-8">
-          <h1 class="manrope-bold text-2xl text-primary-blue">All Orders</h1>
-          <hr class="profile-border" />
-          <p
-          class="manrope-bold left-0 -top-3.5 text-xl pt-3 px-8 text-red"
+      <div v-if="state.worker != null && !state.empty" class=" px-8">
+        <h1 class="manrope-bold text-2xl text-primary-blue">All Orders</h1>
+        <hr class="profile-border" />
+        <p
+          class="manrope-bold left-0 -top-3.5 text-xl mb-8 pt-3 px-8 text-red"
           v-if="
             state.orders == null
           "
@@ -91,7 +91,7 @@
           />
         </div>
           
-        </div>
+      </div>
     </page-header>
   </div>
 </template>
@@ -125,13 +125,19 @@ export default {
       empty: true,
     });
 
-    onMounted(() => {
-      getUserDetails();
-      getUserOrders();
-    });
-
     if (JSON.parse(localStorage.getItem('user')) == null) {
       state.worker = store.state.worker.worker.username
+    }
+
+    if (state.worker != null) {
+      onMounted(() => {
+        getUserDetails();
+        getUserOrders();
+      });
+    } else {
+      onMounted(() => {
+        getUserDetails();
+      });
     }
 
     async function getUserDetails() {
@@ -143,7 +149,9 @@ export default {
       } catch (err) {
         console.log(err);
       }
-      state.empty = false;
+      if (state.worker == null) {
+        state.empty = false;
+      }
     }
 
     async function getUserOrders() {
@@ -153,6 +161,7 @@ export default {
       } catch (err) {
         console.log(err);
       }
+      state.empty = false;
     }
     return { state };
   },
