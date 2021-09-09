@@ -139,6 +139,24 @@
                 "
                 >Resolve Issue</button
               >
+              <button
+                v-if="state.worker && state.report.status !== 'Resolved'"
+                class="
+                  manrope-regular
+                  text-white
+                  inline-block
+                  transition
+                  duration-300
+                  ease-in-out
+                  ml-2
+                  text-center text-sm
+                  hover:bg-link-water hover:text-primary-blue w-28
+                  max-h-xs
+                  rounded-xl
+                  bg-primary-blue
+                "
+                >Cancel Issue</button
+              >
             </div>
             <hr class="report-border mt-1" />
 
