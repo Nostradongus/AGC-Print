@@ -20,7 +20,7 @@
               name="username"
               type="text"
               class="manrope-regular login-text-field"
-              v-model="state.username"
+              v-model.trim="state.username"
             />
             <label
               for="email"
@@ -40,7 +40,7 @@
               name="password"
               type="password"
               class="manrope-regular login-text-field"
-              v-model="state.password"
+              v-model.trim="state.password"
             />
             <label
               for="password"
