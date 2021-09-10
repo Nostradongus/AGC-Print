@@ -11,7 +11,13 @@
           v-on:keyup="searchUsers(state.search)"
         />
       </div>
-
+      
+      <p
+        class="manrope-bold text-2xl text-center text-primary-blue mt-8"
+        v-if="state.empty == null"
+      >
+        Loading data, please wait...
+      </p>
       <UserCard
         v-for="user in state.allUsers"
         :key="user.username"
@@ -41,6 +47,7 @@ export default {
     const state = reactive({
       users: null,
       allUsers: null,
+      empty: null,
       search: null,
     });
 
@@ -48,6 +55,12 @@ export default {
       try {
         const res = await api.getUsers();
         state.users = state.allUsers = res.data;
+        if (state.users.length === 0) {
+          state.empty = true;
+          state.users = null;
+        } else {
+          state.empty = false;
+        }
       } catch (err) {
         console.log(err);
       }

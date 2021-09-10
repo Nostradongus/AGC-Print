@@ -1,5 +1,5 @@
 <template>
-    <div class="px-8 pt-3 pb-5">
+    <div class="px-8 pt-3 pb-1">
     <div 
       class="mx-auto mb-0.5 h-30 bg-light-blue rounded-xl p-3"
     >
