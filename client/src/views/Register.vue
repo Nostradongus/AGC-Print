@@ -12,7 +12,7 @@
               name="firstname"
               type="text"
               class="manrope-regular name-text-field"
-              v-model="state.firstname"
+              v-model.trim="state.firstname"
               @keypress="isLetter"
               @change="isName(state.firstname)"
               :class="{ 'text-field-error': v.firstname.$error }"
@@ -44,7 +44,7 @@
               name="lastname"
               type="text"
               class="manrope-regular name-text-field"
-              v-model="state.lastname"
+              v-model.trim="state.lastname"
               @keypress="isLetter"
               @change="isName(state.lastname)"
               :class="{ 'text-field-error': v.lastname.$error }"
@@ -89,7 +89,7 @@
             name="username"
             type="text"
             class="manrope-regular login-text-field"
-            v-model="state.username"
+            v-model.trim="state.username"
             :class="{
               'text-field-error': v.username.$error,
             }"
@@ -132,7 +132,7 @@
             name="email"
             type="text"
             class="manrope-regular login-text-field"
-            v-model="state.email"
+            v-model.trim="state.email"
             :class="{ 'text-field-error': v.email.$error }"
           />
           <label
@@ -218,7 +218,7 @@
             name="password"
             type="password"
             class="manrope-regular login-text-field"
-            v-model="state.password"
+            v-model.trim="state.password"
             :class="{ 'text-field-error': v.password.$error }"
           />
           <label
@@ -251,7 +251,7 @@
             name="confirmpassword"
             type="password"
             class="manrope-regular login-text-field"
-            v-model="state.confirmPassword"
+            v-model.trim="state.confirmPassword"
             :class="{ 'text-field-error': v.confirmPassword.$error }"
           />
           <label
