@@ -1,7 +1,17 @@
 <template>
   <div>
     <side-bar />
-    <page-header title="View Users" @search="searchUsers">
+    <page-header title="View Users">
+      <div class="grid justify-start mx-8 my-8 content-end">
+        <input
+          type="text"
+          class="h-10 lg:w-96 md:w-80 border search"
+          placeholder="Search"
+          v-model.trim="state.search"
+          v-on:keyup="searchUsers(state.search)"
+        />
+      </div>
+
       <UserCard
         v-for="user in state.allUsers"
         :key="user.username"
@@ -31,6 +41,7 @@ export default {
     const state = reactive({
       users: null,
       allUsers: null,
+      search: null,
     });
 
     async function getInitUsers() {

@@ -2,9 +2,8 @@
   <div>
     <side-bar />
     <page-header title="Profile">
-
-      <p 
-        class="manrope-bold text-2xl text-center text-primary-blue mt-8" 
+      <p
+        class="manrope-bold text-2xl text-center text-primary-blue mt-8"
         v-if="state.empty"
       >
         Loading data, please wait...
@@ -46,7 +45,9 @@
       </div>
       <div v-if="!state.empty" class="px-8">
         <div id="accountinformation">
-          <h1 class="manrope-bold text-2xl text-primary-blue">Account Information</h1>
+          <h1 class="manrope-bold text-2xl text-primary-blue">
+            Account Information
+          </h1>
           <hr class="profile-border" />
           <div class="p-4 flex">
             <h1 class="manrope-regular text-xl w-64">Username</h1>
@@ -62,7 +63,9 @@
           </div>
         </div>
         <div id="accountinformation">
-          <h1 class="manrope-bold text-2xl text-primary-blue">Contact Details</h1>
+          <h1 class="manrope-bold text-2xl text-primary-blue">
+            Contact Details
+          </h1>
           <hr class="profile-border" />
           <div class="p-4 flex">
             <h1 class="manrope-regular text-xl w-64">Contact Number</h1>
@@ -72,25 +75,93 @@
           </div>
         </div>
       </div>
-      <div v-if="state.worker != null && !state.empty" class=" px-8">
+      <div v-if="state.worker != null && !state.empty" class="px-8">
         <h1 class="manrope-bold text-2xl text-primary-blue">All Orders</h1>
         <hr class="profile-border" />
+        <div class="grid grid-cols-2 mb-5">
+          <div class="grid justify-start mx-8 mt-8 content-end">
+            <input
+              type="text"
+              class="h-10 lg:w-96 md:w-80 border search"
+              placeholder="Search"
+              v-model.trim="state.search"
+              v-on:keyup="searchOrders()"
+            />
+          </div>
+          <div class="grid grid-rows-2 justify-end">
+            <div class="mr-10">
+              <!-- order sort message -->
+              <h1
+                class="
+                  manrope-bold
+                  left-0
+                  -top-3.5
+                  text-lg
+                  pt-8
+                  px-3
+                  text-primary-blue
+                "
+              >
+                Orders are sorted by most recent to least recent
+              </h1>
+            </div>
+            <div class="mr-10">
+              <!-- status filter box label -->
+              <label
+                class="
+                  manrope-bold
+                  left-0
+                  -top-3.5
+                  text-lg
+                  pt-8
+                  px-3
+                  text-primary-blue
+                "
+              >
+                Filter Orders By:
+                <!-- status filter box -->
+                <select
+                  name="type"
+                  id="type"
+                  class="w-full md:w-60 md:h-1/2 dropdown-field mt-8"
+                  v-model="state.status"
+                  @change="onSelectStatus()"
+                >
+                  <option value="All">All</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Waiting for Downpayment">
+                    Waiting for Downpayment
+                  </option>
+                  <option value="Processing">Processing</option>
+                  <option value="Ready for Delivery">Ready for Delivery</option>
+                  <option value="Complete">Complete</option>
+                  <option value="Cancelled">Cancelled</option>
+                </select>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <p
+          class="manrope-bold left-0 -top-3.5 text-xl pt-3 px-8 text-red"
+          v-if="!state.shownOrders.length"
+        >
+          No orders in "{{ state.status }}" status for now.
+        </p>
+
         <p
           class="manrope-bold left-0 -top-3.5 text-xl mb-8 pt-3 px-8 text-red"
-          v-if="
-            state.orders == null
-          "
+          v-if="state.shownOrders == null"
         >
           This user has not yet made any orders.
         </p>
         <div class="overflow-y-auto max-h-screen scrollbar-hidden">
           <OrderSetCard
-            v-for="order in state.orders"
+            v-for="order in state.shownOrders"
             :key="order.id"
             :order="order"
           />
         </div>
-          
       </div>
     </page-header>
   </div>
@@ -101,7 +172,7 @@ import { useRoute } from 'vue-router';
 import SideBar from '../components/SideBar.vue';
 import PageHeader from '../components/PageHeader.vue';
 import OrderSetCard from '../components/OrderSetCard.vue';
-import { onMounted, reactive } from 'vue';
+import { onMounted, reactive, computed } from 'vue';
 import { useStore } from 'vuex';
 import * as api from '../api';
 
@@ -118,15 +189,18 @@ export default {
     const state = reactive({
       username: route.params.username,
       worker: null,
-      orders: null,
+      shownOrders: null,
+      allOrders: null,
       email: null,
       name: null,
       contact: null,
+      status: 'All',
       empty: true,
+      search: null,
     });
 
     if (JSON.parse(localStorage.getItem('user')) == null) {
-      state.worker = store.state.worker.worker.username
+      state.worker = store.state.worker.worker.username;
     }
 
     if (state.worker != null) {
@@ -144,7 +218,7 @@ export default {
       try {
         const result = await api.getUser(state.username);
         state.email = result.data.email;
-        state.name = result.data.firstname + " " + result.data.lastname;
+        state.name = result.data.firstname + ' ' + result.data.lastname;
         state.contact = result.data.contactNo;
       } catch (err) {
         console.log(err);
@@ -157,13 +231,52 @@ export default {
     async function getUserOrders() {
       try {
         const result = await api.getUserOrderSets(state.username);
-        state.orders = result.data;
+        state.shownOrders = state.allOrders = result.data;
       } catch (err) {
         console.log(err);
       }
       state.empty = false;
     }
-    return { state };
+
+    function searchOrders() {
+      if (state.search) {
+        if (state.status === 'All') {
+          state.shownOrders = computed(() => {
+            return state.allOrders.filter((order) => {
+              return order.id.match(state.search);
+            });
+          });
+        } else {
+          state.shownOrders = computed(() => {
+            return state.allOrders.filter((order) => {
+              return (
+                order.id.match(state.search) && order.status.match(state.status)
+              );
+            });
+          });
+        }
+      } else {
+        onSelectStatus();
+      }
+    }
+
+    function onSelectStatus() {
+      if (state.search) {
+        searchOrders();
+      } else {
+        if (state.status === 'All') {
+          state.shownOrders = computed(() => state.allOrders);
+        } else {
+          state.shownOrders = computed(() => {
+            return state.allOrders.filter((order) => {
+              return order.status.match(state.status);
+            });
+          });
+        }
+      }
+    }
+
+    return { state, searchOrders, onSelectStatus };
   },
 };
 </script>
