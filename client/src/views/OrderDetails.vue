@@ -59,7 +59,132 @@
               >Pending Total Price</span
             >
 
-            <br />
+            <br /><br /><br />
+            <EditOrderSetModal :editOrderSet="showEditOrderSetModal" @close="toggleEditOrderSetModal">
+              <form class="">
+                <div class="flex flex-col mt-10">
+                  <label
+                  class="
+                    manrope-regular
+                    text-gray-600 text-xl
+                  "
+                  >Order Set <span class="manrope-bold text-primary-blue">#{{state.order.id}}</span></label
+                >
+                  <hr>
+                  <div class="flex">
+                    <label
+                      for="name"
+                      class="relative manrope-regular text-gray-600 text-md mt-4"
+                      >Name of Receiver</label
+                    >
+                    <input
+                      id="name"
+                      name="name"
+                      type="text"
+                      :value="state.order.name"
+                      class="manrope-regular input-text-field w-32 ml-9"
+                    />
+                  </div>
+                  <div class="flex">
+                    <label
+                      for="email"
+                      class="relative manrope-regular text-gray-600 text-md mt-4"
+                      >Email Address</label
+                    >
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      :value="state.order.email"
+                      class="manrope-regular input-text-field w-60 ml-14"
+                    />
+                  </div>
+                  <div class="flex">
+                    <label
+                      for="contactno"
+                      class="relative manrope-regular text-gray-600 text-md mt-4"
+                      >Contact Number</label
+                    >
+                    <div class="flex">
+                      <p class="absolute ml-4 mt-3 left-40 text-lg manrope-regular">+63</p>
+                      <input
+                        id="contactno"
+                        name="contactno"
+                        type="number"
+                        :value="state.order.contactNo % 63000000000"
+                        class="manrope-regular input-text-field w-72 pl-10 text-lg ml-9"
+                      />
+                    </div>
+                  </div>
+                  <div class="flex">
+                    <label
+                      for="deliveryaddress"
+                      class="relative manrope-regular text-gray-600 text-md mt-4"
+                      >Delivery Address</label
+                    >
+                    <input
+                      id="deliveryaddress"
+                      name="deliveryaddress"
+                      type="text"
+                      :value="state.order.address"
+                      class="manrope-regular input-text-field w-72 ml-9"
+                    />
+                  </div>
+                  <div class="flex">
+                    <label
+                      for="width"
+                      class="relative manrope-regular text-gray-600 text-md mt-4"
+                      >Order Status</label
+                    >
+                    <select
+                      name="orderstatus"
+                      id="orderstatus"
+                      class="dropdown-field w-72 ml-16"
+                    >
+                      <option value="Pending" :selected="state.order.status==='Pending'">Pending</option>
+                      <option value="Waiting for Downpayment" :selected="state.order.status==='Waiting for Downpayment'">
+                        Waiting for Downpayment
+                      </option>
+                      <option value="Processing" :selected="state.order.status==='Processing'">Processing</option>
+                      <option value="Ready for Delivery" :selected="state.order.status==='Ready for Delivery'">Ready for Delivery</option>
+                      <option value="Complete" :selected="state.order.status==='Complete'">Complete</option>
+                    </select>
+                  </div>
+                </div>
+                <button
+                  class="
+                    manrope-bold
+                    dowload-btn
+                    transition
+                    duration-300
+                    hover:bg-link-water hover:text-primary-blue
+                    flex-shrink
+                  "
+                >
+                  Update Information
+                </button>
+              </form>
+            </EditOrderSetModal>
+            <button
+              class="
+                manrope-regular
+                text-white
+                inline-block
+                transition
+                duration-300
+                ease-in-out
+                text-center text-md
+                hover:bg-link-water hover:text-primary-blue
+                w-40
+                h-10
+                mt-2
+                p-1
+                rounded-xl
+                bg-primary-blue
+              "
+              @click="toggleEditOrderSetModal"
+              >Edit Order Set</button
+            >
           </div>
         </div>
 
@@ -295,14 +420,16 @@ import SideBar from '../components/SideBar.vue';
 import PageHeader from '../components/PageHeader.vue';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
-import { reactive, onMounted } from 'vue';
+import { reactive, onMounted, ref } from 'vue';
 import OrderCard from '../components/OrderCard.vue';
+import EditOrderSetModal from '../components/Modals/EditOrderSetModal.vue';
 import * as api from '../api';
 
 export default {
   name: 'OrderDetails',
-  components: { SideBar, PageHeader, OrderCard },
+  components: { SideBar, PageHeader, OrderCard, EditOrderSetModal },
   setup() {
+    const showEditOrderSetModal = ref(false);
     const route = useRoute();
     const store = useStore();
     const state = reactive({
@@ -313,6 +440,10 @@ export default {
       empty: true,
       isStaff: false,
     });
+
+    function toggleEditOrderSetModal(){
+      showEditOrderSetModal.value = !showEditOrderSetModal.value;
+    }
 
     if (JSON.parse(localStorage.getItem('user')) == null) {
       state.worker = store.state.worker.worker.username;
@@ -357,7 +488,7 @@ export default {
         console.log(err);
       }
     }
-    return { state, route };
+    return { state, route, toggleEditOrderSetModal, showEditOrderSetModal };
   },
 };
 </script>

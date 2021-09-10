@@ -2,6 +2,12 @@
   <div>
     <side-bar />
     <page-header title="View Users" @search="searchUsers">
+      <p
+        class="manrope-bold text-2xl text-center text-primary-blue mt-8"
+        v-if="state.empty == null"
+      >
+        Loading data, please wait...
+      </p>
       <UserCard
         v-for="user in state.allUsers"
         :key="user.username"
@@ -31,12 +37,19 @@ export default {
     const state = reactive({
       users: null,
       allUsers: null,
+      empty: null,
     });
 
     async function getInitUsers() {
       try {
         const res = await api.getUsers();
         state.users = state.allUsers = res.data;
+        if (state.users.length === 0) {
+          state.empty = true;
+          state.users = null;
+        } else {
+          state.empty = false;
+        }
       } catch (err) {
         console.log(err);
       }
