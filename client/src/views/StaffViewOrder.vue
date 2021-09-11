@@ -11,8 +11,8 @@
       <!-- display all orders of user -->
       <div class="flex-1" v-if="state.empty != null">
         <!-- message and status filter option box -->
-        <div class="grid grid-cols-2 mb-5">
-          <div class="grid justify-start mx-8 mt-8 content-end">
+        <div class="grid grid-cols-2">
+          <div class="grid justify-start mx-8 mt-8 content-around">
             <input
               type="text"
               class="h-10 lg:w-96 md:w-80 border search"
@@ -46,7 +46,7 @@
                   left-0
                   -top-3.5
                   text-lg
-                  pt-8
+                  pt-4
                   px-3
                   text-primary-blue
                 "
@@ -57,7 +57,7 @@
                 <select
                   name="type"
                   id="type"
-                  class="w-full md:w-60 md:h-1/2 dropdown-field mt-8"
+                  class="w-full md:w-60 md:h-1/2 dropdown-field mt-4"
                   v-model="state.status"
                   @change="onSelectStatus"
                 >
@@ -257,7 +257,8 @@ export default {
 }
 
 .search {
-  background-image: url('data:image/svg+xml, %3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20class%3D%22h-8%20w-8%20m-auto%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22currentColor%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M8%204a4%204%200%20100%208%204%204%200%20000-8zM2%208a6%206%200%201110.89%203.476l4.817%204.817a1%201%200%2001-1.414%201.414l-4.816-4.816A6%206%200%20012%208z%22%20clip-rule%3D%22evenodd%22%20%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C%2Fsvg%3E');
+  background-position: 2% 50%;
+  background-image: url('https://img.icons8.com/material-outlined/24/000000/search--v1.png');
   background-repeat: no-repeat;
   padding-left: 45px;
 }

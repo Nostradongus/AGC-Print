@@ -39,6 +39,8 @@ export const addOrderSet = (orders) => API.post('/order/cart/confirm', orders);
 export const deleteOrder = (id) => API.delete(`/order/delete/${id}`);
 export const deleteOrderSet = (id) =>
   API.delete(`/order/delete/orderSet/${id}`);
+export const updateOrderSet = (id, data) =>
+  API.patch(`/order/update/orderSet/${id}`, data);
 export const updateOrderSetStatus = (id, status) =>
   API.patch(`/order/update/orderSet/status/${id}`, status);
 export const updateOrderStatus = (id, status) =>
@@ -64,17 +66,20 @@ export const patchUser = (username, data) =>
 
 // report data api methods
 export const getAllReports = () => API.get('/report');
-export const getFilteredReports = (status) => API.get(`/report/filter/${status}`);
+export const getFilteredReports = (status) =>
+  API.get(`/report/filter/${status}`);
 export const getUserReports = (username) => API.get(`/report/${username}`);
 export const getReport = (id) => API.get(`/report/details/${id}`);
-export const getOrderSetReport = (id) => API.get(`/report/details/orderSet/${id}`);
+export const getOrderSetReport = (id) =>
+  API.get(`/report/details/orderSet/${id}`);
 export const addReport = (report) => API.post('/report/add/new', report);
 export const deleteReport = (id) => API.delete(`/report/delete/${id}`);
 export const updateReportStatus = (id) => API.patch(`/report/update/${id}`);
 
 // payment receipt data api methods
 export const getAllPayments = () => API.get('/payment');
-export const getFilteredPayments = (status) => API.get(`/payment/filter/${status}`);
+export const getFilteredPayments = (status) =>
+  API.get(`/payment/filter/${status}`);
 export const getUserPayments = (username) => API.get(`/payment/${username}`);
 export const getOrderSetIdPayments = (orderSetId) =>
   API.get(`/payment/${orderSetId}/payments`);

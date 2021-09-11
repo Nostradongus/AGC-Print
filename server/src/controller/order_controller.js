@@ -436,6 +436,27 @@ const orderController = {
     }
   },
 
+  // order controller method to update an order set from the database
+  updateOrderSet: async (req, res) => {
+    try {
+      const id = req.params.id;
+      // data to be set on the order set
+      const data = {
+        name: req.body.name,
+        email: req.body.email,
+        contactNo: req.body.contactNo,
+        address: req.body.address,
+        status: req.body.status,
+      };
+
+      const result = await OrderService.updateOrderSet(id, data);
+
+      return res.status(200).json(result);
+    } catch (err) {
+      res.status(500).json({ message: 'Server Error' });
+    }
+  },
+
   // order controller method to update the status of an order set from the database
   updateOrderSetStatus: async (req, res) => {
     try {

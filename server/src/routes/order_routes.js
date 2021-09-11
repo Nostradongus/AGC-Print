@@ -150,6 +150,13 @@ router.delete(
   orderController.deleteOrderSet
 );
 
+// route for updating an order set from the database
+router.patch(
+  '/update/orderSet/:id',
+  token.authenticateToken,
+  orderController.updateOrderSet
+);
+
 // route for updating the status of an order set from the database
 router.patch(
   '/update/orderSet/status/:id',

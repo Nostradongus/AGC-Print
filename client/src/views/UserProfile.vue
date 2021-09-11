@@ -78,14 +78,14 @@
       <div v-if="state.worker != null && !state.empty" class="px-8">
         <h1 class="manrope-bold text-2xl text-primary-blue">All Orders</h1>
         <hr class="profile-border" />
-        <div class="grid grid-cols-2 mb-5">
-          <div class="grid justify-start mx-8 mt-8 content-end">
+        <div class="grid grid-cols-2">
+          <div class="grid justify-start mx-8 mt-8 content-around">
             <input
               type="text"
               class="h-10 lg:w-96 md:w-80 border search"
               placeholder="Search"
               v-model.trim="state.search"
-              v-on:keyup="searchOrders()"
+              v-on:keyup="searchOrders"
             />
           </div>
           <div class="grid grid-rows-2 justify-end">
@@ -113,7 +113,7 @@
                   left-0
                   -top-3.5
                   text-lg
-                  pt-8
+                  pt-4
                   px-3
                   text-primary-blue
                 "
@@ -123,7 +123,7 @@
                 <select
                   name="type"
                   id="type"
-                  class="w-full md:w-60 md:h-1/2 dropdown-field mt-8"
+                  class="w-full md:w-60 md:h-1/2 dropdown-field mt-4"
                   v-model="state.status"
                   @change="onSelectStatus()"
                 >

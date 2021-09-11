@@ -2,8 +2,8 @@
   <div>
     <side-bar />
     <page-header title="Order Details">
-      <p 
-        class="manrope-bold text-2xl text-center text-primary-blue mt-8" 
+      <p
+        class="manrope-bold text-2xl text-center text-primary-blue mt-8"
         v-if="state.empty"
       >
         Loading data, please wait...
@@ -60,110 +60,126 @@
             >
 
             <br /><br /><br />
-            <EditOrderSetModal :editOrderSet="showEditOrderSetModal" @close="toggleEditOrderSetModal">
-              <form class="">
-                <div class="flex flex-col mt-10">
-                  <label
-                  class="
-                    manrope-regular
-                    text-gray-600 text-xl
-                  "
-                  >Order Set <span class="manrope-bold text-primary-blue">#{{state.order.id}}</span></label
+            <EditOrderSetModal
+              :editOrderSet="showEditOrderSetModal"
+              @close="toggleEditOrderSetModal"
+            >
+              <div class="flex flex-col mt-10">
+                <label class="manrope-regular text-gray-600 text-xl"
+                  >Order Set
+                  <span class="manrope-bold text-primary-blue"
+                    >#{{ state.order.id }}</span
+                  ></label
                 >
-                  <hr>
+                <hr />
+                <div class="flex">
+                  <label
+                    for="name"
+                    class="relative manrope-regular text-gray-600 text-md mt-4"
+                    >Name of Receiver</label
+                  >
+                  <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    v-model.trim="updateData.name"
+                    class="manrope-regular input-text-field w-32 ml-9"
+                  />
+                </div>
+                <div class="flex">
+                  <label
+                    for="email"
+                    class="relative manrope-regular text-gray-600 text-md mt-4"
+                    >Email Address</label
+                  >
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    v-model.trim="updateData.email"
+                    class="manrope-regular input-text-field w-60 ml-14"
+                  />
+                </div>
+                <div class="flex">
+                  <label
+                    for="contactno"
+                    class="relative manrope-regular text-gray-600 text-md mt-4"
+                    >Contact Number</label
+                  >
                   <div class="flex">
-                    <label
-                      for="name"
-                      class="relative manrope-regular text-gray-600 text-md mt-4"
-                      >Name of Receiver</label
+                    <p
+                      class="absolute ml-4 mt-3 left-40 text-lg manrope-regular"
                     >
+                      +63
+                    </p>
                     <input
-                      id="name"
-                      name="name"
-                      type="text"
-                      :value="state.order.name"
-                      class="manrope-regular input-text-field w-32 ml-9"
+                      id="contactno"
+                      name="contactno"
+                      type="number"
+                      v-model.trim="updateData.contactNo"
+                      class="
+                        manrope-regular
+                        input-text-field
+                        w-72
+                        pl-10
+                        text-lg
+                        ml-9
+                      "
                     />
-                  </div>
-                  <div class="flex">
-                    <label
-                      for="email"
-                      class="relative manrope-regular text-gray-600 text-md mt-4"
-                      >Email Address</label
-                    >
-                    <input
-                      id="email"
-                      name="email"
-                      type="email"
-                      :value="state.order.email"
-                      class="manrope-regular input-text-field w-60 ml-14"
-                    />
-                  </div>
-                  <div class="flex">
-                    <label
-                      for="contactno"
-                      class="relative manrope-regular text-gray-600 text-md mt-4"
-                      >Contact Number</label
-                    >
-                    <div class="flex">
-                      <p class="absolute ml-4 mt-3 left-40 text-lg manrope-regular">+63</p>
-                      <input
-                        id="contactno"
-                        name="contactno"
-                        type="number"
-                        :value="state.order.contactNo % 63000000000"
-                        class="manrope-regular input-text-field w-72 pl-10 text-lg ml-9"
-                      />
-                    </div>
-                  </div>
-                  <div class="flex">
-                    <label
-                      for="deliveryaddress"
-                      class="relative manrope-regular text-gray-600 text-md mt-4"
-                      >Delivery Address</label
-                    >
-                    <input
-                      id="deliveryaddress"
-                      name="deliveryaddress"
-                      type="text"
-                      :value="state.order.address"
-                      class="manrope-regular input-text-field w-72 ml-9"
-                    />
-                  </div>
-                  <div class="flex">
-                    <label
-                      for="width"
-                      class="relative manrope-regular text-gray-600 text-md mt-4"
-                      >Order Status</label
-                    >
-                    <select
-                      name="orderstatus"
-                      id="orderstatus"
-                      class="dropdown-field w-72 ml-16"
-                    >
-                      <option value="Pending" :selected="state.order.status==='Pending'">Pending</option>
-                      <option value="Waiting for Downpayment" :selected="state.order.status==='Waiting for Downpayment'">
-                        Waiting for Downpayment
-                      </option>
-                      <option value="Processing" :selected="state.order.status==='Processing'">Processing</option>
-                      <option value="Ready for Delivery" :selected="state.order.status==='Ready for Delivery'">Ready for Delivery</option>
-                      <option value="Complete" :selected="state.order.status==='Complete'">Complete</option>
-                    </select>
                   </div>
                 </div>
-                <button
-                  class="
-                    manrope-bold
-                    dowload-btn
-                    transition
-                    duration-300
-                    hover:bg-link-water hover:text-primary-blue
-                    flex-shrink
-                  "
-                >
-                  Update Information
-                </button>
-              </form>
+                <div class="flex">
+                  <label
+                    for="deliveryaddress"
+                    class="relative manrope-regular text-gray-600 text-md mt-4"
+                    >Delivery Address</label
+                  >
+                  <input
+                    id="deliveryaddress"
+                    name="deliveryaddress"
+                    type="text"
+                    v-model.trim="updateData.address"
+                    class="manrope-regular input-text-field w-72 ml-9"
+                  />
+                </div>
+                <div class="flex">
+                  <label
+                    for="width"
+                    class="relative manrope-regular text-gray-600 text-md mt-4"
+                    >Order Status</label
+                  >
+                  <select
+                    name="orderstatus"
+                    id="orderstatus"
+                    v-model.trim="updateData.status"
+                    class="dropdown-field w-72 ml-16"
+                  >
+                    <option value="Pending">Pending</option>
+                    <option value="Waiting for Downpayment">
+                      Waiting for Downpayment
+                    </option>
+                    <option value="Processing">Processing</option>
+                    <option value="Ready for Delivery">
+                      Ready for Delivery
+                    </option>
+                    <option value="Complete">Complete</option>
+                    <option value="Cancelled">Cancelled</option>
+                  </select>
+                </div>
+              </div>
+              <button
+                class="
+                  manrope-bold
+                  dowload-btn
+                  transition
+                  duration-300
+                  hover:bg-link-water hover:text-primary-blue
+                  flex-shrink
+                "
+                @click="updateOrderSet"
+              >
+                Update Information
+              </button>
             </EditOrderSetModal>
             <button
               class="
@@ -183,8 +199,9 @@
                 bg-primary-blue
               "
               @click="toggleEditOrderSetModal"
-              >Edit Order Set</button
             >
+              Edit Order Set
+            </button>
           </div>
         </div>
 
@@ -198,7 +215,7 @@
         </div>
 
         <div v-if="state.report != null" class="mb-2">
-          <h1 
+          <h1
             v-if="state.worker == null"
             class="manrope-bold text-lg mt-5 text-primary-blue"
           >
@@ -207,8 +224,8 @@
 
           <div class="mt-5">
             <div class="flex flex-row">
-              <h1 class="manrope-bold text-2xl text-primary-blue flex-1"> 
-                Report Details: 
+              <h1 class="manrope-bold text-2xl text-primary-blue flex-1">
+                Report Details:
               </h1>
               <button
                 v-if="state.worker"
@@ -221,13 +238,15 @@
                   ease-in-out
                   text-center text-sm
                   ml-2
-                  hover:bg-link-water hover:text-primary-blue w-28
+                  hover:bg-link-water hover:text-primary-blue
+                  w-28
                   max-h-xs
                   rounded-xl
                   bg-primary-blue
                 "
-                >View Notes</button
               >
+                View Notes
+              </button>
               <button
                 v-if="state.worker"
                 class="
@@ -238,14 +257,16 @@
                   duration-300
                   ease-in-out
                   text-center text-sm
-                  hover:bg-link-water hover:text-primary-blue w-28
+                  hover:bg-link-water hover:text-primary-blue
+                  w-28
                   max-h-xs
                   ml-2
                   rounded-xl
                   bg-primary-blue
                 "
-                >Add Note +</button
               >
+                Add Note +
+              </button>
               <button
                 v-if="state.worker && state.report.status !== 'Resolved'"
                 class="
@@ -257,13 +278,15 @@
                   ease-in-out
                   ml-2
                   text-center text-sm
-                  hover:bg-link-water hover:text-primary-blue w-28
+                  hover:bg-link-water hover:text-primary-blue
+                  w-28
                   max-h-xs
                   rounded-xl
                   bg-primary-blue
                 "
-                >Resolve Issue</button
               >
+                Resolve Issue
+              </button>
               <button
                 v-if="state.worker && state.report.status !== 'Resolved'"
                 class="
@@ -275,49 +298,64 @@
                   ease-in-out
                   ml-2
                   text-center text-sm
-                  hover:bg-link-water hover:text-primary-blue w-28
+                  hover:bg-link-water hover:text-primary-blue
+                  w-28
                   max-h-xs
                   rounded-xl
                   bg-primary-blue
                 "
-                >Cancel Issue</button
               >
+                Cancel Issue
+              </button>
             </div>
             <hr class="report-border mt-1" />
 
             <div class="flex flex-row mt-3 mb-2">
-              <p class="manrope-bold text-lg text-primary-blue">Status: </p>
-              <p class="text-lg pl-1"> {{ state.report.status }} </p>
+              <p class="manrope-bold text-lg text-primary-blue">Status:</p>
+              <p class="text-lg pl-1">{{ state.report.status }}</p>
             </div>
 
             <div class="flex flex-row mb-2">
-              <p class="manrope-bold text-lg text-primary-blue">Issued by: </p>
-              <p class="text-lg pl-1"> {{ state.report.user }} ({{ state.report.userFullName }}) </p>
+              <p class="manrope-bold text-lg text-primary-blue">Issued by:</p>
+              <p class="text-lg pl-1">
+                {{ state.report.user }} ({{ state.report.userFullName }})
+              </p>
             </div>
 
             <div class="flex flex-row mb-2">
-              <p class="manrope-bold text-lg text-primary-blue">Date of Issue: </p>
-              <p class="text-lg pl-1"> {{ state.report.dateRequested }} </p>
-            </div>
-            
-            <div class="flex flex-row mb-2">
-              <p class="manrope-bold text-lg text-primary-blue">Type of Issue: </p>
-              <p class="text-lg pl-1"> {{ state.report.type }} </p>
+              <p class="manrope-bold text-lg text-primary-blue">
+                Date of Issue:
+              </p>
+              <p class="text-lg pl-1">{{ state.report.dateRequested }}</p>
             </div>
 
             <div class="flex flex-row mb-2">
-              <p class="manrope-bold text-lg text-primary-blue">Description: </p>
-              <br>
-              <p class="text-lg pl-1 text-justify"> 
+              <p class="manrope-bold text-lg text-primary-blue">
+                Type of Issue:
+              </p>
+              <p class="text-lg pl-1">{{ state.report.type }}</p>
+            </div>
+
+            <div class="flex flex-row mb-2">
+              <p class="manrope-bold text-lg text-primary-blue">Description:</p>
+              <br />
+              <p class="text-lg pl-1 text-justify">
                 {{ state.report.description }}
               </p>
             </div>
 
-            <p class="manrope-bold text-lg mb-4 text-primary-blue">Images: </p>
-            <div class="flex flex-row overflow-x-scroll items-center justify-center">
-              <div 
-                v-for="image in state.report.files" 
-                :key="image.filename" 
+            <p class="manrope-bold text-lg mb-4 text-primary-blue">Images:</p>
+            <div
+              class="
+                flex flex-row
+                overflow-x-scroll
+                items-center
+                justify-center
+              "
+            >
+              <div
+                v-for="image in state.report.files"
+                :key="image.filename"
                 class="flex items-center pl-10 w-1/4 h-1/4"
               >
                 <!-- NOTE: USE IF ACCESSING FROM CLOUDINARY -->
@@ -358,8 +396,7 @@
             >Back</router-link
           >
         </div>
-        
-      
+
         <div v-if="state.order">
           <router-link
             v-if="
@@ -418,7 +455,7 @@
 <script>
 import SideBar from '../components/SideBar.vue';
 import PageHeader from '../components/PageHeader.vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import { reactive, onMounted, ref } from 'vue';
 import OrderCard from '../components/OrderCard.vue';
@@ -430,6 +467,7 @@ export default {
   components: { SideBar, PageHeader, OrderCard, EditOrderSetModal },
   setup() {
     const showEditOrderSetModal = ref(false);
+    const router = useRouter();
     const route = useRoute();
     const store = useStore();
     const state = reactive({
@@ -441,7 +479,15 @@ export default {
       isStaff: false,
     });
 
-    function toggleEditOrderSetModal(){
+    const updateData = reactive({
+      name: null,
+      email: null,
+      contactNo: null,
+      address: null,
+      status: null,
+    });
+
+    function toggleEditOrderSetModal() {
       showEditOrderSetModal.value = !showEditOrderSetModal.value;
     }
 
@@ -459,6 +505,14 @@ export default {
         // get order set
         const orderSet = await api.getOrderSet(route.params.id);
         state.order = orderSet.data;
+        state.order.contactNo = state.order.contactNo % 63000000000;
+
+        // initialize updateData
+        updateData.name = state.order.name;
+        updateData.email = state.order.email;
+        updateData.contactNo = state.order.contactNo;
+        updateData.address = state.order.address;
+        updateData.status = state.order.status;
 
         // get orders of order set
         const orders = await api.getOrdersFromOrderSet(route.params.id);
@@ -478,6 +532,16 @@ export default {
       }
     }
 
+    async function updateOrderSet() {
+      try {
+        const result = await api.updateOrderSet(state.order.id, updateData);
+        console.log(result);
+        router.push(`/order-details/${state.order.id}`);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
     async function isStaff() {
       try {
         const staff = JSON.parse(localStorage.getItem('worker'));
@@ -488,7 +552,14 @@ export default {
         console.log(err);
       }
     }
-    return { state, route, toggleEditOrderSetModal, showEditOrderSetModal };
+    return {
+      state,
+      route,
+      updateData,
+      toggleEditOrderSetModal,
+      showEditOrderSetModal,
+      updateOrderSet,
+    };
   },
 };
 </script>
