@@ -29,7 +29,7 @@
 
             <span class="text-lg manrope-bold">Contact Number: </span>
             <span class="text-lg manrope-regular">
-              +{{ state.order.contactNo }}
+              +63 {{ state.order.contactNo }}
             </span>
 
             <br />
@@ -455,7 +455,7 @@
 <script>
 import SideBar from '../components/SideBar.vue';
 import PageHeader from '../components/PageHeader.vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import { reactive, onMounted, ref } from 'vue';
 import OrderCard from '../components/OrderCard.vue';
@@ -467,7 +467,6 @@ export default {
   components: { SideBar, PageHeader, OrderCard, EditOrderSetModal },
   setup() {
     const showEditOrderSetModal = ref(false);
-    const router = useRouter();
     const route = useRoute();
     const store = useStore();
     const state = reactive({
@@ -505,7 +504,7 @@ export default {
         // get order set
         const orderSet = await api.getOrderSet(route.params.id);
         state.order = orderSet.data;
-        state.order.contactNo = state.order.contactNo % 63000000000;
+        state.order.contactNo = state.order.contactNo % 630000000000;
 
         // initialize updateData
         updateData.name = state.order.name;
@@ -534,13 +533,13 @@ export default {
 
     async function updateOrderSet() {
       try {
+        toggleEditOrderSetModal();
         const result = await api.updateOrderSet(state.order.id, updateData);
         state.order.name = result.data.name;
         state.order.email = result.data.email;
-        state.order.contactNo = result.data.contactNo;
+        state.order.contactNo = result.data.contactNo % 630000000000;
         state.order.address = result.data.address;
         state.order.status = result.data.status;
-        console.log(state.order.name + ' ' + result.data.name);
       } catch (err) {
         console.log(err);
       }

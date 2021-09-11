@@ -445,12 +445,12 @@ const orderController = {
 
       if (req.body.name) data['name'] = req.body.name;
       if (req.body.email) data['email'] = req.body.email;
-      if (req.body.contactNo) data['contactNo'] = req.body.contactNo;
+      if (req.body.contactNo)
+        data['contactNo'] = parseInt(req.body.contactNo) + 630000000000;
       if (req.body.address) data['address'] = req.body.address;
       if (req.body.status) data['status'] = req.body.status;
 
       const result = await OrderService.updateOrderSet(id, data);
-
       return res.status(200).json(result);
     } catch (err) {
       res.status(500).json({ message: 'Server Error' });
@@ -460,11 +460,9 @@ const orderController = {
   // order controller method to update an order from the database
   updateOrder: async (req, res) => {
     try {
-      // update an order set from the database
-      const result = await OrderService.updateOrderSetStatus({
-        id: req.params.id,
-        status: req.body.status,
-      });
+      const id = req.params.id;
+
+      const data = {};
 
       // send result back to the client to indicate success
       return res.status(204).json(result);
