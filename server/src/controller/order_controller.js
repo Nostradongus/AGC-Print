@@ -441,13 +441,13 @@ const orderController = {
     try {
       const id = req.params.id;
       // data to be set on the order set
-      const data = {
-        name: req.body.name,
-        email: req.body.email,
-        contactNo: req.body.contactNo,
-        address: req.body.address,
-        status: req.body.status,
-      };
+      const data = {};
+
+      if (req.body.name) data['name'] = req.body.name;
+      if (req.body.email) data['email'] = req.body.email;
+      if (req.body.contactNo) data['contactNo'] = req.body.contactNo;
+      if (req.body.address) data['address'] = req.body.address;
+      if (req.body.status) data['status'] = req.body.status;
 
       const result = await OrderService.updateOrderSet(id, data);
 
@@ -457,30 +457,13 @@ const orderController = {
     }
   },
 
-  // order controller method to update the status of an order set from the database
-  updateOrderSetStatus: async (req, res) => {
+  // order controller method to update an order from the database
+  updateOrder: async (req, res) => {
     try {
       // update an order set from the database
       const result = await OrderService.updateOrderSetStatus({
         id: req.params.id,
         status: req.body.status,
-      });
-
-      // send result back to the client to indicate success
-      return res.status(204).json(result);
-    } catch (err) {
-      // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
-    }
-  },
-
-  // order controller method to update the price of an order set from the database
-  updateOrderSetPrice: async (req, res) => {
-    try {
-      // update an order set from the database
-      const result = await OrderService.updateOrderSetPrice({
-        id: req.params.id,
-        price: req.body.price,
       });
 
       // send result back to the client to indicate success
@@ -504,40 +487,6 @@ const orderController = {
       res.status(204).json(result);
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
-    }
-  },
-
-  // order controller method to update the status of an order from the database
-  updateOrderStatus: async (req, res) => {
-    try {
-      // update an order from the database
-      const result = await OrderService.updateOrderStatus({
-        id: req.params.id,
-        status: req.body.status,
-      });
-
-      // send result back to the client to indicate success
-      return res.status(204).json(result);
-    } catch (err) {
-      // if error has occured, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
-    }
-  },
-
-  // order controller method to update the price of an order from the database
-  updateOrderPrice: async (req, res) => {
-    try {
-      // update an order from the database
-      const result = await OrderService.updateOrderPrice({
-        id: req.params.id,
-        price: req.body.price,
-      });
-
-      // send result back to the client to indicate success
-      return res.status(204).json(result);
-    } catch (err) {
-      // if error has occured, send server error status and message
       res.status(500).json({ message: 'Server Error' });
     }
   },

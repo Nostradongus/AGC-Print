@@ -102,7 +102,7 @@ const OrderService = {
     OrderSet.findOneAndUpdate(
       { id: id },
       { $set: data },
-      { multi: false, runValidators: true, omitUndefined: true }
+      { new: true, omitUndefined: true }
     ),
 
   // this method updates an order set's status from the database

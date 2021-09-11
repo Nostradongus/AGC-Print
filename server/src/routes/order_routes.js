@@ -157,39 +157,11 @@ router.patch(
   orderController.updateOrderSet
 );
 
-// route for updating the status of an order set from the database
-router.patch(
-  '/update/orderSet/status/:id',
-  token.authenticateToken,
-  orderController.updateOrderSetStatus
-);
-
-// route for updating the price of an order set from the database
-router.patch(
-  '/update/orderSet/price/:id',
-  token.authenticateToken,
-  orderController.updateOrderSetPrice
-);
-
 // route for updating the reported indicator of an order set from the database
 router.patch(
   '/update/orderSet/reported/:id',
   token.authenticateToken,
   orderController.updateOrderSetReported
-);
-
-// route for updating the status of an order from the database
-router.patch(
-  '/update/order/status/:id',
-  token.authenticateToken,
-  orderController.updateOrderStatus
-);
-
-// route for updating the price of an order from the database
-router.patch(
-  '/update/order/price/:id',
-  token.authenticateToken,
-  orderController.updateOrderPrice
 );
 
 // export order routes

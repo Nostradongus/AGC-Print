@@ -535,8 +535,12 @@ export default {
     async function updateOrderSet() {
       try {
         const result = await api.updateOrderSet(state.order.id, updateData);
-        console.log(result);
-        router.push(`/order-details/${state.order.id}`);
+        state.order.name = result.data.name;
+        state.order.email = result.data.email;
+        state.order.contactNo = result.data.contactNo;
+        state.order.address = result.data.address;
+        state.order.status = result.data.status;
+        console.log(state.order.name + ' ' + result.data.name);
       } catch (err) {
         console.log(err);
       }
