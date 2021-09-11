@@ -157,6 +157,13 @@ router.patch(
   orderController.updateOrderSet
 );
 
+// route for updating an order from the database
+router.patch(
+  '/update/order/:id',
+  token.authenticateToken,
+  orderController.updateOrder
+);
+
 // route for updating the reported indicator of an order set from the database
 router.patch(
   '/update/orderSet/reported/:id',

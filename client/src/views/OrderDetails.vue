@@ -182,6 +182,7 @@
               </button>
             </EditOrderSetModal>
             <button
+              v-if="state.isStaff"
               class="
                 manrope-regular
                 text-white
@@ -211,6 +212,7 @@
             :key="order.id"
             :order="order"
             :isStaff="state.isStaff"
+            @orderUpdate="orderUpdate(order, $event)"
           />
         </div>
 
@@ -402,7 +404,7 @@
             v-if="
               state.order.status === 'Complete' &&
               state.order.reported != true &&
-              state.isStaff != true
+              !state.isStaff
             "
             class="
               manrope-regular
@@ -426,7 +428,7 @@
               state.order.price !== -1 &&
               state.order.status !== 'Complete' &&
               state.order.status !== 'Pending' &&
-              state.isStaff != true
+              !state.isStaff
             "
             class="
               manrope-regular
@@ -545,6 +547,12 @@ export default {
       }
     }
 
+    async function orderUpdate(order, update) {
+      const res = {};
+      Object.keys(order).forEach((k) => (res[k] = update[k] ?? order[k]));
+      order = res;
+    }
+
     async function isStaff() {
       try {
         const staff = JSON.parse(localStorage.getItem('worker'));
@@ -559,6 +567,7 @@ export default {
       state,
       route,
       updateData,
+      orderUpdate,
       toggleEditOrderSetModal,
       showEditOrderSetModal,
       updateOrderSet,

@@ -41,16 +41,11 @@ export const deleteOrderSet = (id) =>
   API.delete(`/order/delete/orderSet/${id}`);
 export const updateOrderSet = (id, data) =>
   API.patch(`/order/update/orderSet/${id}`, data);
-export const updateOrderSetStatus = (id, status) =>
-  API.patch(`/order/update/orderSet/status/${id}`, status);
-export const updateOrderStatus = (id, status) =>
-  API.patch(`/order/update/order/status/${id}`, status);
+export const updateOrder = (id, data) =>
+  API.patch(`/order/update/order/${id}`, data);
 export const updateOrderSetReported = (id, status) =>
   API.patch(`/order/update/orderSet/reported/${id}`, status);
-export const updateOrderSetPrice = (id, price) =>
-  API.patch(`/order/update/orderSet/price/${id}`, price);
-export const updateOrderPrice = (id, price) =>
-  API.patch(`/order/update/order/price/${id}`, price);
+
 export const sendEmailOrderPlaced = (id, name, email) =>
   API.post('/order/cart/confirm/sendEmailOrderPlaced', {
     id: id,

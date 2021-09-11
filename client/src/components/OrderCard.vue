@@ -25,19 +25,21 @@
           </button>
         </div>
       </ImageModal>
-      <EditOrderModal :editOrder="showEditOrderModal" @close="toggleEditOrderModal">
+      <EditOrderModal
+        :editOrder="showEditOrderModal"
+        @close="toggleEditOrderModal"
+      >
         <form class="items-center">
-          <div class=" flex flex-col mt-10">
-            <label
-              class="
-                manrope-regular
-                text-gray-600 text-2xl
-              "
-              >Product Type: <span class="manrope-bold text-primary-blue">{{order.type}}</span></label
+          <div class="flex flex-col mt-10">
+            <label class="manrope-regular text-gray-600 text-2xl"
+              >Product Type:
+              <span class="manrope-bold text-primary-blue">{{
+                order.type
+              }}</span></label
             >
-            <hr>
+            <hr />
             <!-- Tarpaulin Form -->
-            <div v-if="order.type === 'Tarpaulin'"> 
+            <div v-if="order.type === 'Tarpaulin'">
               <div class="flex">
                 <label
                   for="quantity"
@@ -48,7 +50,7 @@
                   id="quantity"
                   name="quantity"
                   type="number"
-                  :value="order.quantity"
+                  v-model.trim="updateData.quantity"
                   class="manrope-regular input-text-field w-32 ml-4"
                 />
               </div>
@@ -62,7 +64,7 @@
                   id="width"
                   name="width"
                   type="number"
-                  :value="order.width"
+                  v-model.trim="updateData.width"
                   class="manrope-regular input-text-field w-32 ml-9"
                 />
               </div>
@@ -76,7 +78,7 @@
                   id="height"
                   name="height"
                   type="number"
-                  :value="order.height"
+                  v-model.trim="updateData.height"
                   class="manrope-regular input-text-field w-32 ml-8"
                 />
               </div>
@@ -90,7 +92,7 @@
                   id="noeyelets"
                   name="noeyelets"
                   type="number"
-                  :value="order.eyelets"
+                  v-model.trim="updateData.eyelets"
                   class="manrope-regular input-text-field w-32 ml-8"
                 />
               </div>
@@ -106,8 +108,15 @@
                     id="price"
                     name="price"
                     type="number"
-                    :value="order.price === -1 ? 0 : order.price"
-                    class="manrope-regular input-text-field w-36 pl-6 text-lg ml-9"
+                    v-model.trim="updateData.price"
+                    class="
+                      manrope-regular
+                      input-text-field
+                      w-36
+                      pl-6
+                      text-lg
+                      ml-9
+                    "
                   />
                 </div>
               </div>
@@ -123,8 +132,8 @@
                   type="text"
                   class="manrope-regular input-text-field w-full h-24"
                   min="0"
-                  :value="order.remarks"
-                ></textarea>      
+                  v-model="updateData.remarks"
+                ></textarea>
               </div>
             </div>
             <!-- Wallpaper Form -->
@@ -139,7 +148,7 @@
                   id="quantity"
                   name="quantity"
                   type="number"
-                  :value="order.quantity"
+                  v-model.trim="updateData.quantity"
                   class="manrope-regular input-text-field w-32 ml-4"
                 />
               </div>
@@ -153,7 +162,7 @@
                   id="width"
                   name="width"
                   type="number"
-                  :value="order.width"
+                  v-model.trim="updateData.width"
                   class="manrope-regular input-text-field w-32 ml-9"
                 />
               </div>
@@ -167,7 +176,7 @@
                   id="height"
                   name="height"
                   type="number"
-                  :value="order.height"
+                  v-model.trim="updateData.height"
                   class="manrope-regular input-text-field w-32 ml-8"
                 />
               </div>
@@ -183,8 +192,15 @@
                     id="price"
                     name="price"
                     type="number"
-                    :value="order.price === -1 ? 0 : order.price"
-                    class="manrope-regular input-text-field w-36 pl-6 text-lg ml-9"
+                    v-model.trim="updateData.price"
+                    class="
+                      manrope-regular
+                      input-text-field
+                      w-36
+                      pl-6
+                      text-lg
+                      ml-9
+                    "
                   />
                 </div>
               </div>
@@ -200,8 +216,8 @@
                   type="text"
                   class="manrope-regular input-text-field w-full h-24"
                   min="0"
-                  :value="order.remarks"
-                ></textarea>      
+                  v-model.trim="updateData.remarks"
+                ></textarea>
               </div>
             </div>
             <!-- Canvas print Form -->
@@ -216,7 +232,7 @@
                   id="quantity"
                   name="quantity"
                   type="number"
-                  :value="order.quantity"
+                  v-model.trim="updateData.quantity"
                   class="manrope-regular input-text-field w-32 ml-4"
                 />
               </div>
@@ -230,7 +246,7 @@
                   id="width"
                   name="width"
                   type="number"
-                  :value="order.width"
+                  v-model.trim="updateData.width"
                   class="manrope-regular input-text-field w-32 ml-9"
                 />
               </div>
@@ -244,7 +260,7 @@
                   id="height"
                   name="height"
                   type="number"
-                  :value="order.height"
+                  v-model.trim="updateData.height"
                   class="manrope-regular input-text-field w-32 ml-8"
                 />
               </div>
@@ -258,25 +274,25 @@
                   name="frame"
                   id="frame"
                   class="dropdown-field w-72 ml-4"
-                  v-model="state.frameOption"
+                  v-model.trim="updateData.frameOption"
                   @change="onSelectFrameOption"
                 >
-                  <option value="3/4 Inches" :selected="order.frameOption === '3/4 Inches'">3/4 Inches</option>
-                  <option value="1.5 Inches" :selected="order.frameOption === '1.5 Inches'">1.5 Inches</option>
-                  <option value="Shadow Box" :selected="order.frameOption === 'Shadow Box'">Shadow Box</option>
-                  <option value="Glassless Frame" :selected="order.frameOption === 'Glassless Frame'">Glassless Frame</option>
-                  <option value="Floating Frame" :selected="order.frameOption === 'Floating Frame'">Floating Frame</option>
-                  <option value="Print Only" :selected="order.frameOption === 'Print Only'">Print Only</option>
+                  <option value="3/4 Inches">3/4 Inches</option>
+                  <option value="1.5 Inches">1.5 Inches</option>
+                  <option value="Shadow Box">Shadow Box</option>
+                  <option value="Glassless Frame">Glassless Frame</option>
+                  <option value="Floating Frame">Floating Frame</option>
+                  <option value="Print Only">Print Only</option>
                 </select>
               </div>
-              
+
               <div
                 class="flex"
                 v-if="
-                  state.frameOption !== '3/4 Inches' &&
-                  state.frameOption !== '1.5 Inches' &&
-                  state.frameOption !== 'placeholder' &&
-                  state.frameOption !== 'Print Only'
+                  updateData.frameOption !== '3/4 Inches' &&
+                  updateData.frameOption !== '1.5 Inches' &&
+                  updateData.frameOption !== 'placeholder' &&
+                  updateData.frameOption !== 'Print Only'
                 "
               >
                 <label
@@ -288,26 +304,23 @@
                   name="framefinishing"
                   id="framefinishing"
                   class="dropdown-field w-72 ml-4"
-                  v-model="state.frameFinishing"
+                  v-model.trim="updateData.frameFinishing"
                   @change="onSelectFrameFinishing"
                 >
-                  <option value="placeholder" disabled hidden 
-                    :selected="state.frameOption !== '3/4 Inches' &&
-                    state.frameOption !== '1.5 Inches' &&
-                    state.frameOption !== 'placeholder' &&
-                    state.frameOption !== 'Print Only'">
+                  <option value="placeholder" disabled hidden>
                     Select one
                   </option>
-                  <option value="Black" :selected="order.frameFinishing === 'Black'">Black</option>
-                  <option value="White" :selected="order.frameFinishing === 'White'">White</option>
-                  <option value="Matte" :selected="order.frameFinishing === 'Matte'">Matte</option>
-                  <option value="Glossy" :selected="order.frameFinishing === 'Glossy'">Glossy</option>
+                  <option value="Black">Black</option>
+                  <option value="White">White</option>
+                  <option value="Matte">Matte</option>
+                  <option value="Glossy">Glossy</option>
                 </select>
               </div>
               <div
                 class="flex"
                 v-if="
-                  state.frameOption === '3/4 Inches' || state.frameOption === '1.5 Inches'
+                  updateData.frameOption === '3/4 Inches' ||
+                  updateData.frameOption === '1.5 Inches'
                 "
               >
                 <label
@@ -319,16 +332,21 @@
                   name="frameedges"
                   id="frameedges"
                   class="dropdown-field w-48 ml-4"
-                  v-model="state.frameEdges"
+                  v-model.trim="updateData.frameEdges"
                   @change="onSelectFrameEdges"
                 >
-                  <option value="placeholder" disabled hidden :selected="state.frameOption === '3/4 Inches' || state.frameOption === '1.5 Inches'">Select one</option>
-                  <option value="White Edges" :selected="order.frameEdges==='White Edges'">White Edges</option>
-                  <option value="Black Edges" :selected="order.frameEdges==='Printed Edges'">Printed Edges</option>
+                  <option value="placeholder" disabled hidden>
+                    Select one
+                  </option>
+                  <option value="White Edges">White Edges</option>
+                  <option value="Black Edges">Printed Edges</option>
                 </select>
-                
+
                 <p
-                  v-if="state.frameEdgesValidation != null && !state.frameEdgesValidation"
+                  v-if="
+                    state.frameEdgesValidation != null &&
+                    !state.frameEdgesValidation
+                  "
                   class="text-red manrope-bold text-left text-sm"
                 >
                   Please select a frame edge.
@@ -346,8 +364,15 @@
                     id="price"
                     name="price"
                     type="number"
-                    :value="order.price === -1 ? 0 : order.price"
-                    class="manrope-regular input-text-field w-36 pl-6 text-lg ml-9"
+                    v-model.trim="updateData.price"
+                    class="
+                      manrope-regular
+                      input-text-field
+                      w-36
+                      pl-6
+                      text-lg
+                      ml-9
+                    "
                   />
                 </div>
               </div>
@@ -363,8 +388,8 @@
                   type="text"
                   class="manrope-regular input-text-field w-full h-24"
                   min="0"
-                  :value="order.remarks"
-                ></textarea>      
+                  v-model.trim="updateData.remarks"
+                ></textarea>
               </div>
             </div>
             <!-- Sticker Form -->
@@ -379,7 +404,7 @@
                   id="quantity"
                   name="quantity"
                   type="number"
-                  :value="order.quantity"
+                  v-model.trim="updateData.quantity"
                   class="manrope-regular input-text-field w-32 ml-4"
                 />
               </div>
@@ -393,7 +418,7 @@
                   id="width"
                   name="width"
                   type="number"
-                  :value="order.width"
+                  v-model.trim="updateData.width"
                   class="manrope-regular input-text-field w-32 ml-9"
                 />
               </div>
@@ -407,7 +432,7 @@
                   id="height"
                   name="height"
                   type="number"
-                  :value="order.height"
+                  v-model.trim="updateData.height"
                   class="manrope-regular input-text-field w-32 ml-8"
                 />
               </div>
@@ -421,9 +446,14 @@
                   name="diecut"
                   id="diecut"
                   class="dropdown-field w-32 ml-8 mt-1"
+                  v-model.trim="updateData.diecut"
                 >
-                  <option value="Yes" :selected="order.diecut === 'Yes'">Yes</option>
-                  <option value="No" :selected="order.diecut === 'No'">No</option>
+                  <option value="Yes" :selected="order.diecut === 'Yes'">
+                    Yes
+                  </option>
+                  <option value="No" :selected="order.diecut === 'No'">
+                    No
+                  </option>
                 </select>
               </div>
               <div class="flex">
@@ -438,8 +468,15 @@
                     id="price"
                     name="price"
                     type="number"
-                    :value="order.price === -1 ? 0 : order.price"
-                    class="manrope-regular input-text-field w-36 pl-6 text-lg ml-9"
+                    v-model.trim="updateData.price"
+                    class="
+                      manrope-regular
+                      input-text-field
+                      w-36
+                      pl-6
+                      text-lg
+                      ml-9
+                    "
                   />
                 </div>
               </div>
@@ -455,12 +492,12 @@
                   type="text"
                   class="manrope-regular input-text-field w-full h-24"
                   min="0"
-                  :value="order.remarks"
-                ></textarea>      
+                  v-model.trim="updateData.remarks"
+                ></textarea>
               </div>
             </div>
           </div>
-          
+
           <button
             type="submit"
             class="
@@ -471,6 +508,7 @@
               hover:bg-link-water hover:text-primary-blue
               flex-shrink
             "
+            @click="updateOrder"
           >
             Update Information
           </button>
@@ -585,8 +623,9 @@
                 bg-primary-blue
               "
               @click="toggleEditOrderModal"
-              >Edit</button
             >
+              Edit
+            </button>
           </div>
         </div>
       </div>
@@ -599,6 +638,7 @@ import ImageModal from './Modals/ImageModal.vue';
 import EditOrderModal from './Modals/EditOrderModal.vue';
 import { reactive, ref } from 'vue';
 import axios from 'axios';
+import * as api from '../api';
 export default {
   name: 'OrderCard',
   components: {
@@ -613,47 +653,57 @@ export default {
       type: Boolean,
     },
   },
-  setup(props) {
+  setup(props, { emit }) {
     const showImageModal = ref(false);
     const showEditOrderModal = ref(false);
     let state = reactive({
-      frameOption: 'placeholder',
-      frameFinishing: 'placeholder',
-      frameEdges: 'placeholder',
       frameValidation: null,
       frameOptionValidation: null,
       frameFinishingValidation: null,
       frameEdgesValidation: null,
     });
 
+    const updateData = reactive({
+      quantity: props.order.quantity,
+      width: props.order.width,
+      height: props.order.height,
+      price: props.order.price === -1 ? 0 : props.order.price,
+      remarks: props.order.remarks,
+      eyelets: props.order.eyelets,
+      diecut: props.order.diecut,
+      frameOption: 'placeholder',
+      frameEdges: 'placeholder',
+      frameFinishing: 'placeholder',
+    });
+
     function onSelectFrameOption() {
       state.frameOptionValidation =
-        state.frameOption !== 'placeholder' ? true : false;
+        updateData.frameOption !== 'placeholder' ? true : false;
       if (
-        state.frameOption === '3/4 Inches' ||
-        state.frameOption === '1.5 Inches'
+        updateData.frameOption === '3/4 Inches' ||
+        updateData.frameOption === '1.5 Inches'
       ) {
-        state.frameFinishing = 'placeholder';
+        updateData.frameFinishing = 'placeholder';
         state.frameFinishingValidation = null;
       }
       if (
-        state.frameOption === 'Shadow Box' ||
-        state.frameOption === 'Glassless Frame' ||
-        state.frameOption === 'Floating Frame'
+        updateData.frameOption === 'Shadow Box' ||
+        updateData.frameOption === 'Glassless Frame' ||
+        updateData.frameOption === 'Floating Frame'
       ) {
-        state.frameEdges = 'placeholder';
+        updateData.frameEdges = 'placeholder';
         state.frameEdgesValidation = null;
       }
     }
 
     function onSelectFrameFinishing() {
       state.frameFinishingValidation =
-        state.frameFinishing !== 'placeholder' ? true : false;
+        updateData.frameFinishing !== 'placeholder' ? true : false;
     }
 
     function onSelectFrameEdges() {
       state.frameEdgesValidation =
-        state.frameEdges !== 'placeholder' ? true : false;
+        updateData.frameEdges !== 'placeholder' ? true : false;
     }
 
     function toggleImageModal() {
@@ -662,9 +712,41 @@ export default {
 
     function toggleEditOrderModal() {
       showEditOrderModal.value = !showEditOrderModal.value;
-      state.frameOption = props.order.frameOption;
-      state.frameFinishing = props.order.frameFinishing;
-      state.frameEdges = props.order.frameEdges;
+      updateData.frameOption = props.order.frameOption;
+      updateData.frameFinishing = props.order.frameFinishing;
+      updateData.frameEdges = props.order.frameEdges;
+    }
+
+    async function updateOrder() {
+      try {
+        const result = await api.updateOrder(props.order.id, updateData);
+        console.log(result);
+        const orderUpdate = {
+          quantity: result.data.quantity,
+          width: result.data.width,
+          height: result.data.height,
+          price: result.data.price,
+          remarks: result.data.remarks,
+        };
+        // Tarpaulin only details
+        if (result.data.eyelets) orderUpdate['eyelets'] = result.data.eyelets;
+
+        // Sticker only details
+        if (result.data.diecut) orderUpdate['diecut'] = result.data.diecut;
+
+        // Canvas Print only details
+        if (result.data.frameOption)
+          orderUpdate['frameOption'] = result.data.frameOption;
+        if (result.data.frameEdges)
+          orderUpdate['frameEdges'] = result.data.frameEdges;
+        if (result.data.frameFinishing)
+          orderUpdate['frameFinishing'] = result.data.frameFinishing;
+
+        emit('orderUpdate', orderUpdate);
+        toggleEditOrderModal();
+      } catch (err) {
+        console.log(err);
+      }
     }
 
     function downloadImg() {
@@ -677,10 +759,15 @@ export default {
 
         const link = document.createElement('a');
         link.href = url;
-        
+
         // get filename and file type
-        const fileType = props.order.filePath.substring(props.order.filePath.lastIndexOf('.'));
-        const filename = props.order.filename.substring(props.order.filename.indexOf('/') + 1) + fileType;
+        const fileType = props.order.filePath.substring(
+          props.order.filePath.lastIndexOf('.')
+        );
+        const filename =
+          props.order.filename.substring(
+            props.order.filename.indexOf('/') + 1
+          ) + fileType;
 
         link.setAttribute('download', filename);
         document.body.appendChild(link);
@@ -688,11 +775,20 @@ export default {
         link.click();
       });
     }
-    return { state, showImageModal, showEditOrderModal, toggleImageModal, toggleEditOrderModal, 
+    return {
+      state,
+      updateData,
+      showImageModal,
+      showEditOrderModal,
+      updateOrder,
+      toggleImageModal,
+      toggleEditOrderModal,
       onSelectFrameOption,
       onSelectFrameFinishing,
-      onSelectFrameEdges, downloadImg };
-  }
+      onSelectFrameEdges,
+      downloadImg,
+    };
+  },
 };
 </script>
 
