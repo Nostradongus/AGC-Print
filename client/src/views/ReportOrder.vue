@@ -133,7 +133,7 @@
             v-if="state.fileTypeValidation != null && !state.fileTypeValidation && state.alreadyReported != true"
             class="text-red manrope-bold text-left text-sm"
           >
-            File/s must be in .jpg, .png, or .pdf format.
+            File/s must be in .jpg or .png format.
           </p>
         </div>
         <div class="flex justify-end lg:mr-48"> 
@@ -270,7 +270,7 @@ export default {
       // check if there is/are uploaded file/s by user
       if (state.fileValidation) {
         // valid file type extensions
-        const extensions = ['png', 'jpg', 'jpeg', 'pdf'];
+        const extensions = ['png', 'jpg', 'jpeg'];
 
         // temporary flag value
         state.fileTypeValidation = true;

@@ -32,11 +32,13 @@ const orderController = {
       // retrieve all orders from the database
       const orders = await OrderService.getAllOrderSets();
 
-      if (orders != null && orders.length != 0) {
+      // if there are existing order sets in the database
+      if (orders.length != 0) {
         return res.status(200).json(orders);
       }
 
-      return res.status(404).json({ message: 'No Orders Yet!' });
+      // send back empty array with appropriate status code
+      return res.status(404).json(orders);
     } catch (err) {
       // if error has occurred, send server error status and message
       res.status(500).json({ message: 'Server Error' });
@@ -51,11 +53,14 @@ const orderController = {
         req.params.status
       );
 
-      if (orders != null && orders.length != 0) {
+      // if there are existing orders in the database
+      if (orders.length != 0) {
+        // send array of orders back to the client
         return res.status(200).json(orders);
       }
 
-      return res.status(404).json({ message: 'No Orders Yet!' });
+      // send empty array back to client with appropriate status code
+      return res.status(404).json(orders);
     } catch (err) {
       res.status(500).json({ message: 'Server Error' });
     }
@@ -66,11 +71,14 @@ const orderController = {
     try {
       const orders = await OrderService.getUserOrderSets(req.params.username);
 
-      if (orders != null && orders.length != 0) {
+      // if there are existing orders in the database
+      if (orders.length != 0) {
+        // send array of orders back to the client
         return res.status(200).json(orders);
       }
 
-      return res.status(404).json({ message: 'No Orders Yet!' });
+      // send empty array back to client with appropriate status code
+      return res.status(404).json(orders);
     } catch (err) {
       res.status(500).json({ message: 'Server Error' });
     }
@@ -85,11 +93,11 @@ const orderController = {
         req.params.status
       );
 
-      if (orders != null && orders.length != 0) {
+      if (orders.length != 0) {
         return res.status(200).json(orders);
       }
 
-      return res.status(404).json({ message: 'No Orders Yet!' });
+      return res.status(404).json(orders);
     } catch (err) {
       res.status(500).json({ message: 'Server Error' });
     }
@@ -102,11 +110,11 @@ const orderController = {
         req.params.username
       );
 
-      if (orders != null && orders.length != 0) {
+      if (orders.length != 0) {
         return res.status(200).json(orders);
       }
 
-      return res.status(404).json({ message: 'No Orders Yet!' });
+      return res.status(404).json(orders);
     } catch (err) {
       res.status(500).json({ message: 'Server Error' });
     }
@@ -117,11 +125,11 @@ const orderController = {
     try {
       const orders = await OrderService.getAllActiveOrderSets();
 
-      if (orders != null && orders.length != 0) {
+      if (orders.length != 0) {
         return res.status(200).json(orders);
       }
 
-      return res.status(404).json({ message: 'No Active Orders Yet!' });
+      return res.status(404).json(orders);
     } catch (err) {
       res.status(500).json({ message: 'Server Error' });
     }
@@ -132,11 +140,11 @@ const orderController = {
     try {
       const orders = await OrderService.getAllPastOrderSets();
 
-      if (orders != null && orders.length != 0) {
+      if (orders.length != 0) {
         return res.status(200).json(orders);
       }
 
-      return res.status(404).json({ message: 'No Past Orders Yet!' });
+      return res.status(404).json(orders);
     } catch (err) {
       res.status(500).json({ message: 'Server Error' });
     }
@@ -182,11 +190,11 @@ const orderController = {
       // retrieve a specific order set from the database given the id data from the request
       const orders = await OrderService.getOrdersFromOrderSet(req.params.id);
       // if order set exists in the database, send the data back to the client
-      if (orders != null && orders.length !== 0) {
+      if (orders.length !== 0) {
         return res.status(200).json(orders);
       }
       // if order does not exist, send error status and message
-      return res.status(404).json({ message: 'Orders not found!' });
+      return res.status(404).json(orders);
     } catch (err) {
       // if error has occurred, send server error status and message
       res.status(500).json({ message: 'Server Error' });
@@ -487,7 +495,6 @@ const orderController = {
       const result = await OrderService.updateOrder(id, data);
       return res.status(200).json(result);
     } catch (err) {
-      console.log(err);
       // if error has occurred, send server error status and message
       res.status(500).json({ message: 'Server Error' });
     }

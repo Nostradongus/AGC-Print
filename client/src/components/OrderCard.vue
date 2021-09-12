@@ -624,7 +624,7 @@
               "
               @click="toggleEditOrderModal"
             >
-              Edit
+              Edit Order
             </button>
           </div>
         </div>

@@ -13,8 +13,15 @@ const workerController = {
     try {
       // retrieve all workers from the database
       const workers = await WorkerService.getWorkers();
-      // send the array of workers back to the client
-      return res.status(200).json(workers);
+
+      // if there are workers (staff) from the database
+      if (workers.length != 0) {
+        // send back array of workers to client
+        return res.status(200).json(workers);
+      }
+
+      // send back empty array with appropriate status code
+      return res.status(404).json(workers);
     } catch (err) {
       // if error has occurred, send server error status and message
       res.status(500).json({ message: 'Server Error' });

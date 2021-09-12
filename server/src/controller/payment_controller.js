@@ -23,12 +23,12 @@ const paymentController = {
       const payments = await PaymentService.getAllPayments();
 
       // if there are existing payment receipt data from the database
-      if (payments != null && payments.length != 0) {
+      if (payments.length != 0) {
         return res.status(200).json(payments);
       }
 
-      // send the array of payments back to the client
-      return res.status(404).json({ message: 'No Payment Data Found!' });
+      // send the empty array of payments back to the client with appropriate status code
+      return res.status(404).json(payments);
     } catch (err) {
       // if error has occurred, send server error status and message
       res.status(500).json({ message: 'Server Error' });
@@ -44,12 +44,12 @@ const paymentController = {
       );
 
       // if there are existing payment receipt data from the database
-      if (payments != null && payments.length != 0) {
+      if (payments.length != 0) {
         return res.status(200).json(payments);
       }
 
-      // send the array of payments back to the client
-      return res.status(404).json({ message: 'No Payment Data Found!' });
+      // send the empty array of payments back to the client with appropriate status code
+      return res.status(404).json(payments);
     } catch (err) {
       // if error has occurred, send server error status and message
       res.status(500).json({ message: 'Server Error' });
@@ -81,14 +81,12 @@ const paymentController = {
       );
 
       // if there are payment receipts uploaded from user, send data back to client
-      if (payments != null && payments.length != 0) {
+      if (payments.length != 0) {
         return res.status(200).json(payments);
       }
 
-      // if no payment receipts uploaded yet from user, send message
-      return res
-        .status(404)
-        .json({ message: 'No payment receipts uploaded from user yet!' });
+      // if no payment receipts uploaded yet from user, send back empty array with appropriate status code
+      return res.status(404).json(payments);
     } catch (err) {
       // if error has occurred, send server error status and message
       res.status(500).json({ message: 'Server Error' });
@@ -103,14 +101,12 @@ const paymentController = {
       );
 
       // if there are payment receipts uploaded from user, send data back to client
-      if (payments != null && payments.length != 0) {
+      if (payments.length != 0) {
         return res.status(200).json(payments);
       }
 
-      // if no payment receipts uploaded yet from user, send message
-      return res
-        .status(404)
-        .json({ message: 'No payment receipts uploaded from user yet!' });
+      // if no payment receipts uploaded yet from user, send back empty array with appropriate status code
+      return res.status(404).json(payments);
     } catch (err) {
       // if error has occurred, send server error status and message
       res.status(500).json({ message: 'Server Error' });
@@ -200,6 +196,7 @@ const paymentController = {
       res.status(500).json({ message: 'Server Error' });
     }
   },
+
   // payment receipt controller method to update a payment's payment account from the database
   updatePaymentAcc: async (req, res) => {
     try {
@@ -214,6 +211,7 @@ const paymentController = {
       res.status(500).json({ message: 'Server Error' });
     }
   },
+
   // payment receipt controller method to delete a payment receipt from the database
   deletePayment: async (req, res) => {
     try {

@@ -10,22 +10,24 @@
         <div class="flex-1">
           <div class="my-auto ml-3 mt-5">
             <div class="manrope-extrabold text-2xl my-auto">{{user.firstname}} {{user.lastname}}</div>
-            <div class="manrope-regular text-light-gray text-xl my-auto">{{user.username}}</div>
+            <div class="manrope-bold text-primary-blue text-xl my-auto">{{user.username}}</div>
           </div>
         </div>
-        <div>
+        <div class="flex items-center">
             <router-link :to="`/profile/${user.username}`">
             <button
               class="
                 text-primary-blue
-                manrope-regular
-                rounded-sm
-                my-10
                 mr-4
-                pt-0.5
                 ml-2
+                manrope-bold
+                rounded-md
+                pt-0.5
+                pl-2
+                pr-2
                 focus:outline-none
                 bg-gray-500
+                transition duration-100 ease-in-out hover:bg-light-gray
               "
             >
               View User Information >

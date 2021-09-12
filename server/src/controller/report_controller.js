@@ -22,8 +22,14 @@ const reportController = {
       // retrieve all reports from the database
       const reports = await ReportService.getAllReports();
 
-      // send array of reports back to client
-      return res.status(200).json(reports);
+      // if there are existing reports in the database
+      if (reports.length != 0) {
+        // send back array of reports to client
+        return res.status(200).json(reports);
+      }
+
+      // send empty array back to client with appropriate status code
+      return res.status(404).json(reports);
     } catch (err) {
       // if error has occurred, send server error status and message
       res.status(500).json({ message: 'Server Error' });
@@ -36,8 +42,14 @@ const reportController = {
       // retrieve all reports from the database according to given status
       const reports = await ReportService.getFilteredReports(req.params.status);
 
-      // send the array of reports back to the client
-      return res.status(200).json(reports);
+      // if there are existing reports in the database
+      if (reports.length != 0) {
+        // send array of reports back to client
+        return res.status(200).json(reports);
+      }
+
+      // send empty array back to client with appropriate status code
+      return res.status(404).json(reports);
     } catch (err) {
       // if error has occurred, send server error status and message
       res.status(500).json({ message: 'Server Error' });
@@ -87,14 +99,12 @@ const reportController = {
       const reports = await ReportService.getUserReports(req.params.username);
 
       // if there are reports from user, send data back to client
-      if (reports != null) {
+      if (reports.length != 0) {
         return res.status(200).json(reports);
       }
 
-      // if no reports yet from user, send message
-      return res
-        .status(404)
-        .json({ message: 'No reports created from user yet!' });
+      // if no reports yet from user, send back empty array with appropriate status code
+      return res.status(404).json(reports);
     } catch (err) {
       // if error has occurred, send server error status and message
       res.status(500).json({ message: 'Server Error' });

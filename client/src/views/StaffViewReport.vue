@@ -30,32 +30,33 @@
           </div>
           <div class="flex flex-row items-center mr-10">
             <!-- status filter box label -->
-            <p
+            <label
               class="
                 manrope-bold
                 left-0
                 -top-3.5
                 text-lg
-                pt-8
+                pt-4
                 px-3
                 text-primary-blue
               "
             >
               Filter Reports By:
-            </p>
-            <!-- status filter box -->
-            <select
-              name="type"
-              id="type"
-              class="w-full md:w-60 md:h-1/2 dropdown-field mt-8"
-              v-model="state.status"
-              @change="onSelectStatus"
-            >
-              <option value="All">All</option>
-              <option value="Not Yet Resolved">Not Yet Resolved</option>
-              <option value="Resolved">Resolved</option>
-              <option value="Cancelled">Cancelled</option>
-            </select>
+              
+              <!-- status filter box -->
+              <select
+                name="type"
+                id="type"
+                class="w-full md:w-60 md:h-1/2 dropdown-field mt-4 ml-2"
+                v-model="state.status"
+                @change="onSelectStatus"
+              >
+                <option value="All">All</option>
+                <option value="Not Yet Resolved">Not Yet Resolved</option>
+                <option value="Resolved">Resolved</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+            </label>
           </div>
         </div>
         <p

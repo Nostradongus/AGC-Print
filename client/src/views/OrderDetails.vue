@@ -59,7 +59,7 @@
               >Pending Total Price</span
             >
 
-            <br /><br /><br />
+            <br />
             <EditOrderSetModal
               :editOrderSet="showEditOrderSetModal"
               @close="toggleEditOrderSetModal"

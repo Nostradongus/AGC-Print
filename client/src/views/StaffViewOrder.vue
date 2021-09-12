@@ -12,13 +12,14 @@
       <div class="flex-1" v-if="state.empty != null">
         <!-- message and status filter option box -->
         <div class="grid grid-cols-2">
-          <div class="grid justify-start mx-8 mt-8 content-around">
+          <div v-if="!state.empty" class="flex flex-row justify-start mx-8 my-8 content-around">
+            <h1 class="manrope-extrabold text-lg text-center mt-1.5 mr-3 text-primary-blue"> Search Order: </h1>
             <input
               type="text"
-              class="h-10 lg:w-96 md:w-80 border search"
-              placeholder="Search"
+              class="h-10 lg:w-96 md:w-80 border search placeholder-primary-blue text-primary-blue"
+              placeholder="Search by order id..."
               v-model.trim="state.search"
-              v-on:keyup="searchOrders"
+              v-on:keyup="searchOrders(state.search)"
             />
           </div>
           <div class="grid grid-rows-2 justify-end">
@@ -57,7 +58,7 @@
                 <select
                   name="type"
                   id="type"
-                  class="w-full md:w-60 md:h-1/2 dropdown-field mt-4"
+                  class="w-full md:w-60 md:h-1/2 dropdown-field mt-4 ml-2"
                   v-model="state.status"
                   @change="onSelectStatus"
                 >

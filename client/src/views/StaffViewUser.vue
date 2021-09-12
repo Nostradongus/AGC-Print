@@ -2,11 +2,12 @@
   <div>
     <side-bar />
     <page-header title="View Users">
-      <div class="grid justify-start mx-8 my-8 content-end">
+      <div v-if="!state.empty" class="flex flex-row justify-start mx-8 my-8 content-end">
+        <h1 class="manrope-extrabold text-lg text-center mt-1.5 mr-3 text-primary-blue"> Search User: </h1>
         <input
           type="text"
-          class="h-10 lg:w-96 md:w-80 border search"
-          placeholder="Search"
+          class="h-10 lg:w-96 md:w-80 border search placeholder-primary-blue text-primary-blue"
+          placeholder="Search by username..."
           v-model.trim="state.search"
           v-on:keyup="searchUsers(state.search)"
         />
@@ -14,15 +15,18 @@
       
       <p
         class="manrope-bold text-2xl text-center text-primary-blue mt-8"
-        v-if="state.empty == null"
+        v-if="state.empty"
       >
         Loading data, please wait...
       </p>
-      <UserCard
-        v-for="user in state.allUsers"
-        :key="user.username"
-        :user="user"
-      />
+
+      <div class="max-h-screen overflow-y-scroll scrollbar-hidden mb-5">
+        <UserCard
+          v-for="user in state.allUsers"
+          :key="user.username"
+          :user="user"
+        />
+      </div>
     </page-header>
   </div>
 </template>
@@ -47,7 +51,7 @@ export default {
     const state = reactive({
       users: null,
       allUsers: null,
-      empty: null,
+      empty: true,
       search: null,
     });
 
@@ -63,6 +67,7 @@ export default {
         }
       } catch (err) {
         console.log(err);
+        state.empty = false;
       }
     }
 
@@ -129,5 +134,16 @@ export default {
 .manrope-extrabold {
   font-family: 'Manrope', sans-serif;
   font-weight: 800;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge add Firefox */
+.scrollbar-hidden {
+  -ms-overflow-style: none;
+  scrollbar-width: none; /* Firefox */
 }
 </style>
