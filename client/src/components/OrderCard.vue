@@ -306,9 +306,7 @@
                 v-model.trim="updateData.frameFinishing"
                 @change="onSelectFrameFinishing"
               >
-                <option value="placeholder" disabled hidden>
-                  Select one
-                </option>
+                <option value="placeholder" disabled hidden>Select one</option>
                 <option value="Black">Black</option>
                 <option value="White">White</option>
                 <option value="Matte">Matte</option>
@@ -334,9 +332,7 @@
                 v-model.trim="updateData.frameEdges"
                 @change="onSelectFrameEdges"
               >
-                <option value="placeholder" disabled hidden>
-                  Select one
-                </option>
+                <option value="placeholder" disabled hidden>Select one</option>
                 <option value="White Edges">White Edges</option>
                 <option value="Black Edges">Printed Edges</option>
               </select>
@@ -450,9 +446,7 @@
                 <option value="Yes" :selected="order.diecut === 'Yes'">
                   Yes
                 </option>
-                <option value="No" :selected="order.diecut === 'No'">
-                  No
-                </option>
+                <option value="No" :selected="order.diecut === 'No'">No</option>
               </select>
             </div>
             <div class="flex">
@@ -769,7 +763,7 @@ export default {
             props.order.filename.indexOf('/') + 1
           ) + fileType;
 
-        // download file 
+        // download file
         fileDownload(response.data, filename);
       });
     }
