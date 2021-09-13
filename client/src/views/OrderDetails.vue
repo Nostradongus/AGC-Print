@@ -536,12 +536,15 @@ export default {
     async function updateOrderSet() {
       try {
         toggleEditOrderSetModal();
-        const result = await api.updateOrderSet(state.order.id, updateData);
-        state.order.name = result.data.name;
-        state.order.email = result.data.email;
-        state.order.contactNo = result.data.contactNo % 630000000000;
-        state.order.address = result.data.address;
-        state.order.status = result.data.status;
+        const res = await api.updateOrderSet(state.order.id, updateData);
+
+        if (res.status === 204) {
+          state.order.name = updateData.name;
+          state.order.email = updateData.email;
+          state.order.contactNo = updateData.contactNo % 630000000000;
+          state.order.address = updateData.address;
+          state.order.status = updateData.status;
+        }
       } catch (err) {
         console.log(err);
       }
