@@ -208,11 +208,11 @@
 
         <div class="overflow-y-auto max-h-screen pt-2 pb-2 mt-5">
           <order-card
-            v-for="order in state.orders"
+            v-for="(order, index) in state.orders"
             :key="order.id"
             :order="order"
             :isStaff="state.isStaff"
-            @orderUpdate="orderUpdate(order, $event)"
+            @orderUpdate="orderUpdate(order, index, $event)"
           />
         </div>
 
@@ -486,6 +486,7 @@ export default {
       contactNo: null,
       address: null,
       status: null,
+      price: null,
     });
 
     function toggleEditOrderSetModal() {
@@ -547,10 +548,19 @@ export default {
       }
     }
 
-    async function orderUpdate(order, update) {
+    async function orderUpdate(order, index, update) {
       const res = {};
       Object.keys(order).forEach((k) => (res[k] = update[k] ?? order[k]));
-      order = res;
+      state.orders[index] = res;
+      const sum = state.orders
+        .filter(({ price }) => price != -1)
+        .reduce((total, order) => total + order.price, 0);
+      console.log('Sum: ' + sum);
+      if (sum != 0) {
+        updateData.price = sum;
+        const result = await api.updateOrderSet(state.order.id, updateData);
+        state.order.price = result.data.price;
+      } else state.order.price = -1;
     }
 
     async function isStaff() {
