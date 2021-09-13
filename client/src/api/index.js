@@ -78,9 +78,10 @@ export const getFilteredPayments = (status) =>
 export const getUserPayments = (username) => API.get(`/payment/${username}`);
 export const getOrderSetIdPayments = (orderSetId) =>
   API.get(`/payment/${orderSetId}/payments`);
-export const getPayment = (id) => API.get(`/report/details/${id}`);
+export const getPayment = (id) => API.get(`/payment/details/${id}`);
 export const addPayment = (payment) => API.post('/payment/add/new', payment);
-export const deletePayment = (id) => API.delete(`/report/delete/${id}`);
+export const verifyPayment = (id, data) => API.patch(`/payment/update/${id}`, data);
+export const deletePayment = (id) => API.delete(`/payment/delete/${id}`);
 
 // worker data api methods
 export const getWorker = (username) => API.get(`/workers/${username}`);

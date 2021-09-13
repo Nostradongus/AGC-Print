@@ -13,7 +13,7 @@
 
           <img
             :src="payment.filePath"
-            onerror="this.onerror=null;this.src='http://localhost:5000/assets/nopreview.png'"
+            onerror="this.onerror=null;this.src='../src/assets/nopreview.png'"
             alt="Payment receipt image"
             class="flex-grow receipt-img self-center"
           />
@@ -107,6 +107,7 @@
 </template>
 
 <script>
+import fileDownload from 'js-file-download';
 import ImageModal from './Modals/ImageModal.vue';
 import { ref } from 'vue';
 import axios from 'axios';
@@ -134,19 +135,12 @@ export default {
         method: 'GET',
         responseType: 'blob',
       }).then((response) => {
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-
-        const link = document.createElement('a');
-        link.href = url;
-        
         // get filename and file type
         const fileType = props.payment.filePath.substring(props.payment.filePath.lastIndexOf('.'));
         const filename = props.payment.filename.substring(props.payment.filename.indexOf('/') + 1) + fileType;
 
-        link.setAttribute('download', filename);
-        document.body.appendChild(link);
-
-        link.click();
+        // download file
+        fileDownload(response.data + filename);
       });
     }
     return { showModal, toggleModal, downloadImg };

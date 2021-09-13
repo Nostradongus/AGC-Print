@@ -6,7 +6,7 @@
         <div class="image-content flex flex-col justify-center items-center">
           <img
             :src="order.filePath"
-            onerror="this.onerror=null;this.src='http://localhost:5000/assets/nopreview.png'"
+            onerror="this.onerror=null;this.src='../src/assets/nopreview.png'"
             alt="Order Image"
             class="flex-grow content-img self-center"
           />
@@ -522,7 +522,7 @@
           <!-- NOTE: USE IF ACCESSING FROM CLOUDINARY -->
           <img
             :src="order.filePath"
-            onerror="this.onerror=null;this.src='http://localhost:5000/assets/nopreview.png'"
+            onerror="this.onerror=null;this.src='../src/assets/nopreview.png'"
             alt="Order Image"
             class="order-img h-full w-full object-contain cursor-pointer"
             border="0"
@@ -626,6 +626,7 @@
 </template>
 
 <script>
+import fileDownload from 'js-file-download';
 import ImageModal from './Modals/ImageModal.vue';
 import EditOrderModal from './Modals/EditOrderModal.vue';
 import { reactive, ref } from 'vue';
@@ -720,18 +721,25 @@ export default {
           remarks: result.data.remarks,
         };
         // Tarpaulin only details
-        if (result.data.eyelets) orderUpdate['eyelets'] = result.data.eyelets;
+        if (result.data.eyelets) {
+          orderUpdate['eyelets'] = result.data.eyelets;
+        }
 
         // Sticker only details
-        if (result.data.diecut) orderUpdate['diecut'] = result.data.diecut;
+        if (result.data.diecut) {
+          orderUpdate['diecut'] = result.data.diecut;
+        }
 
         // Canvas Print only details
-        if (result.data.frameOption)
+        if (result.data.frameOption) {
           orderUpdate['frameOption'] = result.data.frameOption;
-        if (result.data.frameEdges)
+        }
+        if (result.data.frameEdges) {
           orderUpdate['frameEdges'] = result.data.frameEdges;
-        if (result.data.frameFinishing)
+        }
+        if (result.data.frameFinishing) {
           orderUpdate['frameFinishing'] = result.data.frameFinishing;
+        }
 
         emit('orderUpdate', orderUpdate);
         toggleEditOrderModal();
@@ -746,11 +754,6 @@ export default {
         method: 'GET',
         responseType: 'blob',
       }).then((response) => {
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-
-        const link = document.createElement('a');
-        link.href = url;
-
         // get filename and file type
         const fileType = props.order.filePath.substring(
           props.order.filePath.lastIndexOf('.')
@@ -760,10 +763,8 @@ export default {
             props.order.filename.indexOf('/') + 1
           ) + fileType;
 
-        link.setAttribute('download', filename);
-        document.body.appendChild(link);
-
-        link.click();
+        // download file
+        fileDownload(response.data, filename);
       });
     }
     return {
