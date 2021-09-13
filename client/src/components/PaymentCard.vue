@@ -1,22 +1,25 @@
 <template>
   <div class="bg-light-blue rounded-xl p-4 mx-auto mb-2 h-30 payment-card">
-    <div class="grid grid-flow-col grid-cols auto-cols-5 justify-items-stretch items-center">
-      <div v-if="!payment.confirmed" class="flex-auto">
+    <div class="flex flex-row justify-items-stretch items-center">
+      <div v-if="!payment.confirmed" class="flex-auto w-1/3">
         <p class="text-lg manrope-regular">{{ payment.dateUploaded }}</p>
       </div>
-      <div v-if="!payment.confirmed" class="flex-auto">
+      <div v-if="!payment.confirmed" class="flex-auto w-1/2">
         <p class="text-lg manrope-regular">Payment Pending Verification</p>
       </div>
-      <div v-if="payment.confirmed" class="flex-auto">
+      <div v-if="payment.confirmed" class="flex-auto w-1/4">
+        <p class="text-lg manrope-regular">{{ payment.dateConfirmed }}</p>
+      </div>
+      <div v-if="payment.confirmed" class="flex-auto w-1/3">
         <p class="text-lg manrope-regular">Ref #{{ payment.refNumber }}</p>
       </div>
-      <div v-if="payment.confirmed" class="flex-auto">
+      <div v-if="payment.confirmed" class="flex-auto w-1/12">
         <p class="text-lg manrope-regular">{{ payment.paymentAcc }}</p>
       </div>
-      <div v-if="payment.confirmed" class="flex-auto">
+      <div v-if="payment.confirmed" class="flex-auto w-24">
         <p class="text-lg manrope-regular">₱ {{ payment.amount }}</p>
       </div>
-      <div v-if="payment.filename" class="flex flex-col justify-self-end text-center items-center">
+      <div v-if="payment.filename" class="flex flex-col justify-self-end text-center items-center w-1/6">
         <button
           class="
             text-primary-blue
@@ -53,11 +56,12 @@
             rounded-xl
             bg-primary-blue
           "
+          @click="toggleVerifyPaymentModal"
           >Verify</button
         >
       </div>
 
-      <!-- Start of Modal; receipt image view -->
+      <!-- payment receipt image view modal -->
       <ImageModal :showModal="showModal" @close="toggleModal">
         <div class="receipt-content flex flex-col justify-center items-center">
           <!-- TODO: reference number to be updated soon -->
@@ -67,7 +71,7 @@
 
           <img
             :src="payment.filePath"
-            onerror="this.onerror=null;this.src='http://localhost:5000/assets/nopreview.png'"
+            onerror="this.onerror=null;this.src='../src/assets/nopreview.png'"
             alt="Payment receipt image"
             class="flex-grow receipt-img self-center"
           />
@@ -86,20 +90,118 @@
           </button>
         </div>
       </ImageModal>
-      <!-- End of Modal -->
+
+      <!-- verify payment view modal -->
+      <VerifyPaymentModal 
+        :verifyPayment="showVerifyPaymentModal" 
+        @close="toggleVerifyPaymentModal"
+      >
+        <form @submit.prevent="confirmPayment" class="items-start">
+          <!-- payment account -->
+          <div class="flex flex-col mt-10">
+            <div class="flex flex-row items-start">
+              <label
+                for="paymentAcc"
+                class="relative manrope-bold text-primary-blue text-gray-600 text-lg mt-2"
+              >Account: </label
+              >
+              <select
+                id="paymentAcc"
+                name="paymentAcc"
+                v-model.trim="paymentData.paymentAcc"
+                class="manrope-bold text-md dropdown-field w-48 ml-4"
+              >
+                <option value="BDO" selected>BDO</option>
+                <option value="BPI">BPI</option>
+                <option value="GCash">GCash</option>
+                <option value="OTC">Over The Counter (OTC)</option>
+              </select>
+            </div>
+            <div class="flex flex-row items-start mt-2">
+              <label
+                for="refNumber"
+                class="relative manrope-bold text-primary-blue text-gray-600 text-md mt-4"
+              >Reference Number #: </label
+              >
+              <div>
+                <input
+                  id="refNumber"
+                  name="refNumber"
+                  type="number"
+                  v-model.trim="paymentData.refNumber"
+                  class="manrope-bold text-md input-text-field w-96 ml-4"
+                  :class="{ 'border-red': v.refNumber.$error }"
+                />
+                <p
+                  v-if="v.refNumber.$error"
+                  class="text-red manrope-bold text-left ml-4 text-sm"
+                >
+                  {{ v.refNumber.$errors[0].$message }}
+                </p>
+              </div>
+            </div>
+            <div class="flex flex-row items-start mt-2">
+              <label
+                for="amount"
+                class="relative manrope-bold text-primary-blue text-gray-600 text-lg mt-4"
+              >Amount Paid: </label
+              >
+              <div>
+                <input
+                  id="amount"
+                  name="amount"
+                  type="number"
+                  step="0.0001"
+                  v-model.trim="paymentData.amount"
+                  class="manrope-bold text-md input-text-field w-96 ml-4"
+                  :class="{ 'border-red': v.amount.$error }"
+                />
+                <p
+                  v-if="v.amount.$error"
+                  class="text-red manrope-bold text-left ml-4 text-sm"
+                >
+                  {{ v.amount.$errors[0].$message }}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-center">
+            <button
+              class="
+                manrope-bold
+                dowload-btn
+                transition
+                duration-300
+                hover:bg-link-water hover:text-primary-blue
+                flex-shrink
+              "
+            >
+              Confirm Payment
+            </button>
+          </div>
+        </form>
+      </VerifyPaymentModal>
     </div>
   </div>
 </template>
 
 <script>
+import fileDownload from 'js-file-download';
 import ImageModal from './Modals/ImageModal.vue';
+import VerifyPaymentModal from './Modals/VerifyPaymentModal.vue';
 import { reactive, ref } from 'vue';
 import { useStore } from 'vuex';
+import useVuelidate from '@vuelidate/core';
+import { required, minValue } from '@vuelidate/validators';
 import axios from 'axios';
+import * as api from '../api/index.js';
+
 export default {
   name: 'PaymentCard',
   components: {
     ImageModal,
+    VerifyPaymentModal,
   },
   props: {
     payment: {
@@ -107,12 +209,25 @@ export default {
       required: true,
     },
   },
-  setup(props) {
+  setup(props, { emit }) {
     const state = reactive({
       worker: null,
     });
+    const paymentData = reactive({
+      paymentAcc: 'BDO',
+      refNumber: null,
+      amount: null,
+    })
     const store = useStore();
     const showModal = ref(false);
+    const showVerifyPaymentModal = ref(false);
+
+    const rules = {
+      refNumber: { required },
+      amount: { required, minValue: minValue(1) },
+    };
+
+    const v = useVuelidate(rules, paymentData);
 
     if (JSON.parse(localStorage.getItem('user')) == null) {
       state.worker = store.state.worker.worker.username
@@ -122,28 +237,53 @@ export default {
       showModal.value = !showModal.value;
     }
 
+    function toggleVerifyPaymentModal() {
+      showVerifyPaymentModal.value = !showVerifyPaymentModal.value;
+    }
+
+    async function confirmPayment() {
+      const validated = await v.value.$validate();
+
+      if (validated) {
+        try {
+          // verify payment receipt
+          await api.verifyPayment(props.payment.id, paymentData);
+          
+          // get updated payment
+          const result = await api.getPayment(props.payment.id);
+
+          // update UI of parent component with updated payment data
+          emit('paymentVerify', result.data);
+          toggleVerifyPaymentModal();
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    }
+
     function downloadImg() {
       axios({
         url: props.payment.filePath,
         method: 'GET',
         responseType: 'blob',
       }).then((response) => {
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-
-        const link = document.createElement('a');
-        link.href = url;
-        
         // get filename and file type
         const fileType = props.payment.filePath.substring(props.payment.filePath.lastIndexOf('.'));
         const filename = props.payment.filename.substring(props.payment.filename.indexOf('/') + 1) + fileType;
 
-        link.setAttribute('download', filename);
-        document.body.appendChild(link);
-
-        link.click();
+        fileDownload(response.data, filename);
       });
     }
-    return { state, showModal, toggleModal, downloadImg };
+    return { state, 
+             v, 
+             paymentData,
+             showModal, 
+             showVerifyPaymentModal, 
+             toggleModal, 
+             toggleVerifyPaymentModal, 
+             confirmPayment,
+             downloadImg,
+           };
   },
 };
 </script>
@@ -185,5 +325,13 @@ export default {
 .receipt-img {
   max-width: 100%;
   max-height: 75%;
+}
+
+.input-text-field {
+  outline: 0;
+  border-width: 0 0 2px;
+  border-bottom-color: #c4c4c4;
+  width: 48rem;
+  height: 2rem;
 }
 </style>

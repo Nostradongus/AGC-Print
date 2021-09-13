@@ -87,7 +87,7 @@ router.post(
 router.patch(
   '/update/:id',
   token.authenticateToken,
-  paymentController.updatePaymentAcc
+  paymentController.verifyPayment
 );
 
 // route for deleting a payment receipt from the database

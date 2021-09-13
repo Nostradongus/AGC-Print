@@ -14,12 +14,6 @@ const PaymentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    // name of the bank used by the client to pay
-    paymentAcc: {
-      type: String,
-      default: null,
-      required: false,
-    },
     // user who uploaded the payment receipt
     user: {
       type: String,
@@ -49,6 +43,12 @@ const PaymentSchema = new mongoose.Schema(
     },
     // date when the payment was received and confirmed by the staff
     dateConfirmed: {
+      type: String,
+      default: null,
+      required: false,
+    },
+    // name of the bank used by the client to pay
+    paymentAcc: {
       type: String,
       default: null,
       required: false,

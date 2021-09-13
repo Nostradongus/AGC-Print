@@ -82,8 +82,8 @@
           <div v-if="state.worker" class="p-4 w-6/12">
             <div class="bg-light-blue rounded-xl p-6 mx-auto mb-8 h-30">
               <div class="flex flex-row items-center justify-center">
-                <p class="text-md manrope-bold truncate max-w-xs">
-                  Uploaded by: {{ state.order.userFullName }}
+                <p class="text-sm manrope-bold truncate max-w-xs">
+                  Uploaded by: {{ state.order.user }} ({{ state.order.userFullName }})
                 </p>
               </div>
             </div>
@@ -173,6 +173,7 @@
             v-for="payment in state.payment"
             :key="payment.id"
             :payment="payment"
+            @paymentVerify="updatePayment(payment, $event)"
           />
         </div>
         <div class="flex items-end mt-8 mb-8">
@@ -291,6 +292,14 @@ export default {
       }
     }
 
+    async function updatePayment(payment, data) {
+      payment.paymentAcc = data.paymentAcc;
+      payment.refNumber = data.refNumber;
+      payment.amount = data.amount;
+      payment.confirmed = true;
+      payment.dateConfirmed = data.dateConfirmed;
+    }
+
     async function submitPayment(e) {
       e.preventDefault();
 
@@ -329,7 +338,7 @@ export default {
       }
     }
 
-    return { state, file, onSelectFile, submitPayment, route };
+    return { state, file, onSelectFile, updatePayment, submitPayment, route };
   },
 };
 </script>

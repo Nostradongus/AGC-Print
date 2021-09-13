@@ -32,7 +32,7 @@ const reportController = {
       return res.status(404).json(reports);
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -52,7 +52,7 @@ const reportController = {
       return res.status(404).json(reports);
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -69,7 +69,7 @@ const reportController = {
       return res.status(404).json({ message: 'Report not found!' });
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -89,7 +89,7 @@ const reportController = {
       return res.status(404).json({ message: 'Report not found!' });
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -107,7 +107,7 @@ const reportController = {
       return res.status(404).json(reports);
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -207,7 +207,7 @@ const reportController = {
       return res.status(201).json(result);
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -218,7 +218,7 @@ const reportController = {
       const result = await ReportService.deleteReport({ id: req.params.id });
 
       // send result back to the client to indicate success
-      return res.status(200).json(result);
+      return res.status(202).json(result);
     } catch (err) {
       // if error has occurred, send server error status and message
       res.status(500).json({ message: 'Server Error' });
@@ -238,7 +238,7 @@ const reportController = {
       return res.status(204).json(result);
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 };

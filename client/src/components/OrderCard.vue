@@ -6,7 +6,7 @@
         <div class="image-content flex flex-col justify-center items-center">
           <img
             :src="order.filePath"
-            onerror="this.onerror=null;this.src='http://localhost:5000/assets/nopreview.png'"
+            onerror="this.onerror=null;this.src='../src/assets/nopreview.png'"
             alt="Order Image"
             class="flex-grow content-img self-center"
           />
@@ -29,490 +29,488 @@
         :editOrder="showEditOrderModal"
         @close="toggleEditOrderModal"
       >
-        <form class="items-center">
-          <div class="flex flex-col mt-10">
-            <label class="manrope-regular text-gray-600 text-2xl"
-              >Product Type:
-              <span class="manrope-bold text-primary-blue">{{
-                order.type
-              }}</span></label
-            >
-            <hr />
-            <!-- Tarpaulin Form -->
-            <div v-if="order.type === 'Tarpaulin'">
-              <div class="flex">
-                <label
-                  for="quantity"
-                  class="relative manrope-regular text-gray-600 text-md mt-4"
-                  >Quantity</label
-                >
-                <input
-                  id="quantity"
-                  name="quantity"
-                  type="number"
-                  v-model.trim="updateData.quantity"
-                  class="manrope-regular input-text-field w-32 ml-4"
-                />
-              </div>
-              <div class="flex">
-                <label
-                  for="width"
-                  class="relative manrope-regular text-gray-600 text-md mt-4"
-                  >Width (in inches)</label
-                >
-                <input
-                  id="width"
-                  name="width"
-                  type="number"
-                  v-model.trim="updateData.width"
-                  class="manrope-regular input-text-field w-32 ml-9"
-                />
-              </div>
-              <div class="flex">
-                <label
-                  for="height"
-                  class="relative manrope-regular text-gray-600 text-md mt-4"
-                  >Height (in inches)</label
-                >
-                <input
-                  id="height"
-                  name="height"
-                  type="number"
-                  v-model.trim="updateData.height"
-                  class="manrope-regular input-text-field w-32 ml-8"
-                />
-              </div>
-              <div class="flex">
-                <label
-                  for="noeyelets"
-                  class="relative manrope-regular text-gray-600 text-md mt-4"
-                  >Number of Eyelets</label
-                >
-                <input
-                  id="noeyelets"
-                  name="noeyelets"
-                  type="number"
-                  v-model.trim="updateData.eyelets"
-                  class="manrope-regular input-text-field w-32 ml-8"
-                />
-              </div>
-              <div class="flex">
-                <label
-                  for="price"
-                  class="relative manrope-regular text-gray-600 text-md mt-4"
-                  >Price</label
-                >
-                <div class="flex ml-16">
-                  <p class="absolute ml-10 mt-2 text-lg manrope-regular">₱</p>
-                  <input
-                    id="price"
-                    name="price"
-                    type="number"
-                    v-model.trim="updateData.price"
-                    class="
-                      manrope-regular
-                      input-text-field
-                      w-36
-                      pl-6
-                      text-lg
-                      ml-9
-                    "
-                  />
-                </div>
-              </div>
-              <div class="mt-4">
-                <label
-                  for="other-details"
-                  class="relative manrope-regular text-gray-600 text-md mt-4"
-                  >Other Details</label
-                >
-                <textarea
-                  id="other-details"
-                  name="other-details"
-                  type="text"
-                  class="manrope-regular input-text-field w-full h-24"
-                  min="0"
-                  v-model="updateData.remarks"
-                ></textarea>
-              </div>
-            </div>
-            <!-- Wallpaper Form -->
-            <div v-if="order.type === 'Wallpaper'">
-              <div class="flex">
-                <label
-                  for="quantity"
-                  class="relative manrope-regular text-gray-600 text-md mt-4"
-                  >Quantity</label
-                >
-                <input
-                  id="quantity"
-                  name="quantity"
-                  type="number"
-                  v-model.trim="updateData.quantity"
-                  class="manrope-regular input-text-field w-32 ml-4"
-                />
-              </div>
-              <div class="flex">
-                <label
-                  for="width"
-                  class="relative manrope-regular text-gray-600 text-md mt-4"
-                  >Width (in inches)</label
-                >
-                <input
-                  id="width"
-                  name="width"
-                  type="number"
-                  v-model.trim="updateData.width"
-                  class="manrope-regular input-text-field w-32 ml-9"
-                />
-              </div>
-              <div class="flex">
-                <label
-                  for="height"
-                  class="relative manrope-regular text-gray-600 text-md mt-4"
-                  >Height (in inches)</label
-                >
-                <input
-                  id="height"
-                  name="height"
-                  type="number"
-                  v-model.trim="updateData.height"
-                  class="manrope-regular input-text-field w-32 ml-8"
-                />
-              </div>
-              <div class="flex">
-                <label
-                  for="price"
-                  class="relative manrope-regular text-gray-600 text-md mt-4"
-                  >Price</label
-                >
-                <div class="flex ml-16">
-                  <p class="absolute ml-10 mt-2 text-lg manrope-regular">₱</p>
-                  <input
-                    id="price"
-                    name="price"
-                    type="number"
-                    v-model.trim="updateData.price"
-                    class="
-                      manrope-regular
-                      input-text-field
-                      w-36
-                      pl-6
-                      text-lg
-                      ml-9
-                    "
-                  />
-                </div>
-              </div>
-              <div class="mt-4">
-                <label
-                  for="other-details"
-                  class="relative manrope-regular text-gray-600 text-md"
-                  >Other Details</label
-                >
-                <textarea
-                  id="other-details"
-                  name="other-details"
-                  type="text"
-                  class="manrope-regular input-text-field w-full h-24"
-                  min="0"
-                  v-model.trim="updateData.remarks"
-                ></textarea>
-              </div>
-            </div>
-            <!-- Canvas print Form -->
-            <div v-if="order.type === 'Canvas Print'">
-              <div class="flex">
-                <label
-                  for="quantity"
-                  class="relative manrope-regular text-gray-600 text-md mt-4"
-                  >Quantity</label
-                >
-                <input
-                  id="quantity"
-                  name="quantity"
-                  type="number"
-                  v-model.trim="updateData.quantity"
-                  class="manrope-regular input-text-field w-32 ml-4"
-                />
-              </div>
-              <div class="flex">
-                <label
-                  for="width"
-                  class="relative manrope-regular text-gray-600 text-md mt-4"
-                  >Width (in inches)</label
-                >
-                <input
-                  id="width"
-                  name="width"
-                  type="number"
-                  v-model.trim="updateData.width"
-                  class="manrope-regular input-text-field w-32 ml-9"
-                />
-              </div>
-              <div class="flex">
-                <label
-                  for="height"
-                  class="relative manrope-regular text-gray-600 text-md mt-4"
-                  >Height (in inches)</label
-                >
-                <input
-                  id="height"
-                  name="height"
-                  type="number"
-                  v-model.trim="updateData.height"
-                  class="manrope-regular input-text-field w-32 ml-8"
-                />
-              </div>
-              <div class="flex">
-                <label
-                  for="frame"
-                  class="relative manrope-regular text-gray-600 text-md mt-4"
-                  >Frame</label
-                >
-                <select
-                  name="frame"
-                  id="frame"
-                  class="dropdown-field w-72 ml-4"
-                  v-model.trim="updateData.frameOption"
-                  @change="onSelectFrameOption"
-                >
-                  <option value="3/4 Inches">3/4 Inches</option>
-                  <option value="1.5 Inches">1.5 Inches</option>
-                  <option value="Shadow Box">Shadow Box</option>
-                  <option value="Glassless Frame">Glassless Frame</option>
-                  <option value="Floating Frame">Floating Frame</option>
-                  <option value="Print Only">Print Only</option>
-                </select>
-              </div>
-
-              <div
-                class="flex"
-                v-if="
-                  updateData.frameOption !== '3/4 Inches' &&
-                  updateData.frameOption !== '1.5 Inches' &&
-                  updateData.frameOption !== 'placeholder' &&
-                  updateData.frameOption !== 'Print Only'
-                "
+        <div class="flex flex-col mt-10">
+          <label class="manrope-regular text-gray-600 text-2xl"
+            >Product Type:
+            <span class="manrope-bold text-primary-blue">{{
+              order.type
+            }}</span></label
+          >
+          <hr />
+          <!-- Tarpaulin Form -->
+          <div v-if="order.type === 'Tarpaulin'">
+            <div class="flex">
+              <label
+                for="quantity"
+                class="relative manrope-regular text-gray-600 text-md mt-4"
+                >Quantity</label
               >
-                <label
-                  for="frame"
-                  class="relative manrope-regular text-gray-600 text-md mt-4"
-                  >Frame Finishing</label
-                >
-                <select
-                  name="framefinishing"
-                  id="framefinishing"
-                  class="dropdown-field w-72 ml-4"
-                  v-model.trim="updateData.frameFinishing"
-                  @change="onSelectFrameFinishing"
-                >
-                  <option value="placeholder" disabled hidden>
-                    Select one
-                  </option>
-                  <option value="Black">Black</option>
-                  <option value="White">White</option>
-                  <option value="Matte">Matte</option>
-                  <option value="Glossy">Glossy</option>
-                </select>
-              </div>
-              <div
-                class="flex"
-                v-if="
-                  updateData.frameOption === '3/4 Inches' ||
-                  updateData.frameOption === '1.5 Inches'
-                "
+              <input
+                id="quantity"
+                name="quantity"
+                type="number"
+                v-model.trim="updateData.quantity"
+                class="manrope-regular input-text-field w-32 ml-4"
+              />
+            </div>
+            <div class="flex">
+              <label
+                for="width"
+                class="relative manrope-regular text-gray-600 text-md mt-4"
+                >Width (in inches)</label
               >
-                <label
-                  for="frameedges"
-                  class="relative manrope-regular text-gray-600 text-md mt-4"
-                  >Stretcher Frame Edges</label
-                >
-                <select
-                  name="frameedges"
-                  id="frameedges"
-                  class="dropdown-field w-48 ml-4"
-                  v-model.trim="updateData.frameEdges"
-                  @change="onSelectFrameEdges"
-                >
-                  <option value="placeholder" disabled hidden>
-                    Select one
-                  </option>
-                  <option value="White Edges">White Edges</option>
-                  <option value="Black Edges">Printed Edges</option>
-                </select>
-
-                <p
-                  v-if="
-                    state.frameEdgesValidation != null &&
-                    !state.frameEdgesValidation
+              <input
+                id="width"
+                name="width"
+                type="number"
+                v-model.trim="updateData.width"
+                class="manrope-regular input-text-field w-32 ml-9"
+              />
+            </div>
+            <div class="flex">
+              <label
+                for="height"
+                class="relative manrope-regular text-gray-600 text-md mt-4"
+                >Height (in inches)</label
+              >
+              <input
+                id="height"
+                name="height"
+                type="number"
+                v-model.trim="updateData.height"
+                class="manrope-regular input-text-field w-32 ml-8"
+              />
+            </div>
+            <div class="flex">
+              <label
+                for="noeyelets"
+                class="relative manrope-regular text-gray-600 text-md mt-4"
+                >Number of Eyelets</label
+              >
+              <input
+                id="noeyelets"
+                name="noeyelets"
+                type="number"
+                v-model.trim="updateData.eyelets"
+                class="manrope-regular input-text-field w-32 ml-8"
+              />
+            </div>
+            <div class="flex">
+              <label
+                for="price"
+                class="relative manrope-regular text-gray-600 text-md mt-4"
+                >Price</label
+              >
+              <div class="flex ml-16">
+                <p class="absolute ml-10 mt-2 text-lg manrope-regular">₱</p>
+                <input
+                  id="price"
+                  name="price"
+                  type="number"
+                  v-model.trim="updateData.price"
+                  class="
+                    manrope-regular
+                    input-text-field
+                    w-36
+                    pl-6
+                    text-lg
+                    ml-9
                   "
-                  class="text-red manrope-bold text-left text-sm"
-                >
-                  Please select a frame edge.
-                </p>
-              </div>
-              <div class="flex">
-                <label
-                  for="price"
-                  class="relative manrope-regular text-gray-600 text-md mt-4"
-                  >Price</label
-                >
-                <div class="flex ml-16">
-                  <p class="absolute ml-10 mt-2 text-lg manrope-regular">₱</p>
-                  <input
-                    id="price"
-                    name="price"
-                    type="number"
-                    v-model.trim="updateData.price"
-                    class="
-                      manrope-regular
-                      input-text-field
-                      w-36
-                      pl-6
-                      text-lg
-                      ml-9
-                    "
-                  />
-                </div>
-              </div>
-              <div class="mt-4">
-                <label
-                  for="other-details"
-                  class="relative manrope-regular text-gray-600 text-md mt-4"
-                  >Other Details</label
-                >
-                <textarea
-                  id="other-details"
-                  name="other-details"
-                  type="text"
-                  class="manrope-regular input-text-field w-full h-24"
-                  min="0"
-                  v-model.trim="updateData.remarks"
-                ></textarea>
+                />
               </div>
             </div>
-            <!-- Sticker Form -->
-            <div v-if="order.type === 'Sticker'">
-              <div class="flex">
-                <label
-                  for="quantity"
-                  class="relative manrope-regular text-gray-600 text-md mt-4"
-                  >Quantity (min. 100)</label
-                >
-                <input
-                  id="quantity"
-                  name="quantity"
-                  type="number"
-                  v-model.trim="updateData.quantity"
-                  class="manrope-regular input-text-field w-32 ml-4"
-                />
-              </div>
-              <div class="flex">
-                <label
-                  for="width"
-                  class="relative manrope-regular text-gray-600 text-md mt-4"
-                  >Width (in inches)</label
-                >
-                <input
-                  id="width"
-                  name="width"
-                  type="number"
-                  v-model.trim="updateData.width"
-                  class="manrope-regular input-text-field w-32 ml-9"
-                />
-              </div>
-              <div class="flex">
-                <label
-                  for="height"
-                  class="relative manrope-regular text-gray-600 text-md mt-4"
-                  >Height (in inches)</label
-                >
-                <input
-                  id="height"
-                  name="height"
-                  type="number"
-                  v-model.trim="updateData.height"
-                  class="manrope-regular input-text-field w-32 ml-8"
-                />
-              </div>
-              <div class="flex">
-                <label
-                  for="file"
-                  class="relative manrope-regular text-gray-600 text-md mt-4"
-                  >With die-cut?</label
-                >
-                <select
-                  name="diecut"
-                  id="diecut"
-                  class="dropdown-field w-32 ml-8 mt-1"
-                  v-model.trim="updateData.diecut"
-                >
-                  <option value="Yes" :selected="order.diecut === 'Yes'">
-                    Yes
-                  </option>
-                  <option value="No" :selected="order.diecut === 'No'">
-                    No
-                  </option>
-                </select>
-              </div>
-              <div class="flex">
-                <label
-                  for="price"
-                  class="relative manrope-regular text-gray-600 text-md mt-4"
-                  >Price</label
-                >
-                <div class="flex ml-16">
-                  <p class="absolute ml-10 mt-2 text-lg manrope-regular">₱</p>
-                  <input
-                    id="price"
-                    name="price"
-                    type="number"
-                    v-model.trim="updateData.price"
-                    class="
-                      manrope-regular
-                      input-text-field
-                      w-36
-                      pl-6
-                      text-lg
-                      ml-9
-                    "
-                  />
-                </div>
-              </div>
-              <div class="mt-4">
-                <label
-                  for="other-details"
-                  class="relative manrope-regular text-gray-600 text-md mt-4"
-                  >Other Details</label
-                >
-                <textarea
-                  id="other-details"
-                  name="other-details"
-                  type="text"
-                  class="manrope-regular input-text-field w-full h-24"
-                  min="0"
-                  v-model.trim="updateData.remarks"
-                ></textarea>
-              </div>
+            <div class="mt-4">
+              <label
+                for="other-details"
+                class="relative manrope-regular text-gray-600 text-md mt-4"
+                >Other Details</label
+              >
+              <textarea
+                id="other-details"
+                name="other-details"
+                type="text"
+                class="manrope-regular input-text-field w-full h-24"
+                min="0"
+                v-model="updateData.remarks"
+              ></textarea>
             </div>
           </div>
+          <!-- Wallpaper Form -->
+          <div v-if="order.type === 'Wallpaper'">
+            <div class="flex">
+              <label
+                for="quantity"
+                class="relative manrope-regular text-gray-600 text-md mt-4"
+                >Quantity</label
+              >
+              <input
+                id="quantity"
+                name="quantity"
+                type="number"
+                v-model.trim="updateData.quantity"
+                class="manrope-regular input-text-field w-32 ml-4"
+              />
+            </div>
+            <div class="flex">
+              <label
+                for="width"
+                class="relative manrope-regular text-gray-600 text-md mt-4"
+                >Width (in inches)</label
+              >
+              <input
+                id="width"
+                name="width"
+                type="number"
+                v-model.trim="updateData.width"
+                class="manrope-regular input-text-field w-32 ml-9"
+              />
+            </div>
+            <div class="flex">
+              <label
+                for="height"
+                class="relative manrope-regular text-gray-600 text-md mt-4"
+                >Height (in inches)</label
+              >
+              <input
+                id="height"
+                name="height"
+                type="number"
+                v-model.trim="updateData.height"
+                class="manrope-regular input-text-field w-32 ml-8"
+              />
+            </div>
+            <div class="flex">
+              <label
+                for="price"
+                class="relative manrope-regular text-gray-600 text-md mt-4"
+                >Price</label
+              >
+              <div class="flex ml-16">
+                <p class="absolute ml-10 mt-2 text-lg manrope-regular">₱</p>
+                <input
+                  id="price"
+                  name="price"
+                  type="number"
+                  v-model.trim="updateData.price"
+                  class="
+                    manrope-regular
+                    input-text-field
+                    w-36
+                    pl-6
+                    text-lg
+                    ml-9
+                  "
+                />
+              </div>
+            </div>
+            <div class="mt-4">
+              <label
+                for="other-details"
+                class="relative manrope-regular text-gray-600 text-md"
+                >Other Details</label
+              >
+              <textarea
+                id="other-details"
+                name="other-details"
+                type="text"
+                class="manrope-regular input-text-field w-full h-24"
+                min="0"
+                v-model.trim="updateData.remarks"
+              ></textarea>
+            </div>
+          </div>
+          <!-- Canvas print Form -->
+          <div v-if="order.type === 'Canvas Print'">
+            <div class="flex">
+              <label
+                for="quantity"
+                class="relative manrope-regular text-gray-600 text-md mt-4"
+                >Quantity</label
+              >
+              <input
+                id="quantity"
+                name="quantity"
+                type="number"
+                v-model.trim="updateData.quantity"
+                class="manrope-regular input-text-field w-32 ml-4"
+              />
+            </div>
+            <div class="flex">
+              <label
+                for="width"
+                class="relative manrope-regular text-gray-600 text-md mt-4"
+                >Width (in inches)</label
+              >
+              <input
+                id="width"
+                name="width"
+                type="number"
+                v-model.trim="updateData.width"
+                class="manrope-regular input-text-field w-32 ml-9"
+              />
+            </div>
+            <div class="flex">
+              <label
+                for="height"
+                class="relative manrope-regular text-gray-600 text-md mt-4"
+                >Height (in inches)</label
+              >
+              <input
+                id="height"
+                name="height"
+                type="number"
+                v-model.trim="updateData.height"
+                class="manrope-regular input-text-field w-32 ml-8"
+              />
+            </div>
+            <div class="flex">
+              <label
+                for="frame"
+                class="relative manrope-regular text-gray-600 text-md mt-4"
+                >Frame</label
+              >
+              <select
+                name="frame"
+                id="frame"
+                class="dropdown-field w-72 ml-4"
+                v-model.trim="updateData.frameOption"
+                @change="onSelectFrameOption"
+              >
+                <option value="3/4 Inches">3/4 Inches</option>
+                <option value="1.5 Inches">1.5 Inches</option>
+                <option value="Shadow Box">Shadow Box</option>
+                <option value="Glassless Frame">Glassless Frame</option>
+                <option value="Floating Frame">Floating Frame</option>
+                <option value="Print Only">Print Only</option>
+              </select>
+            </div>
 
-          <button
-            type="submit"
-            class="
-              manrope-bold
-              dowload-btn
-              transition
-              duration-300
-              hover:bg-link-water hover:text-primary-blue
-              flex-shrink
-            "
-            @click="updateOrder"
-          >
-            Update Information
-          </button>
-        </form>
+            <div
+              class="flex"
+              v-if="
+                updateData.frameOption !== '3/4 Inches' &&
+                updateData.frameOption !== '1.5 Inches' &&
+                updateData.frameOption !== 'placeholder' &&
+                updateData.frameOption !== 'Print Only'
+              "
+            >
+              <label
+                for="frame"
+                class="relative manrope-regular text-gray-600 text-md mt-4"
+                >Frame Finishing</label
+              >
+              <select
+                name="framefinishing"
+                id="framefinishing"
+                class="dropdown-field w-72 ml-4"
+                v-model.trim="updateData.frameFinishing"
+                @change="onSelectFrameFinishing"
+              >
+                <option value="placeholder" disabled hidden>
+                  Select one
+                </option>
+                <option value="Black">Black</option>
+                <option value="White">White</option>
+                <option value="Matte">Matte</option>
+                <option value="Glossy">Glossy</option>
+              </select>
+            </div>
+            <div
+              class="flex"
+              v-if="
+                updateData.frameOption === '3/4 Inches' ||
+                updateData.frameOption === '1.5 Inches'
+              "
+            >
+              <label
+                for="frameedges"
+                class="relative manrope-regular text-gray-600 text-md mt-4"
+                >Stretcher Frame Edges</label
+              >
+              <select
+                name="frameedges"
+                id="frameedges"
+                class="dropdown-field w-48 ml-4"
+                v-model.trim="updateData.frameEdges"
+                @change="onSelectFrameEdges"
+              >
+                <option value="placeholder" disabled hidden>
+                  Select one
+                </option>
+                <option value="White Edges">White Edges</option>
+                <option value="Black Edges">Printed Edges</option>
+              </select>
+
+              <p
+                v-if="
+                  state.frameEdgesValidation != null &&
+                  !state.frameEdgesValidation
+                "
+                class="text-red manrope-bold text-left text-sm"
+              >
+                Please select a frame edge.
+              </p>
+            </div>
+            <div class="flex">
+              <label
+                for="price"
+                class="relative manrope-regular text-gray-600 text-md mt-4"
+                >Price</label
+              >
+              <div class="flex ml-16">
+                <p class="absolute ml-10 mt-2 text-lg manrope-regular">₱</p>
+                <input
+                  id="price"
+                  name="price"
+                  type="number"
+                  v-model.trim="updateData.price"
+                  class="
+                    manrope-regular
+                    input-text-field
+                    w-36
+                    pl-6
+                    text-lg
+                    ml-9
+                  "
+                />
+              </div>
+            </div>
+            <div class="mt-4">
+              <label
+                for="other-details"
+                class="relative manrope-regular text-gray-600 text-md mt-4"
+                >Other Details</label
+              >
+              <textarea
+                id="other-details"
+                name="other-details"
+                type="text"
+                class="manrope-regular input-text-field w-full h-24"
+                min="0"
+                v-model.trim="updateData.remarks"
+              ></textarea>
+            </div>
+          </div>
+          <!-- Sticker Form -->
+          <div v-if="order.type === 'Sticker'">
+            <div class="flex">
+              <label
+                for="quantity"
+                class="relative manrope-regular text-gray-600 text-md mt-4"
+                >Quantity (min. 100)</label
+              >
+              <input
+                id="quantity"
+                name="quantity"
+                type="number"
+                v-model.trim="updateData.quantity"
+                class="manrope-regular input-text-field w-32 ml-4"
+              />
+            </div>
+            <div class="flex">
+              <label
+                for="width"
+                class="relative manrope-regular text-gray-600 text-md mt-4"
+                >Width (in inches)</label
+              >
+              <input
+                id="width"
+                name="width"
+                type="number"
+                v-model.trim="updateData.width"
+                class="manrope-regular input-text-field w-32 ml-9"
+              />
+            </div>
+            <div class="flex">
+              <label
+                for="height"
+                class="relative manrope-regular text-gray-600 text-md mt-4"
+                >Height (in inches)</label
+              >
+              <input
+                id="height"
+                name="height"
+                type="number"
+                v-model.trim="updateData.height"
+                class="manrope-regular input-text-field w-32 ml-8"
+              />
+            </div>
+            <div class="flex">
+              <label
+                for="file"
+                class="relative manrope-regular text-gray-600 text-md mt-4"
+                >With die-cut?</label
+              >
+              <select
+                name="diecut"
+                id="diecut"
+                class="dropdown-field w-32 ml-8 mt-1"
+                v-model.trim="updateData.diecut"
+              >
+                <option value="Yes" :selected="order.diecut === 'Yes'">
+                  Yes
+                </option>
+                <option value="No" :selected="order.diecut === 'No'">
+                  No
+                </option>
+              </select>
+            </div>
+            <div class="flex">
+              <label
+                for="price"
+                class="relative manrope-regular text-gray-600 text-md mt-4"
+                >Price</label
+              >
+              <div class="flex ml-16">
+                <p class="absolute ml-10 mt-2 text-lg manrope-regular">₱</p>
+                <input
+                  id="price"
+                  name="price"
+                  type="number"
+                  v-model.trim="updateData.price"
+                  class="
+                    manrope-regular
+                    input-text-field
+                    w-36
+                    pl-6
+                    text-lg
+                    ml-9
+                  "
+                />
+              </div>
+            </div>
+            <div class="mt-4">
+              <label
+                for="other-details"
+                class="relative manrope-regular text-gray-600 text-md mt-4"
+                >Other Details</label
+              >
+              <textarea
+                id="other-details"
+                name="other-details"
+                type="text"
+                class="manrope-regular input-text-field w-full h-24"
+                min="0"
+                v-model.trim="updateData.remarks"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          class="
+            manrope-bold
+            dowload-btn
+            transition
+            duration-300
+            hover:bg-link-water hover:text-primary-blue
+            flex-shrink
+          "
+          @click="updateOrder"
+        >
+          Update Information
+        </button>
       </EditOrderModal>
       <div class="flex p-3">
         <div class="my-auto pr-3 w-1/3">
@@ -530,7 +528,7 @@
           <!-- NOTE: USE IF ACCESSING FROM CLOUDINARY -->
           <img
             :src="order.filePath"
-            onerror="this.onerror=null;this.src='http://localhost:5000/assets/nopreview.png'"
+            onerror="this.onerror=null;this.src='../src/assets/nopreview.png'"
             alt="Order Image"
             class="order-img h-full w-full object-contain cursor-pointer"
             border="0"
@@ -634,6 +632,7 @@
 </template>
 
 <script>
+import fileDownload from 'js-file-download';
 import ImageModal from './Modals/ImageModal.vue';
 import EditOrderModal from './Modals/EditOrderModal.vue';
 import { reactive, ref } from 'vue';
@@ -720,7 +719,6 @@ export default {
     async function updateOrder() {
       try {
         const result = await api.updateOrder(props.order.id, updateData);
-        console.log(result);
         const orderUpdate = {
           quantity: result.data.quantity,
           width: result.data.width,
@@ -729,18 +727,25 @@ export default {
           remarks: result.data.remarks,
         };
         // Tarpaulin only details
-        if (result.data.eyelets) orderUpdate['eyelets'] = result.data.eyelets;
+        if (result.data.eyelets) {
+          orderUpdate['eyelets'] = result.data.eyelets;
+        }
 
         // Sticker only details
-        if (result.data.diecut) orderUpdate['diecut'] = result.data.diecut;
+        if (result.data.diecut) {
+          orderUpdate['diecut'] = result.data.diecut;
+        }
 
         // Canvas Print only details
-        if (result.data.frameOption)
+        if (result.data.frameOption) {
           orderUpdate['frameOption'] = result.data.frameOption;
-        if (result.data.frameEdges)
+        }
+        if (result.data.frameEdges) {
           orderUpdate['frameEdges'] = result.data.frameEdges;
-        if (result.data.frameFinishing)
+        }
+        if (result.data.frameFinishing) {
           orderUpdate['frameFinishing'] = result.data.frameFinishing;
+        }
 
         emit('orderUpdate', orderUpdate);
         toggleEditOrderModal();
@@ -755,11 +760,6 @@ export default {
         method: 'GET',
         responseType: 'blob',
       }).then((response) => {
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-
-        const link = document.createElement('a');
-        link.href = url;
-
         // get filename and file type
         const fileType = props.order.filePath.substring(
           props.order.filePath.lastIndexOf('.')
@@ -769,10 +769,8 @@ export default {
             props.order.filename.indexOf('/') + 1
           ) + fileType;
 
-        link.setAttribute('download', filename);
-        document.body.appendChild(link);
-
-        link.click();
+        // download file 
+        fileDownload(response.data, filename);
       });
     }
     return {

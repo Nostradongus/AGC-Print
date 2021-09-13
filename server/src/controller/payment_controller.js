@@ -31,7 +31,7 @@ const paymentController = {
       return res.status(404).json(payments);
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -52,7 +52,7 @@ const paymentController = {
       return res.status(404).json(payments);
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -69,7 +69,7 @@ const paymentController = {
       return res.status(404).json({ message: 'Payment receipt not found!' });
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -89,7 +89,7 @@ const paymentController = {
       return res.status(404).json(payments);
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -109,7 +109,7 @@ const paymentController = {
       return res.status(404).json(payments);
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -193,22 +193,39 @@ const paymentController = {
       return res.status(201).json(receipt);
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
-  // payment receipt controller method to update a payment's payment account from the database
-  updatePaymentAcc: async (req, res) => {
+  // payment receipt controller method to verify a payment receipt to the database
+  verifyPayment: async (req, res) => {
     try {
-      const result = await PaymentService.updatePaymentAcc({
-        id: req.params.id,
+      // get today's date
+      const date = new Date();
+      const year = date.getFullYear().toString();
+      const month = (date.getMonth() + 1).toString().padStart(2, 0);
+      const day = date.getDate().toString().padStart(2, 0);
+      const formattedDate = `${year}-${month}-${day}`;
+
+      // create verified payment data
+      const verifiedPayment = {
         paymentAcc: req.body.paymentAcc,
-      });
+        refNumber: req.body.refNumber,
+        amount: parseFloat(req.body.amount),
+        confirmed: true,
+        dateConfirmed: formattedDate,
+      };
+
+      const result = await PaymentService.verifyPayment(
+        req.params.id,
+        verifiedPayment
+      );
+
       // send result back to the client to indicate success
-      res.status(204).json(result);
+      return res.status(204).json(result);
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -219,10 +236,10 @@ const paymentController = {
       const result = await PaymentService.deletePayment({ id: req.params.id });
 
       // send result back to the client to indicate success
-      return res.status(200).json(result);
+      return res.status(202).json(result);
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 };

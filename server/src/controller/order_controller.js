@@ -41,7 +41,7 @@ const orderController = {
       return res.status(404).json(orders);
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -62,7 +62,7 @@ const orderController = {
       // send empty array back to client with appropriate status code
       return res.status(404).json(orders);
     } catch (err) {
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -80,7 +80,7 @@ const orderController = {
       // send empty array back to client with appropriate status code
       return res.status(404).json(orders);
     } catch (err) {
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -99,7 +99,7 @@ const orderController = {
 
       return res.status(404).json(orders);
     } catch (err) {
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -116,7 +116,7 @@ const orderController = {
 
       return res.status(404).json(orders);
     } catch (err) {
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -131,7 +131,7 @@ const orderController = {
 
       return res.status(404).json(orders);
     } catch (err) {
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -146,7 +146,7 @@ const orderController = {
 
       return res.status(404).json(orders);
     } catch (err) {
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -163,7 +163,7 @@ const orderController = {
       return res.status(404).json({ message: 'Order not found!' });
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -180,7 +180,7 @@ const orderController = {
       return res.status(404).json({ message: 'Order set not found' });
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -197,7 +197,7 @@ const orderController = {
       return res.status(404).json(orders);
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -250,7 +250,7 @@ const orderController = {
       return res.status(200).json(newOrderSet);
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -421,10 +421,10 @@ const orderController = {
       const result = await OrderService.deleteOrder({ id: req.params.id });
 
       // send result back to the client to indicate success
-      return res.status(200).json(result);
+      return res.status(202).json(result);
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -437,10 +437,10 @@ const orderController = {
       const result = await OrderService.deleteOrderSet({ id: req.params.id });
 
       // send order data back to the client to indicate success
-      return res.status(200).json(result);
+      return res.status(202).json(result);
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -459,9 +459,9 @@ const orderController = {
       if (req.body.status) data['status'] = req.body.status;
 
       const result = await OrderService.updateOrderSet(id, data);
-      return res.status(200).json(result);
+      return res.status(204).json(result);
     } catch (err) {
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -493,10 +493,10 @@ const orderController = {
 
       // send result back to the client to indicate success
       const result = await OrderService.updateOrder(id, data);
-      return res.status(200).json(result);
+      return res.status(204).json(result);
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -510,10 +510,10 @@ const orderController = {
       });
 
       // send result back to the client to indicate success
-      res.status(204).json(result);
+      return res.status(204).json(result);
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -569,7 +569,7 @@ const orderController = {
         .json('Order Placed E-mail Sent To ' + clientData.email + '!');
     } catch (err) {
       logger.info(err);
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 };

@@ -14,7 +14,7 @@
           <!-- NOTE: USE IF ACCESSING FILE WITH CLOUDINARY -->
           <img
             :src="order.filePath"
-            onerror="this.onerror=null;this.src='http://localhost:5000/assets/nopreview.png'"
+            onerror="this.onerror=null;this.src='../src/assets/nopreview.png'"
             alt="Order Image" 
             class="order-img"
             border="0"
