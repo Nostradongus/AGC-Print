@@ -364,7 +364,7 @@
                 <a :href="image.filePath" target="_blank">
                   <img
                     :src="image.filePath"
-                    onerror="this.onerror=null;this.src='http://localhost:5000/assets/nopreview.png'"
+                    onerror="this.onerror=null;this.src='../src/assets/nopreview.png'"
                     alt="Order Image"
                     class="order-img"
                     border="0"
@@ -563,7 +563,9 @@ export default {
         updateData.price = sum;
         const result = await api.updateOrderSet(state.order.id, updateData);
         state.order.price = result.data.price;
-      } else state.order.price = -1;
+      } else {
+        state.order.price = -1;
+      }
     }
 
     async function isStaff() {
