@@ -713,36 +713,39 @@ export default {
     async function updateOrder() {
       try {
         const result = await api.updateOrder(props.order.id, updateData);
-        const orderUpdate = {
-          quantity: result.data.quantity,
-          width: result.data.width,
-          height: result.data.height,
-          price: result.data.price,
-          remarks: result.data.remarks,
-        };
-        // Tarpaulin only details
-        if (result.data.eyelets) {
-          orderUpdate['eyelets'] = result.data.eyelets;
-        }
 
-        // Sticker only details
-        if (result.data.diecut) {
-          orderUpdate['diecut'] = result.data.diecut;
-        }
+        if (result.status === 204) {
+          const orderUpdate = {
+            quantity: updateData.quantity,
+            width: updateData.width,
+            height: updateData.height,
+            price: parseFloat(parseFloat(updateData.price).toFixed(2)),
+            remarks: updateData.remarks,
+          };
+          // Tarpaulin only details
+          if (updateData.eyelets) {
+            orderUpdate['eyelets'] = updateData.eyelets;
+          }
 
-        // Canvas Print only details
-        if (result.data.frameOption) {
-          orderUpdate['frameOption'] = result.data.frameOption;
-        }
-        if (result.data.frameEdges) {
-          orderUpdate['frameEdges'] = result.data.frameEdges;
-        }
-        if (result.data.frameFinishing) {
-          orderUpdate['frameFinishing'] = result.data.frameFinishing;
-        }
+          // Sticker only details
+          if (updateData.diecut) {
+            orderUpdate['diecut'] = updateData.diecut;
+          }
 
-        emit('orderUpdate', orderUpdate);
-        toggleEditOrderModal();
+          // Canvas Print only details
+          if (updateData.frameOption) {
+            orderUpdate['frameOption'] = updateData.frameOption;
+          }
+          if (updateData.frameEdges) {
+            orderUpdate['frameEdges'] = updateData.frameEdges;
+          }
+          if (updateData.frameFinishing) {
+            orderUpdate['frameFinishing'] = updateData.frameFinishing;
+          }
+
+          emit('orderUpdate', orderUpdate);
+          toggleEditOrderModal();
+        }
       } catch (err) {
         console.log(err);
       }

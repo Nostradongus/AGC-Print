@@ -557,12 +557,15 @@ export default {
       state.orders[index] = res;
       const sum = state.orders
         .filter(({ price }) => price != -1)
-        .reduce((total, order) => total + order.price, 0);
+        .reduce((total, order) => total + parseFloat(order.price), 0);
       console.log('Sum: ' + sum);
       if (sum != 0) {
         updateData.price = sum;
         const result = await api.updateOrderSet(state.order.id, updateData);
-        state.order.price = result.data.price;
+
+        if (result.status === 204) {
+          state.order.price = parseFloat(updateData.price).toFixed(2);
+        }
       } else {
         state.order.price = -1;
       }

@@ -451,13 +451,24 @@ const orderController = {
       // data to be set on the order set
       const data = {};
 
-      if (req.body.name) data['name'] = req.body.name;
-      if (req.body.email) data['email'] = req.body.email;
-      if (req.body.contactNo)
+      if (req.body.name) {
+        data['name'] = req.body.name;
+      }
+      if (req.body.email) {
+        data['email'] = req.body.email;
+      }
+      if (req.body.contactNo) {
         data['contactNo'] = parseInt(req.body.contactNo) + 630000000000;
-      if (req.body.address) data['address'] = req.body.address;
-      if (req.body.status) data['status'] = req.body.status;
-      if (req.body.price) data['price'] = req.body.price;
+      }
+      if (req.body.address) {
+        data['address'] = req.body.address;
+      }
+      if (req.body.status) {
+        data['status'] = req.body.status;
+      }
+      if (req.body.price) {
+        data['price'] = parseFloat(parseFloat(req.body.price).toFixed(2));
+      }
 
       const result = await OrderService.updateOrderSet(id, data);
       return res.status(204).json(result);
@@ -474,23 +485,42 @@ const orderController = {
       const data = {};
 
       // General details of each order
-      if (req.body.quantity) data['quantity'] = req.body.quantity;
-      if (req.body.width) data['width'] = req.body.width;
-      if (req.body.height) data['height'] = req.body.height;
-      if (req.body.price) data['price'] = req.body.price;
-      if (req.body.remarks) data['remarks'] = req.body.remarks;
+      if (req.body.quantity) {
+        data['quantity'] = req.body.quantity;
+      }
+      if (req.body.width) {
+        data['width'] = req.body.width;
+      }
+      if (req.body.height) {
+        data['height'] = req.body.height;
+      }
+      if (req.body.price) {
+        data['price'] = parseFloat(parseFloat(req.body.price).toFixed(2));
+      }
+      if (req.body.remarks) {
+        data['remarks'] = req.body.remarks;
+      }
 
       // Tarpaulin only details
-      if (req.body.eyelets) data['eyelets'] = req.body.eyelets;
+      if (req.body.eyelets) {
+        data['eyelets'] = req.body.eyelets;
+      }
 
       // Sticker only details
-      if (req.body.diecut) data['diecut'] = req.body.diecut;
+      if (req.body.diecut) {
+        data['diecut'] = req.body.diecut;
+      }
 
       // Canvas Print only details
-      if (req.body.frameOption) data['frameOption'] = req.body.frameOption;
-      if (req.body.frameEdges) data['frameEdges'] = req.body.frameEdges;
-      if (req.body.frameFinishing)
+      if (req.body.frameOption) {
+        data['frameOption'] = req.body.frameOption;
+      }
+      if (req.body.frameEdges) {
+        data['frameEdges'] = req.body.frameEdges;
+      }
+      if (req.body.frameFinishing) {
         data['frameFinishing'] = req.body.frameFinishing;
+      }
 
       // send result back to the client to indicate success
       const result = await OrderService.updateOrder(id, data);
