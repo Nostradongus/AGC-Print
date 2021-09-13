@@ -368,7 +368,7 @@
               v-bind:style="[
                 order.type === 'Canvas Print'
                   ? { height: '6rem' }
-                  : { height: '6rem' },
+                  : { height: '8rem' },
               ]"
               min="0"
               v-model.trim="updateData.remarks"
