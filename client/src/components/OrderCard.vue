@@ -565,7 +565,7 @@ export default {
         quantity: { numeric, minValue: minValue(1), maxValue: maxValue(1000) },
         width: { numeric, minValue: minValue(6), maxValue: maxValue(120) },
         height: { numeric, minValue: minValue(6), maxValue: maxValue(120) },
-        eyelets: { minValue: minValue(0), maxValue: maxValue(100) },
+        eyelets: { numeric, minValue: minValue(0), maxValue: maxValue(100) },
       };
     } else if (props.order.type === 'Wallpaper') {
       rules = {
