@@ -457,7 +457,7 @@ const orderController = {
         data['contactNo'] = parseInt(req.body.contactNo) + 630000000000;
       if (req.body.address) data['address'] = req.body.address;
       if (req.body.status) data['status'] = req.body.status;
-      if (req.body.status) data['price'] = req.body.price;
+      if (req.body.price) data['price'] = req.body.price;
 
       const result = await OrderService.updateOrderSet(id, data);
       return res.status(200).json(result);
