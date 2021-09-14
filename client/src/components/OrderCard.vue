@@ -92,7 +92,7 @@
                   type="number"
                   v-model.trim="updateData.width"
                   v-on="
-                    order.type === 'Canvas Print'
+                    order.type === 'Canvas Print' || order.type === 'Sticker'
                       ? { keyup: onChangeHeightWidth }
                       : {}
                   "
@@ -126,7 +126,7 @@
                   type="number"
                   v-model.trim="updateData.height"
                   v-on="
-                    order.type === 'Canvas Print'
+                    order.type === 'Canvas Print' || order.type === 'Sticker'
                       ? { keyup: onChangeHeightWidth }
                       : {}
                   "
@@ -227,20 +227,31 @@
                 "
                 >Frame Finishing:</label
               >
-              <select
-                name="framefinishing"
-                id="framefinishing"
-                class="dropdown-field w-72 ml-4"
-                v-model.trim="updateData.frameFinishing"
-                @change="onSelectFrameFinishing"
-              >
-                <option value="placeholder" disabled hidden>Select one</option>
-                <option value="Black">Black</option>
-                <option value="White">White</option>
-                <option value="Matte">Matte</option>
-                <option value="Glossy">Glossy</option>
-              </select>
+              <div>
+                <select
+                  name="framefinishing"
+                  id="framefinishing"
+                  class="dropdown-field w-72 ml-4"
+                  v-model.trim="updateData.frameFinishing"
+                  @change="onSelectFrameFinishing"
+                >
+                  <option value="placeholder" disabled hidden>
+                    Select one
+                  </option>
+                  <option value="Black">Black</option>
+                  <option value="White">White</option>
+                  <option value="Matte">Matte</option>
+                  <option value="Glossy">Glossy</option>
+                </select>
+                <p
+                  v-if="state.frameFinishingValidation == null"
+                  class="ml-5 text-red manrope-bold text-left text-sm"
+                >
+                  Please select a frame finishing.
+                </p>
+              </div>
             </div>
+
             <div
               class="flex"
               v-if="
@@ -260,27 +271,28 @@
                 "
                 >Stretcher Frame Edges:</label
               >
-              <select
-                name="frameedges"
-                id="frameedges"
-                class="dropdown-field w-48 ml-4"
-                v-model.trim="updateData.frameEdges"
-                @change="onSelectFrameEdges"
-              >
-                <option value="placeholder" disabled hidden>Select one</option>
-                <option value="White Edges">White Edges</option>
-                <option value="Black Edges">Printed Edges</option>
-              </select>
+              <div>
+                <select
+                  name="frameedges"
+                  id="frameedges"
+                  class="dropdown-field w-48 ml-4"
+                  v-model.trim="updateData.frameEdges"
+                  @change="onSelectFrameEdges"
+                >
+                  <option value="placeholder" disabled hidden>
+                    Select one
+                  </option>
+                  <option value="White Edges">White Edges</option>
+                  <option value="Black Edges">Printed Edges</option>
+                </select>
 
-              <p
-                v-if="
-                  state.frameEdgesValidation != null &&
-                  !state.frameEdgesValidation
-                "
-                class="text-red manrope-bold text-left text-sm"
-              >
-                Please select a frame edge.
-              </p>
+                <p
+                  v-if="state.frameEdgesValidation == null"
+                  class="ml-5 text-red manrope-bold text-left text-sm"
+                >
+                  Please select a frame edge.
+                </p>
+              </div>
             </div>
           </div>
           <!-- Sticker Only -->
@@ -343,7 +355,7 @@
                   class="ml-9 text-red manrope-bold text-left text-sm"
                   v-if="!state.priceValidation"
                 >
-                  Value must contain a decimal number
+                  Value must contain a positive decimal number
                 </p>
               </div>
             </div>
@@ -627,6 +639,8 @@ export default {
         updateData.frameEdges = 'placeholder';
         state.frameEdgesValidation = null;
       }
+      console.log('ff: ' + updateData.frameFinishing);
+      console.log('fe: ' + updateData.frameEdges);
     }
 
     // for special case, one dimension can go greater than 64 to 120 max if the other dimension
@@ -657,6 +671,7 @@ export default {
     function onSelectFrameEdges() {
       state.frameEdgesValidation =
         updateData.frameEdges !== 'placeholder' ? true : false;
+      console.log(updateData.frameEdges);
     }
 
     function toggleImageModal() {
@@ -670,12 +685,19 @@ export default {
       updateData.frameEdges = props.order.frameEdges;
       isValidPrice(updateData.price);
       state.dimValidation = true;
+      console.log(updateData.frameEdges + ' ' + updateData.frameFinishing);
     }
 
     async function updateOrder() {
       try {
         const validated = await v.value.$validate();
-        if (validated && state.priceValidation && state.dimValidation) {
+        if (
+          validated &&
+          state.priceValidation &&
+          state.dimValidation &&
+          state.frameEdgesValidation &&
+          state.frameFinishingValidation
+        ) {
           const result = await api.updateOrder(props.order.id, updateData);
 
           if (result.status === 204) {
@@ -737,7 +759,9 @@ export default {
     }
 
     function isValidPrice(price) {
-      if (/\d+\.?\d*/.test(price) ? true : false) {
+      if (
+        /^(?!0*[.,]0*$|[.,]0*$|0*$)\d+[,.]?\d{0,2}$/.test(price) ? true : false
+      ) {
         state.priceValidation = true;
       } else {
         state.priceValidation = false;

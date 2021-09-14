@@ -458,8 +458,9 @@ const orderController = {
         data['email'] = req.body.email;
       }
       if (req.body.contactNo) {
-        data['contactNo'] = parseInt(req.body.contactNo) + 630000000000;
+        data['contactNo'] = `63${req.body.contactNo}`;
       }
+      console.log('data:' + data.contactNo);
       if (req.body.address) {
         data['address'] = req.body.address;
       }

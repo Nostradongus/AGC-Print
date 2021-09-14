@@ -90,7 +90,7 @@
                       name="name"
                       type="text"
                       v-model.trim="updateData.name"
-                      class="manrope-regular input-text-field w-96 ml-9"
+                      class="manrope-regular input-text-field w-80 ml-8"
                       :class="{ 'border-red': !state.nameValidation }"
                       @keyup="isValidName(updateData.name)"
                     />
@@ -121,7 +121,7 @@
                       name="email"
                       type="email"
                       v-model.trim="updateData.email"
-                      class="manrope-regular input-text-field w-96 ml-14"
+                      class="manrope-regular input-text-field w-80 ml-14"
                       :class="{ 'border-red': v.email.$error }"
                     />
                     <p
@@ -160,7 +160,7 @@
                         class="
                           manrope-regular
                           input-text-field
-                          w-96
+                          w-80
                           pl-9
                           pb-0.5
                           text-lg
@@ -196,7 +196,7 @@
                       name="deliveryaddress"
                       type="text"
                       v-model.trim="updateData.address"
-                      class="manrope-regular input-text-field w-96 ml-9"
+                      class="manrope-regular input-text-field w-80 ml-9"
                     />
                   </div>
                 </div>
@@ -585,7 +585,10 @@ export default {
         // get order set
         const orderSet = await api.getOrderSet(route.params.id);
         state.order = orderSet.data;
-        state.order.contactNo = state.order.contactNo % 630000000000;
+        const contactNo = state.order.contactNo;
+        state.order.contactNo = parseInt(
+          contactNo.replace(contactNo.substring(0, 2), '')
+        );
 
         isValidName(state.order.name);
 
@@ -623,7 +626,7 @@ export default {
           if (res.status === 204) {
             state.order.name = updateData.name;
             state.order.email = updateData.email;
-            state.order.contactNo = updateData.contactNo % 630000000000;
+            state.order.contactNo = updateData.contactNo;
             state.order.address = updateData.address;
             state.order.status = updateData.status;
           }
