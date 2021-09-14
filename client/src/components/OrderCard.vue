@@ -167,13 +167,14 @@
                   type="number"
                   v-model.trim="updateData.eyelets"
                   class="manrope-regular input-text-field w-32 ml-8"
-                  :class="{ 'border-red': v.eyelets.$error }"
+                  :class="{ 'border-red': !state.eyeletsValidation }"
+                  @keyup="isValidEyelets(updateData.eyelets)"
                 />
                 <p
                   class="ml-8 text-red manrope-bold text-left text-sm"
-                  v-if="v.eyelets.$error"
+                  v-if="!state.eyeletsValidation"
                 >
-                  {{ v.eyelets.$errors[0].$message }}
+                  Value must be a positive number
                 </p>
               </div>
             </div>
@@ -244,7 +245,10 @@
                   <option value="Glossy">Glossy</option>
                 </select>
                 <p
-                  v-if="state.frameFinishingValidation == null"
+                  v-if="
+                    state.frameFinishingValidation == null &&
+                    !state.frameFinishingValidation
+                  "
                   class="ml-5 text-red manrope-bold text-left text-sm"
                 >
                   Please select a frame finishing.
@@ -555,6 +559,7 @@ export default {
       frameEdgesValidation: null,
       priceValidation: null,
       dimValidation: true,
+      eyeletsValidation: null,
     });
 
     const updateData = reactive({
@@ -639,8 +644,6 @@ export default {
         updateData.frameEdges = 'placeholder';
         state.frameEdgesValidation = null;
       }
-      console.log('ff: ' + updateData.frameFinishing);
-      console.log('fe: ' + updateData.frameEdges);
     }
 
     // for special case, one dimension can go greater than 64 to 120 max if the other dimension
@@ -671,7 +674,6 @@ export default {
     function onSelectFrameEdges() {
       state.frameEdgesValidation =
         updateData.frameEdges !== 'placeholder' ? true : false;
-      console.log(updateData.frameEdges);
     }
 
     function toggleImageModal() {
@@ -684,23 +686,83 @@ export default {
       updateData.frameFinishing = props.order.frameFinishing;
       updateData.frameEdges = props.order.frameEdges;
       isValidPrice(updateData.price);
+
       state.dimValidation = true;
-      console.log(updateData.frameEdges + ' ' + updateData.frameFinishing);
+      if (props.order.type === 'Tarpaulin') isValidEyelets(updateData.eyelets);
+      if (
+        updateData.frameOption === '3/4 Inches' ||
+        updateData.frameOption === '1.5 Inches'
+      ) {
+        onSelectFrameEdges();
+      }
+      if (
+        updateData.frameOption === 'Shadow Box' ||
+        updateData.frameOption === 'Glassless Frame' ||
+        updateData.frameOption === 'Floating Frame'
+      ) {
+        onSelectFrameFinishing();
+      }
     }
 
     async function updateOrder() {
       try {
         const validated = await v.value.$validate();
+
+        if (props.order.type !== 'Tarpaulin') {
+          state.eyeletsValidation = true;
+        }
+        if (props.order.type !== 'Canvas Print') {
+          state.frameEdgesValidation = true;
+          state.frameFinishingValidation = true;
+        } else {
+          if (
+            updateData.frameOption === '3/4 Inches' ||
+            updateData.frameOption === '1.5 Inches'
+          ) {
+            state.frameFinishingValidation = true;
+          }
+          if (
+            updateData.frameOption === 'Shadow Box' ||
+            updateData.frameOption === 'Glassless Frame' ||
+            updateData.frameOption === 'Floating Frame'
+          ) {
+            state.frameEdgesValidation = true;
+          }
+        }
+
         if (
           validated &&
           state.priceValidation &&
           state.dimValidation &&
           state.frameEdgesValidation &&
-          state.frameFinishingValidation
+          state.frameFinishingValidation &&
+          state.eyeletsValidation
         ) {
           const result = await api.updateOrder(props.order.id, updateData);
 
           if (result.status === 204) {
+            if (props.order.type !== 'Tarpaulin') {
+              state.eyeletsValidation = null;
+            }
+            if (props.order.type !== 'Canvas Print') {
+              state.frameEdgesValidation = null;
+              state.frameFinishingValidation = null;
+            } else {
+              if (
+                updateData.frameOption === '3/4 Inches' ||
+                updateData.frameOption === '1.5 Inches'
+              ) {
+                state.frameFinishingValidation = null;
+              }
+              if (
+                updateData.frameOption === 'Shadow Box' ||
+                updateData.frameOption === 'Glassless Frame' ||
+                updateData.frameOption === 'Floating Frame'
+              ) {
+                state.frameEdgesValidation = null;
+              }
+            }
+
             const orderUpdate = {
               quantity: updateData.quantity,
               width: updateData.width,
@@ -766,7 +828,15 @@ export default {
       } else {
         state.priceValidation = false;
       }
-      console.log(state.priceValidation);
+    }
+
+    function isValidEyelets(eyelets) {
+      if (/^[0-9]*$/.test(eyelets) ? true : false) {
+        state.eyeletsValidation = true;
+      } else {
+        state.eyeletsValidation = false;
+      }
+      console.log(state.eyeletsValidation);
     }
 
     return {
@@ -776,6 +846,7 @@ export default {
       showEditOrderModal,
       onChangeHeightWidth,
       isValidPrice,
+      isValidEyelets,
       updateOrder,
       toggleImageModal,
       toggleEditOrderModal,
