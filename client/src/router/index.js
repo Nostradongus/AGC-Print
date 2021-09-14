@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Register from '../views/Register.vue';
 import Login from '../views/Login.vue';
+import StaffLogin  from '../views/StaffLogin.vue'
 import Order from '../views/Order.vue';
 import OrderDetails from '../views/OrderDetails.vue';
 import ViewOrder from '../views/ViewOrder.vue';
@@ -23,6 +24,14 @@ const routes = [
     path: '/',
     name: 'Login',
     component: Login,
+    meta: {
+      hideForAuth: true,
+    },
+  },
+  {
+    path: '/staff-login',
+    name: 'StaffLogin',
+    component: StaffLogin,
     meta: {
       hideForAuth: true,
     },
