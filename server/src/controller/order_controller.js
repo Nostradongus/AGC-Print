@@ -460,7 +460,6 @@ const orderController = {
       if (req.body.contactNo) {
         data['contactNo'] = `63${req.body.contactNo}`;
       }
-      console.log('data:' + data.contactNo);
       if (req.body.address) {
         data['address'] = req.body.address;
       }
