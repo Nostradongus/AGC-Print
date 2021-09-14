@@ -246,7 +246,7 @@
                 </select>
                 <p
                   v-if="
-                    state.frameFinishingValidation == null &&
+                    state.frameFinishingValidation == null ||
                     !state.frameFinishingValidation
                   "
                   class="ml-5 text-red manrope-bold text-left text-sm"
@@ -291,7 +291,10 @@
                 </select>
 
                 <p
-                  v-if="state.frameEdgesValidation == null"
+                  v-if="
+                    state.frameEdgesValidation == null ||
+                    !state.frameEdgesValidation
+                  "
                   class="ml-5 text-red manrope-bold text-left text-sm"
                 >
                   Please select a frame edge.
@@ -701,6 +704,7 @@ export default {
         updateData.frameOption === 'Floating Frame'
       ) {
         onSelectFrameFinishing();
+        console.log('finish: ' + updateData.frameFinishing);
       }
     }
 
@@ -729,6 +733,20 @@ export default {
             state.frameEdgesValidation = true;
           }
         }
+
+        console.log(
+          validated +
+            ' ' +
+            state.priceValidation +
+            ' ' +
+            state.dimValidation +
+            ' edge: ' +
+            state.frameEdgesValidation +
+            ' finish: ' +
+            state.frameFinishingValidation +
+            ' ' +
+            state.eyeletsValidation
+        );
 
         if (
           validated &&
@@ -794,6 +812,42 @@ export default {
             emit('orderUpdate', orderUpdate);
           }
           toggleEditOrderModal();
+        } else {
+          if (props.order.type !== 'Tarpaulin') {
+            state.eyeletsValidation = null;
+          }
+          if (props.order.type !== 'Canvas Print') {
+            state.frameEdgesValidation = null;
+            state.frameFinishingValidation = null;
+          } else {
+            if (
+              updateData.frameOption === '3/4 Inches' ||
+              updateData.frameOption === '1.5 Inches'
+            ) {
+              state.frameFinishingValidation = null;
+            }
+            if (
+              updateData.frameOption === 'Shadow Box' ||
+              updateData.frameOption === 'Glassless Frame' ||
+              updateData.frameOption === 'Floating Frame'
+            ) {
+              state.frameEdgesValidation = null;
+            }
+          }
+          console.log(
+            'else ' +
+              validated +
+              ' ' +
+              state.priceValidation +
+              ' ' +
+              state.dimValidation +
+              ' edge: ' +
+              state.frameEdgesValidation +
+              ' finish: ' +
+              state.frameFinishingValidation +
+              ' ' +
+              state.eyeletsValidation
+          );
         }
       } catch (err) {
         console.log(err);
