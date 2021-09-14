@@ -92,7 +92,7 @@
                   type="number"
                   v-model.trim="updateData.width"
                   v-on="
-                    order.type === 'Canvas Print'
+                    order.type === 'Canvas Print' || order.type === 'Sticker'
                       ? { keyup: onChangeHeightWidth }
                       : {}
                   "
@@ -126,7 +126,7 @@
                   type="number"
                   v-model.trim="updateData.height"
                   v-on="
-                    order.type === 'Canvas Print'
+                    order.type === 'Canvas Print' || order.type === 'Sticker'
                       ? { keyup: onChangeHeightWidth }
                       : {}
                   "
@@ -167,13 +167,14 @@
                   type="number"
                   v-model.trim="updateData.eyelets"
                   class="manrope-regular input-text-field w-32 ml-8"
-                  :class="{ 'border-red': v.eyelets.$error }"
+                  :class="{ 'border-red': !state.eyeletsValidation }"
+                  @keyup="isValidEyelets(updateData.eyelets)"
                 />
                 <p
                   class="ml-8 text-red manrope-bold text-left text-sm"
-                  v-if="v.eyelets.$error"
+                  v-if="!state.eyeletsValidation"
                 >
-                  {{ v.eyelets.$errors[0].$message }}
+                  Value must be a positive number
                 </p>
               </div>
             </div>
@@ -227,20 +228,34 @@
                 "
                 >Frame Finishing:</label
               >
-              <select
-                name="framefinishing"
-                id="framefinishing"
-                class="dropdown-field w-72 ml-4"
-                v-model.trim="updateData.frameFinishing"
-                @change="onSelectFrameFinishing"
-              >
-                <option value="placeholder" disabled hidden>Select one</option>
-                <option value="Black">Black</option>
-                <option value="White">White</option>
-                <option value="Matte">Matte</option>
-                <option value="Glossy">Glossy</option>
-              </select>
+              <div>
+                <select
+                  name="framefinishing"
+                  id="framefinishing"
+                  class="dropdown-field w-72 ml-4"
+                  v-model.trim="updateData.frameFinishing"
+                  @change="onSelectFrameFinishing"
+                >
+                  <option value="placeholder" disabled hidden>
+                    Select one
+                  </option>
+                  <option value="Black">Black</option>
+                  <option value="White">White</option>
+                  <option value="Matte">Matte</option>
+                  <option value="Glossy">Glossy</option>
+                </select>
+                <p
+                  v-if="
+                    state.frameFinishingValidation == null &&
+                    !state.frameFinishingValidation
+                  "
+                  class="ml-5 text-red manrope-bold text-left text-sm"
+                >
+                  Please select a frame finishing.
+                </p>
+              </div>
             </div>
+
             <div
               class="flex"
               v-if="
@@ -260,27 +275,28 @@
                 "
                 >Stretcher Frame Edges:</label
               >
-              <select
-                name="frameedges"
-                id="frameedges"
-                class="dropdown-field w-48 ml-4"
-                v-model.trim="updateData.frameEdges"
-                @change="onSelectFrameEdges"
-              >
-                <option value="placeholder" disabled hidden>Select one</option>
-                <option value="White Edges">White Edges</option>
-                <option value="Black Edges">Printed Edges</option>
-              </select>
+              <div>
+                <select
+                  name="frameedges"
+                  id="frameedges"
+                  class="dropdown-field w-48 ml-4"
+                  v-model.trim="updateData.frameEdges"
+                  @change="onSelectFrameEdges"
+                >
+                  <option value="placeholder" disabled hidden>
+                    Select one
+                  </option>
+                  <option value="White Edges">White Edges</option>
+                  <option value="Black Edges">Printed Edges</option>
+                </select>
 
-              <p
-                v-if="
-                  state.frameEdgesValidation != null &&
-                  !state.frameEdgesValidation
-                "
-                class="text-red manrope-bold text-left text-sm"
-              >
-                Please select a frame edge.
-              </p>
+                <p
+                  v-if="state.frameEdgesValidation == null"
+                  class="ml-5 text-red manrope-bold text-left text-sm"
+                >
+                  Please select a frame edge.
+                </p>
+              </div>
             </div>
           </div>
           <!-- Sticker Only -->
@@ -343,7 +359,7 @@
                   class="ml-9 text-red manrope-bold text-left text-sm"
                   v-if="!state.priceValidation"
                 >
-                  Value must contain a decimal number
+                  Value must contain a positive decimal number
                 </p>
               </div>
             </div>
@@ -543,6 +559,7 @@ export default {
       frameEdgesValidation: null,
       priceValidation: null,
       dimValidation: true,
+      eyeletsValidation: null,
     });
 
     const updateData = reactive({
@@ -669,16 +686,83 @@ export default {
       updateData.frameFinishing = props.order.frameFinishing;
       updateData.frameEdges = props.order.frameEdges;
       isValidPrice(updateData.price);
+
       state.dimValidation = true;
+      if (props.order.type === 'Tarpaulin') isValidEyelets(updateData.eyelets);
+      if (
+        updateData.frameOption === '3/4 Inches' ||
+        updateData.frameOption === '1.5 Inches'
+      ) {
+        onSelectFrameEdges();
+      }
+      if (
+        updateData.frameOption === 'Shadow Box' ||
+        updateData.frameOption === 'Glassless Frame' ||
+        updateData.frameOption === 'Floating Frame'
+      ) {
+        onSelectFrameFinishing();
+      }
     }
 
     async function updateOrder() {
       try {
         const validated = await v.value.$validate();
-        if (validated && state.priceValidation && state.dimValidation) {
+
+        if (props.order.type !== 'Tarpaulin') {
+          state.eyeletsValidation = true;
+        }
+        if (props.order.type !== 'Canvas Print') {
+          state.frameEdgesValidation = true;
+          state.frameFinishingValidation = true;
+        } else {
+          if (
+            updateData.frameOption === '3/4 Inches' ||
+            updateData.frameOption === '1.5 Inches'
+          ) {
+            state.frameFinishingValidation = true;
+          }
+          if (
+            updateData.frameOption === 'Shadow Box' ||
+            updateData.frameOption === 'Glassless Frame' ||
+            updateData.frameOption === 'Floating Frame'
+          ) {
+            state.frameEdgesValidation = true;
+          }
+        }
+
+        if (
+          validated &&
+          state.priceValidation &&
+          state.dimValidation &&
+          state.frameEdgesValidation &&
+          state.frameFinishingValidation &&
+          state.eyeletsValidation
+        ) {
           const result = await api.updateOrder(props.order.id, updateData);
 
           if (result.status === 204) {
+            if (props.order.type !== 'Tarpaulin') {
+              state.eyeletsValidation = null;
+            }
+            if (props.order.type !== 'Canvas Print') {
+              state.frameEdgesValidation = null;
+              state.frameFinishingValidation = null;
+            } else {
+              if (
+                updateData.frameOption === '3/4 Inches' ||
+                updateData.frameOption === '1.5 Inches'
+              ) {
+                state.frameFinishingValidation = null;
+              }
+              if (
+                updateData.frameOption === 'Shadow Box' ||
+                updateData.frameOption === 'Glassless Frame' ||
+                updateData.frameOption === 'Floating Frame'
+              ) {
+                state.frameEdgesValidation = null;
+              }
+            }
+
             const orderUpdate = {
               quantity: updateData.quantity,
               width: updateData.width,
@@ -737,12 +821,22 @@ export default {
     }
 
     function isValidPrice(price) {
-      if (/\d+\.?\d*/.test(price) ? true : false) {
+      if (
+        /^(?!0*[.,]0*$|[.,]0*$|0*$)\d+[,.]?\d{0,2}$/.test(price) ? true : false
+      ) {
         state.priceValidation = true;
       } else {
         state.priceValidation = false;
       }
-      console.log(state.priceValidation);
+    }
+
+    function isValidEyelets(eyelets) {
+      if (/^[0-9]*$/.test(eyelets) ? true : false) {
+        state.eyeletsValidation = true;
+      } else {
+        state.eyeletsValidation = false;
+      }
+      console.log(state.eyeletsValidation);
     }
 
     return {
@@ -752,6 +846,7 @@ export default {
       showEditOrderModal,
       onChangeHeightWidth,
       isValidPrice,
+      isValidEyelets,
       updateOrder,
       toggleImageModal,
       toggleEditOrderModal,
