@@ -1,80 +1,73 @@
 <template>
-    <transition name="modal-animation">
+  <transition name="modal-animation">
     <div v-show="editOrderSet" class="modal flex justify-center items-center">
-        <transition name="modal-animation-inner">
-            <div
-            v-show="editOrderSet"
-            class="modal-inner flex flex-col"
-            >
-            <!-- modal header -->
-            <h1
-                class="
-                manrope-extrabold 
-                absolute
-                top-2
-                left-2
-                px-2 
-                text-primary-blue 
-                text-left 
-                text-2xl
-                "
-            >
-                Edit Order Set
-            </h1>
-            <i @click="close" class="far fa-times-circle"></i>
+      <transition name="modal-animation-inner">
+        <div v-show="editOrderSet" class="modal-inner flex flex-col">
+          <!-- modal header -->
+          <h1
+            class="
+              manrope-extrabold
+              absolute
+              top-2
+              left-2
+              px-2
+              text-primary-blue text-left text-2xl
+            "
+          >
+            Edit Order Set
+          </h1>
+          <i @click="close" class="far fa-times-circle"></i>
 
-            <!-- horizontal divider -->
-            <hr 
-                class="
-                border-primary-blue 
-                bg-primary-blue 
-                manrope-bold 
-                border-solid 
-                border-2
-                mb-0.5
-                absolute
-                top-10 
-                right-0 
-                w-full 
-                justify-center
-                "
-            >
-            <!-- edit orderset form contents -->
-            <slot />
-            </div>
-        </transition>
+          <!-- horizontal divider -->
+          <hr
+            class="
+              border-primary-blue
+              bg-primary-blue
+              manrope-bold
+              border-solid border-2
+              mb-0.5
+              absolute
+              top-10
+              right-0
+              w-full
+              justify-center
+            "
+          />
+          <!-- edit orderset form contents -->
+          <slot />
         </div>
-    </transition>
+      </transition>
+    </div>
+  </transition>
 </template>
 
 <script>
 export default {
-    props: ['editOrderSet'],
-    setup(props, { emit }) {
+  props: ['editOrderSet'],
+  setup(props, { emit }) {
     const close = () => {
-        emit('close');
+      emit('close');
     };
 
     return { close };
-    },
-}
+  },
+};
 </script>
 
 <style lang="scss" scoped>
 .modal {
-    height: 100vh;
-    width: 100vw;
-    position: fixed;
-    top: 0;
-    left: 0;
-    background-color: rgba(113, 113, 122, 0.75);
-    transition-property: opacity;
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(113, 113, 122, 0.75);
+  transition-property: opacity;
 }
 
 .modal-inner {
   position: relative;
-  max-width: 640px;
-  width: 40%;
+  max-width: 960px;
   height: 75%;
   border-radius: 10px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),

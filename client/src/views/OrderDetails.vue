@@ -65,88 +65,153 @@
               @close="toggleEditOrderSetModal"
             >
               <div class="flex flex-col mt-10">
-                <label class="manrope-regular text-gray-600 text-xl"
+                <label class="manrope-bold text-xl"
                   >Order Set
                   <span class="manrope-bold text-primary-blue"
                     >#{{ state.order.id }}</span
                   ></label
                 >
-                <hr />
-                <div class="flex">
+                <hr class="report-border" />
+                <div class="flex mb-5">
                   <label
                     for="name"
-                    class="relative manrope-regular text-gray-600 text-md mt-4"
-                    >Name of Receiver</label
+                    class="
+                      relative
+                      manrope-bold
+                      text-gray-600 text-md
+                      mt-4
+                      text-primary-blue
+                    "
+                    >Name of Receiver:</label
                   >
-                  <input
-                    id="name"
-                    name="name"
-                    type="text"
-                    v-model.trim="updateData.name"
-                    class="manrope-regular input-text-field w-32 ml-9"
-                  />
+                  <div>
+                    <input
+                      id="name"
+                      name="name"
+                      type="text"
+                      v-model.trim="updateData.name"
+                      class="manrope-regular input-text-field w-80 ml-8"
+                      :class="{ 'border-red': !state.nameValidation }"
+                      @keyup="isValidName(updateData.name)"
+                    />
+                    <p
+                      class="ml-9 text-red manrope-bold text-left text-sm"
+                      v-if="!state.nameValidation"
+                    >
+                      Value may only contain letters
+                    </p>
+                  </div>
                 </div>
-                <div class="flex">
+
+                <div class="flex mb-5">
                   <label
                     for="email"
-                    class="relative manrope-regular text-gray-600 text-md mt-4"
-                    >Email Address</label
+                    class="
+                      relative
+                      manrope-bold
+                      text-gray-600 text-md
+                      mt-4
+                      text-primary-blue
+                    "
+                    >Email Address:</label
                   >
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    v-model.trim="updateData.email"
-                    class="manrope-regular input-text-field w-60 ml-14"
-                  />
+                  <div>
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      v-model.trim="updateData.email"
+                      class="manrope-regular input-text-field w-80 ml-14"
+                      :class="{ 'border-red': v.email.$error }"
+                    />
+                    <p
+                      class="ml-14 text-red manrope-bold text-left text-sm"
+                      v-if="v.email.$error"
+                    >
+                      {{ v.email.$errors[0].$message }}
+                    </p>
+                  </div>
                 </div>
-                <div class="flex">
+
+                <div class="flex mb-5">
                   <label
                     for="contactno"
-                    class="relative manrope-regular text-gray-600 text-md mt-4"
-                    >Contact Number</label
+                    class="
+                      relative
+                      manrope-bold
+                      text-gray-600 text-md
+                      mt-4
+                      text-primary-blue
+                    "
+                    >Contact Number:</label
                   >
                   <div class="flex">
                     <p
-                      class="absolute ml-4 mt-3 left-40 text-lg manrope-regular"
+                      class="absolute ml-4 mt-2 left-40 text-lg manrope-regular"
                     >
                       +63
                     </p>
+                    <div>
+                      <input
+                        id="contactno"
+                        name="contactno"
+                        type="number"
+                        v-model.trim="updateData.contactNo"
+                        class="
+                          manrope-regular
+                          input-text-field
+                          w-80
+                          pl-9
+                          pb-0.5
+                          text-lg
+                          ml-9
+                        "
+                        :class="{ 'border-red': v.contactNo.$error }"
+                      />
+                      <p
+                        class="ml-9 text-red manrope-bold text-left text-sm"
+                        v-if="v.contactNo.$error"
+                      >
+                        {{ v.contactNo.$errors[0].$message }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="flex mb-5">
+                  <label
+                    for="deliveryaddress"
+                    class="
+                      relative
+                      manrope-bold
+                      text-gray-600 text-md
+                      mt-4
+                      text-primary-blue
+                    "
+                    >Delivery Address:</label
+                  >
+                  <div>
                     <input
-                      id="contactno"
-                      name="contactno"
-                      type="number"
-                      v-model.trim="updateData.contactNo"
-                      class="
-                        manrope-regular
-                        input-text-field
-                        w-72
-                        pl-10
-                        text-lg
-                        ml-9
-                      "
+                      id="deliveryaddress"
+                      name="deliveryaddress"
+                      type="text"
+                      v-model.trim="updateData.address"
+                      class="manrope-regular input-text-field w-80 ml-9"
                     />
                   </div>
                 </div>
-                <div class="flex">
-                  <label
-                    for="deliveryaddress"
-                    class="relative manrope-regular text-gray-600 text-md mt-4"
-                    >Delivery Address</label
-                  >
-                  <input
-                    id="deliveryaddress"
-                    name="deliveryaddress"
-                    type="text"
-                    v-model.trim="updateData.address"
-                    class="manrope-regular input-text-field w-72 ml-9"
-                  />
-                </div>
+
                 <div class="flex">
                   <label
                     for="width"
-                    class="relative manrope-regular text-gray-600 text-md mt-4"
-                    >Order Status</label
+                    class="
+                      relative
+                      manrope-bold
+                      text-gray-600 text-md
+                      mt-4
+                      text-primary-blue
+                    "
+                    >Order Status:</label
                   >
                   <select
                     name="orderstatus"
@@ -167,19 +232,22 @@
                   </select>
                 </div>
               </div>
-              <button
-                class="
-                  manrope-bold
-                  dowload-btn
-                  transition
-                  duration-300
-                  hover:bg-link-water hover:text-primary-blue
-                  flex-shrink
-                "
-                @click="updateOrderSet"
-              >
-                Update Information
-              </button>
+              <div class="flex">
+                <button
+                  class="
+                    manrope-bold
+                    dowload-btn
+                    transition
+                    duration-300
+                    hover:bg-link-water hover:text-primary-blue
+                    flex-shrink
+                    content-center
+                  "
+                  @click="updateOrderSet"
+                >
+                  Update Information
+                </button>
+              </div>
             </EditOrderSetModal>
             <button
               v-if="state.isStaff"
@@ -316,15 +384,15 @@
                   border-primary-blue 
                   p-2 placeholder-link-water
                 " 
-                :class="{ 'border-red': v.note.$error }"
+                :class="{ 'border-red': v2.note.$error }"
                 placeholder="Input note here..."
                 v-model.trim="reportData.note"
               />
               <p
-                v-if="v.note.$error"
+                v-if="v2.note.$error"
                 class="text-red manrope-bold text-left text-sm"
               >
-                {{ v.note.$errors[0].$message }}
+                {{ v2.note.$errors[0].$message }}
               </p>
               <div class="flex items-center justify-center">
                 <button
@@ -658,6 +726,7 @@ import CancelReportModal from '../components/Modals/CancelReportModal.vue';
 import AddNoteModal from '../components/Modals/AddNoteModal.vue';
 import ViewNotesModal from '../components/Modals/ViewNotesModal.vue';
 import * as api from '../api';
+import { email, numeric, maxLength, minLength } from '@vuelidate/validators';
 
 export default {
   name: 'OrderDetails',
@@ -686,6 +755,7 @@ export default {
       report: null,
       empty: true,
       isStaff: false,
+      nameValidation: false,
     });
 
     const updateData = reactive({
@@ -708,7 +778,7 @@ export default {
       note: { required },
     };
     
-    const v = useVuelidate(rules, reportData);
+    const v2 = useVuelidate(rules, reportData);
 
     async function resolveReport() {
       try {
@@ -770,7 +840,7 @@ export default {
     }
 
     async function addNote() {
-      const validated = await v.value.$validate();
+      const validated = await v2.value.$validate();
 
       if (validated) {
         try {
@@ -795,6 +865,12 @@ export default {
         }
       }
     }
+    const updateRules = {
+      email: { email },
+      contactNo: { numeric, minLength: minLength(9), maxLength: maxLength(10) },
+    };
+
+    const v = useVuelidate(updateRules, updateData);
 
     function toggleEditOrderSetModal() {
       showEditOrderSetModal.value = !showEditOrderSetModal.value;
@@ -830,7 +906,12 @@ export default {
         // get order set
         const orderSet = await api.getOrderSet(route.params.id);
         state.order = orderSet.data;
-        state.order.contactNo = state.order.contactNo % 630000000000;
+        const contactNo = state.order.contactNo;
+        state.order.contactNo = parseInt(
+          contactNo.replace(contactNo.substring(0, 2), '')
+        );
+
+        isValidName(state.order.name);
 
         // initialize updateData
         updateData.name = state.order.name;
@@ -864,15 +945,18 @@ export default {
 
     async function updateOrderSet() {
       try {
-        toggleEditOrderSetModal();
-        const res = await api.updateOrderSet(state.order.id, updateData);
+        const validated = await v.value.$validate();
+        if (validated && state.nameValidation) {
+          const res = await api.updateOrderSet(state.order.id, updateData);
 
-        if (res.status === 204) {
-          state.order.name = updateData.name;
-          state.order.email = updateData.email;
-          state.order.contactNo = updateData.contactNo % 630000000000;
-          state.order.address = updateData.address;
-          state.order.status = updateData.status;
+          if (res.status === 204) {
+            state.order.name = updateData.name;
+            state.order.email = updateData.email;
+            state.order.contactNo = updateData.contactNo;
+            state.order.address = updateData.address;
+            state.order.status = updateData.status;
+          }
+          toggleEditOrderSetModal();
         }
       } catch (err) {
         console.log(err);
@@ -910,12 +994,21 @@ export default {
       }
     }
 
+    function isValidName(name) {
+      if (/^[a-zA-Z ]*$/.test(name) ? true : false) {
+        state.nameValidation = true;
+      } else {
+        state.nameValidation = false;
+      }
+    }
+
     return {
       state,
       route,
       updateData,
       reportData,
       v,
+      v2,
       orderUpdate,
       toggleEditOrderSetModal,
       toggleResolveReportModal,
@@ -931,6 +1024,7 @@ export default {
       showAddNoteModal,
       showViewNotesModal,
       updateOrderSet,
+      isValidName,
     };
   },
 };
@@ -943,6 +1037,19 @@ export default {
   border-bottom-color: #c4c4c4;
   width: 48rem;
   height: 3rem;
+}
+
+.dowload-btn {
+  position: absolute;
+  background-color: #0f4c81;
+  color: white;
+  border-radius: 20px;
+  bottom: 15px;
+  width: 50%;
+  left: 25%;
+  height: 3rem;
+  vertical-align: middle;
+  outline: none;
 }
 
 .background-black {

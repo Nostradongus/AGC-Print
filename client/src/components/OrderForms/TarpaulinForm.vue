@@ -172,12 +172,7 @@ import { reactive, ref } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import useVuelidate from '@vuelidate/core';
-import {
-  required,
-  numeric,
-  minValue,
-  maxValue
-} from '@vuelidate/validators';
+import { required, numeric, minValue, maxValue } from '@vuelidate/validators';
 import * as api from '../../api';
 
 export default {
@@ -199,13 +194,33 @@ export default {
     });
 
     const rules = {
-      quantity: {required, numeric, minValue: minValue(1), maxValue: maxValue(1000)},
-      width: {required, numeric, minValue: minValue(6), maxValue: maxValue(120)},
-      height: {required, numeric, minValue: minValue(6), maxValue: maxValue(120)},
-      eyelets: { required, minValue: minValue(0), maxValue: maxValue(100) }
+      quantity: {
+        required,
+        numeric,
+        minValue: minValue(1),
+        maxValue: maxValue(1000),
+      },
+      width: {
+        required,
+        numeric,
+        minValue: minValue(6),
+        maxValue: maxValue(120),
+      },
+      height: {
+        required,
+        numeric,
+        minValue: minValue(6),
+        maxValue: maxValue(120),
+      },
+      eyelets: {
+        required,
+        numeric,
+        minValue: minValue(0),
+        maxValue: maxValue(100),
+      },
     };
 
-    const v = useVuelidate(rules,state);
+    const v = useVuelidate(rules, state);
 
     function onSelect() {
       state.fileValidation = file.value.files.length == 0 ? false : true;
@@ -218,7 +233,9 @@ export default {
         const extensions = ['png', 'jpg', 'jpeg', 'svg', 'ai', 'psd', 'pdf'];
 
         // get uploaded file's extension
-        const fileExtension = state.orderFile.name.substring(state.orderFile.name.indexOf('.') + 1);
+        const fileExtension = state.orderFile.name.substring(
+          state.orderFile.name.indexOf('.') + 1
+        );
 
         // check if uploaded file contains valid file type extension
         state.fileTypeValidation = extensions.includes(fileExtension);
@@ -232,7 +249,7 @@ export default {
 
       state.fileValidation = file.value.files.length == 0 ? false : true;
 
-      if(validated && state.fileValidation && state.fileTypeValidation){
+      if (validated && state.fileValidation && state.fileTypeValidation) {
         // indicate that order form has been submitted
         state.submitted = true;
 

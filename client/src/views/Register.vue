@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen bg-primary-blue flex">
-    <div class="register-rectangle relative m-auto mt-8 mb-8">
+    <div class="register-rectangle relative m-auto">
       <p class="manrope-regular text-3xl text-center mt-10">
         Create an Account
       </p>
