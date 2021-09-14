@@ -7,7 +7,7 @@
         <input
           type="text"
           class="h-10 lg:w-96 md:w-80 border search placeholder-primary-blue text-primary-blue"
-          placeholder="Search by username..."
+          placeholder="Search by Username..."
           v-model.trim="state.search"
           v-on:keyup="searchUsers(state.search)"
         />

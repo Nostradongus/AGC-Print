@@ -103,82 +103,80 @@
               </div>
             </div>
           </div>
-          
-          <div v-if="state.order.remBalance > 0">
-            <div v-if="state.worker == null" class="p-4 w-4/12">
-              <p class="manrope-bold text-md mb-3">
-                Upload Payment Receipt Here:
-              </p>
-              <input
-                id="payment-file"
-                name="payment-file"
-                type="file"
-                ref="file"
-                class="manrope-regular w-72"
-                min="0"
-                @change="onSelectFile"
-              />
-              <label
-                for="payment-file"
+
+          <div v-if="state.worker == null && state.order.remBalance > 0" class="p-4 w-4/12">
+            <p class="manrope-bold text-md mb-3">
+              Upload Payment Receipt Here:
+            </p>
+            <input
+              id="payment-file"
+              name="payment-file"
+              type="file"
+              ref="file"
+              class="manrope-regular w-72"
+              min="0"
+              @change="onSelectFile"
+            />
+            <label
+              for="payment-file"
+              class="
+                absolute
+                manrope-regular
+                left-0
+                -top-8
+                text-gray-600 text-md
+              "
+              >Upload Image</label
+            >
+            <p
+              v-if="state.fileValidation != null && !state.fileValidation"
+              class="text-red manrope-bold text-left text-sm mt-2"
+            >
+              Please upload your payment receipt.
+            </p>
+            <p
+              v-if="
+                state.fileTypeValidation != null && !state.fileTypeValidation
+              "
+              class="text-red manrope-bold text-left text-xs mt-2"
+            >
+              File must be in .jpg, .png, or .pdf format.
+            </p>
+            <p
+              v-if="state.paymentSubmitted"
+              class="text-primary-blue manrope-bold text-left text-sm mt-2"
+            >
+              Receipt Uploaded!
+            </p>
+          </div>
+          <div v-if="state.worker == null && state.order.remBalance > 0" class="w-2/12 mt-8">
+            <div>
+              <button
                 class="
-                  absolute
                   manrope-regular
-                  left-0
-                  -top-8
-                  text-gray-600 text-md
+                  text-white
+                  inline-block
+                  transition
+                  duration-300
+                  ease-in-out
+                  text-center text-sm
+                  hover:bg-link-water hover:text-primary-blue
+                  w-32
+                  p-3
+                  rounded-xl
+                  bg-primary-blue
                 "
-                >Upload Image</label
+                @click="submitPayment"
+                v-if="!state.submitted"
               >
+                Upload Receipt
+              </button>
               <p
-                v-if="state.fileValidation != null && !state.fileValidation"
-                class="text-red manrope-bold text-left text-sm mt-2"
+                v-else
+                class="mt-3 manrope-bold text-primary-blue text-sm text-left"
               >
-                Please upload your payment receipt.
+                Uploading receipt...
               </p>
-              <p
-                v-if="
-                  state.fileTypeValidation != null && !state.fileTypeValidation
-                "
-                class="text-red manrope-bold text-left text-xs mt-2"
-              >
-                File must be in .jpg, .png, or .pdf format.
-              </p>
-              <p
-                v-if="state.paymentSubmitted"
-                class="text-primary-blue manrope-bold text-left text-sm mt-2"
-              >
-                Receipt Uploaded!
-              </p>
-            </div>
-            <div v-if="state.worker == null" class="w-2/12 mt-8">
-              <div>
-                <button
-                  class="
-                    manrope-regular
-                    text-white
-                    inline-block
-                    transition
-                    duration-300
-                    ease-in-out
-                    text-center text-sm
-                    hover:bg-link-water hover:text-primary-blue
-                    w-32
-                    p-3
-                    rounded-xl
-                    bg-primary-blue
-                  "
-                  @click="submitPayment"
-                  v-if="!state.submitted"
-                >
-                  Upload Receipt
-                </button>
-                <p
-                  v-else
-                  class="mt-3 manrope-bold text-primary-blue text-sm text-left"
-                >
-                  Uploading receipt...
-                </p>
-              </div>
             </div>
           </div>
         </div>

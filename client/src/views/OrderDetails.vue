@@ -424,22 +424,15 @@
               <div 
                 v-for="note in state.report.notes" 
                 :key="note" 
-                class="p-3 mt-4 bg-light-blue rounded-xl order-card text-justify manrope-bold"
+                class="p-3 mt-4 bg-light-blue rounded-xl order-card text-justify manrope-bold break-all"
               >
                 {{ note }}
               </div>
             </div>
           </ViewNotesModal>
-
-          <h1
-            v-if="state.worker == null"
-            class="manrope-bold text-lg mt-10 text-primary-blue"
-          >
-            You have submitted a report to this order set.
-          </h1>
           
           <h1
-            v-else
+            v-if="state.worker"
             class="manrope-bold text-lg mt-10 text-primary-blue"
           >
             {{ state.report.user }} ({{ state.report.userFullName }}) submitted a report to this order set.
@@ -685,6 +678,7 @@
               state.order.price !== -1 &&
               state.order.status !== 'Complete' &&
               state.order.status !== 'Pending' &&
+              state.order.status !== 'Cancelled' && 
               !state.isStaff
             "
             class="

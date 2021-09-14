@@ -114,7 +114,7 @@
                 <option value="BDO" selected>BDO</option>
                 <option value="BPI">BPI</option>
                 <option value="GCash">GCash</option>
-                <option value="OTC">Over The Counter (OTC)</option>
+                <option value="Cash">Cash</option>
               </select>
             </div>
             <div class="flex flex-row items-start mt-2">
@@ -127,7 +127,7 @@
                 <input
                   id="refNumber"
                   name="refNumber"
-                  type="number"
+                  type="text"
                   v-model.trim="paymentData.refNumber"
                   class="manrope-bold text-md input-text-field w-96 ml-4"
                   :class="{ 'border-red': v.refNumber.$error }"
@@ -231,7 +231,7 @@ export default {
     const showVerifyPaymentModal = ref(false);
 
     const rules = {
-      refNumber: { required, numeric },
+      refNumber: { required },
       amount: { required, minValue: minValue(1) },
     };
 
