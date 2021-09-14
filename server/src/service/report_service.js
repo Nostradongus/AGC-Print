@@ -28,6 +28,7 @@ const ReportService = {
       orderSetId: report.orderSetId,
       type: report.type,
       user: report.user,
+      userFullName: report.userFullName,
       description: report.description,
       files: report.files,
       status: report.status,
@@ -39,9 +40,20 @@ const ReportService = {
     return report;
   },
 
+  // this method adds a staff note to the report data's notes in the database
+  addNote: async (data) =>
+    Report.updateOne({ id: data.id }, { notes: data.notes }),
+
   // this method updates the status of an existing report data from the database
   updateReportStatus: async (data) =>
-    Report.updateOne({ id: data.id }, { status: data.status }),
+    Report.updateOne(
+      { id: data.id },
+      {
+        status: data.status,
+        comment: data.comment,
+        dateUpdated: data.dateUpdated,
+      }
+    ),
 
   // this method deletes an existing report from the database
   deleteReport: async (id) => Report.deleteOne(id),

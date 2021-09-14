@@ -61,6 +61,11 @@ const OrderSetSchema = new mongoose.Schema(
       type: Number,
       default: -1,
     },
+    // remaining balance not yet paid to the order set
+    remBalance: {
+      type: Number,
+      default: -1,
+    },
     // current status of the order set
     status: {
       type: String,

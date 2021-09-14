@@ -51,6 +51,24 @@ const ReportSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    // date when the report was resolved or cancelled by staff
+    dateUpdated: {
+      type: String,
+      required: false,
+      default: null,
+    },
+    // staff notes regarding the report
+    notes: {
+      type: Array,
+      required: false,
+      default: [],
+    },
+    // staff comment regarding the resolution or cancellation of the report
+    comment: {
+      type: String,
+      required: false,
+      default: null,
+    },
     // when the report was created in the database
     timestamp: {
       type: Date,

@@ -217,14 +217,167 @@
         </div>
 
         <div v-if="state.report != null" class="mb-2">
+          <!-- resolve report view modal -->
+          <ResolveReportModal
+            :resolveReport="showResolveReportModal"
+            @close="toggleResolveReportModal"
+          >
+            <div class="flex flex-col mt-10">
+              <p class="text-primary-blue text-left text-lg manrope-bold mb-2">
+                Add comment regarding resolution (optional):
+              </p>
+              <textarea 
+                class="
+                  manrope-bold 
+                  text-justify 
+                  text-md
+                  w-auto h-64
+                  border-2 
+                  rounded-md 
+                  border-primary-blue 
+                  p-2 placeholder-link-water
+                " 
+                placeholder="Input comment here..."
+                v-model.trim="reportData.resolveComment"
+              />
+              <div class="flex items-center justify-center">
+                <button
+                  class="
+                    manrope-bold
+                    dowload-btn
+                    transition
+                    duration-300
+                    hover:bg-link-water hover:text-primary-blue
+                    flex-shrink
+                  "
+                  @click="resolveReport"
+                >
+                  Resolve Issue
+                </button>
+              </div>
+            </div>
+          </ResolveReportModal>
+
+          <!-- cancel report view modal -->
+          <CancelReportModal
+            :cancelReport="showCancelReportModal"
+            @close="toggleCancelReportModal"
+          >
+            <div class="flex flex-col mt-10">
+              <p class="text-primary-blue text-left text-lg manrope-bold mb-2">
+                Add comment regarding cancellation (optional):
+              </p>
+              <textarea 
+                class="
+                  manrope-bold 
+                  text-justify 
+                  text-md
+                  w-auto h-64
+                  border-2 
+                  rounded-md 
+                  border-primary-blue 
+                  p-2 placeholder-link-water
+                " 
+                placeholder="Input comment here..."
+                v-model.trim="reportData.cancelComment"
+              />
+              <div class="flex items-center justify-center">
+                <button
+                  class="
+                    manrope-bold
+                    dowload-btn
+                    transition
+                    duration-300
+                    hover:bg-link-water hover:text-primary-blue
+                    flex-shrink
+                  "
+                  @click="cancelReport"
+                >
+                  Cancel Issue
+                </button>
+              </div>
+            </div>
+          </CancelReportModal>
+
+          <!-- add note view modal -->
+          <AddNoteModal
+            :addNote="showAddNoteModal"
+            @close="toggleAddNoteModal"
+          >
+            <div class="flex flex-col mt-10">
+              <textarea 
+                class="
+                  manrope-bold 
+                  text-justify 
+                  text-md
+                  w-auto h-72
+                  border-2 
+                  rounded-md 
+                  border-primary-blue 
+                  p-2 placeholder-link-water
+                " 
+                :class="{ 'border-red': v.note.$error }"
+                placeholder="Input note here..."
+                v-model.trim="reportData.note"
+              />
+              <p
+                v-if="v.note.$error"
+                class="text-red manrope-bold text-left text-sm"
+              >
+                {{ v.note.$errors[0].$message }}
+              </p>
+              <div class="flex items-center justify-center">
+                <button
+                  class="
+                    manrope-bold
+                    dowload-btn
+                    transition
+                    duration-300
+                    hover:bg-link-water hover:text-primary-blue
+                    flex-shrink
+                  "
+                  @click="addNote"
+                >
+                  Create Note
+                </button>
+              </div>
+            </div>
+          </AddNoteModal>
+
+          <!-- view notes view modal -->
+          <ViewNotesModal
+            :viewNotes="showViewNotesModal"
+            @close="toggleViewNotesModal"
+          >
+            <div v-if="reportData.emptyNotes" class="flex items-center justify-start mt-10">
+              <p class="text-red text-lg manrope-bold"> No notes created yet for this report. </p>
+            </div>
+            <div v-else class="overflow-y-scroll mt-7 h-96">
+              <div 
+                v-for="note in state.report.notes" 
+                :key="note" 
+                class="p-3 mt-4 bg-light-blue rounded-xl order-card text-justify manrope-bold"
+              >
+                {{ note }}
+              </div>
+            </div>
+          </ViewNotesModal>
+
           <h1
             v-if="state.worker == null"
-            class="manrope-bold text-lg mt-5 text-primary-blue"
+            class="manrope-bold text-lg mt-10 text-primary-blue"
           >
             You have submitted a report to this order set.
           </h1>
+          
+          <h1
+            v-else
+            class="manrope-bold text-lg mt-10 text-primary-blue"
+          >
+            {{ state.report.user }} ({{ state.report.userFullName }}) submitted a report to this order set.
+          </h1>
 
-          <div class="mt-5">
+          <div class="mt-8">
             <div class="flex flex-row">
               <h1 class="manrope-bold text-2xl text-primary-blue flex-1">
                 Report Details:
@@ -246,6 +399,7 @@
                   rounded-xl
                   bg-primary-blue
                 "
+                @click="toggleViewNotesModal"
               >
                 View Notes
               </button>
@@ -266,11 +420,14 @@
                   rounded-xl
                   bg-primary-blue
                 "
+                @click="toggleAddNoteModal"
               >
                 Add Note +
               </button>
               <button
-                v-if="state.worker && state.report.status !== 'Resolved'"
+                v-if="
+                  state.worker && state.report.status !== 'Resolved' && state.report.status !== 'Cancelled'
+                "
                 class="
                   manrope-regular
                   text-white
@@ -286,11 +443,14 @@
                   rounded-xl
                   bg-primary-blue
                 "
+                @click="toggleResolveReportModal"
               >
                 Resolve Issue
               </button>
               <button
-                v-if="state.worker && state.report.status !== 'Resolved'"
+                v-if="
+                  state.worker && state.report.status !== 'Resolved' && state.report.status !== 'Cancelled'
+                "
                 class="
                   manrope-regular
                   text-white
@@ -306,11 +466,40 @@
                   rounded-xl
                   bg-primary-blue
                 "
+                @click="toggleCancelReportModal"
               >
                 Cancel Issue
               </button>
             </div>
             <hr class="report-border mt-1" />
+
+            <div v-if="state.report.status === 'Resolved'" class="flex flex-col mt-3">
+              <h1 class="manrope-bold text-xl">
+                Issue Resolved.
+              </h1>
+              <div v-if="state.report.comment" class="flex flex-row mt-3">
+                <p class="manrope-bold text-lg">Comments:</p>
+                <br />
+                <p class="text-lg pl-1 text-justify">
+                  {{ state.report.comment }}
+                </p>
+              </div>
+              <hr class="report-border mt-3" /> 
+            </div>
+
+            <div v-if="state.report.status === 'Cancelled'" class="flex flex-col mt-3">
+              <h1 class="manrope-bold text-xl">
+                Issue Cancelled.
+              </h1>
+              <div v-if="state.report.comment" class="flex flex-row mt-3">
+                <p class="manrope-bold text-lg">Comments:</p>
+                <br />
+                <p class="text-lg pl-1 text-justify">
+                  {{ state.report.comment }}
+                </p>
+              </div>
+              <hr class="report-border mt-3" />
+            </div>
 
             <div class="flex flex-row mt-3 mb-2">
               <p class="manrope-bold text-lg text-primary-blue">Status:</p>
@@ -460,15 +649,34 @@ import PageHeader from '../components/PageHeader.vue';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import { reactive, onMounted, ref } from 'vue';
+import useVuelidate from '@vuelidate/core';
+import { required } from '@vuelidate/validators';
 import OrderCard from '../components/OrderCard.vue';
 import EditOrderSetModal from '../components/Modals/EditOrderSetModal.vue';
+import ResolveReportModal from '../components/Modals/ResolveReportModal.vue';
+import CancelReportModal from '../components/Modals/CancelReportModal.vue';
+import AddNoteModal from '../components/Modals/AddNoteModal.vue';
+import ViewNotesModal from '../components/Modals/ViewNotesModal.vue';
 import * as api from '../api';
 
 export default {
   name: 'OrderDetails',
-  components: { SideBar, PageHeader, OrderCard, EditOrderSetModal },
+  components: { 
+    SideBar, 
+    PageHeader, 
+    OrderCard, 
+    EditOrderSetModal,
+    ResolveReportModal,
+    CancelReportModal,
+    AddNoteModal,
+    ViewNotesModal,
+  },
   setup() {
     const showEditOrderSetModal = ref(false);
+    const showResolveReportModal = ref(false);
+    const showCancelReportModal = ref(false);
+    const showAddNoteModal = ref(false);
+    const showViewNotesModal = ref(false);
     const route = useRoute();
     const store = useStore();
     const state = reactive({
@@ -489,8 +697,123 @@ export default {
       price: null,
     });
 
+    const reportData = reactive({
+      resolveComment: '',
+      cancelComment: '',
+      note: '',
+      emptyNotes: true,
+    });
+
+    const rules = {
+      note: { required },
+    };
+    
+    const v = useVuelidate(rules, reportData);
+
+    async function resolveReport() {
+      try {
+        // create resolve report update object
+        const data = {
+          status: 'Resolved',
+        };
+
+        // check if comment was added by staff
+        if (reportData.resolveComment !== '') {
+          data['comment'] = reportData.resolveComment;
+        }
+
+        // update report status
+        const result = await api.updateReportStatus(state.report.id, data);
+
+        // if update successful, update UI
+        if (result.status === 204) {
+          // report is resolved
+          state.report.status = 'Resolved';
+          state.report.comment = reportData.resolveComment;
+
+          // close modal
+          toggleResolveReportModal();
+        }
+      } catch (err) {
+        console.log(err);
+      }
+      
+    }
+
+    async function cancelReport() {
+      try {
+        // create resolve report update object
+        const data = {
+          status: 'Cancelled',
+        };
+
+        // check if comment was added by staff
+        if (reportData.cancelComment !== '') {
+          data['comment'] = reportData.cancelComment;
+        }
+
+        // update report status
+        const result = await api.updateReportStatus(state.report.id, data);
+
+        // if update successful, update UI
+        if (result.status === 204) {
+          // report is cancelled
+          state.report.status = 'Cancelled';
+          state.report.comment = reportData.cancelComment;
+
+          // close modal
+          toggleCancelReportModal();
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+    async function addNote() {
+      const validated = await v.value.$validate();
+
+      if (validated) {
+        try {
+          // add note to report in the database
+          const result = await api.addNote(state.report.id, { note: reportData.note });
+
+          // if successful, update note list in UI 
+          if (result.status === 204) {
+            // add new note to notes list
+            state.report.notes.push(reportData.note);
+
+            // update view notes empty message, if empty before
+            if (reportData.emptyNotes) {
+              reportData.emptyNotes = false;
+            }
+
+            // close modal
+            toggleAddNoteModal();
+          }
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    }
+
     function toggleEditOrderSetModal() {
       showEditOrderSetModal.value = !showEditOrderSetModal.value;
+    }
+
+    function toggleResolveReportModal() {
+      showResolveReportModal.value = !showResolveReportModal.value;
+    }
+
+    function toggleCancelReportModal() {
+      showCancelReportModal.value = !showCancelReportModal.value;
+    }
+
+    function toggleAddNoteModal() {
+      showAddNoteModal.value = !showAddNoteModal.value;
+    }
+
+    function toggleViewNotesModal() {
+      showViewNotesModal.value = !showViewNotesModal.value;
     }
 
     if (JSON.parse(localStorage.getItem('user')) == null) {
@@ -524,6 +847,11 @@ export default {
         if (state.order.reported) {
           const report = await api.getOrderSetReport(route.params.id);
           state.report = report.data;
+
+          // check if report data has staff notes
+          if (state.report.notes.length != 0) {
+            reportData.emptyNotes = false;
+          }
         }
 
         state.empty = false;
@@ -581,13 +909,27 @@ export default {
         console.log(err);
       }
     }
+
     return {
       state,
       route,
       updateData,
+      reportData,
+      v,
       orderUpdate,
       toggleEditOrderSetModal,
+      toggleResolveReportModal,
+      toggleCancelReportModal,
+      toggleAddNoteModal,
+      toggleViewNotesModal,
+      resolveReport,
+      cancelReport,
+      addNote,
       showEditOrderSetModal,
+      showResolveReportModal,
+      showCancelReportModal,
+      showAddNoteModal,
+      showViewNotesModal,
       updateOrderSet,
     };
   },
@@ -670,5 +1012,26 @@ export default {
   @apply border-light-blue;
   @apply bg-light-blue;
   border-width: 2.5px;
+}
+
+.dowload-btn {
+  position: absolute;
+  background-color: #0f4c81;
+  color: white;
+  border-radius: 20px;
+  bottom: 15px;
+  width: 50%;
+  height: 3rem;
+  vertical-align: middle;
+  outline: none;
+}
+
+.order-card {
+  transition: 1500ms;
+}
+
+.order-card:hover {
+  transition: 1500ms;
+  box-shadow: 5px 1px 11px 0px rgba(0, 0, 0, 0.26);
 }
 </style>

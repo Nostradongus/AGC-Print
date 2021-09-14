@@ -468,6 +468,7 @@ const orderController = {
       }
       if (req.body.price) {
         data['price'] = parseFloat(parseFloat(req.body.price).toFixed(2));
+        data['remBalance'] = parseFloat(parseFloat(req.body.price).toFixed(2));
       }
 
       const result = await OrderService.updateOrderSet(id, data);

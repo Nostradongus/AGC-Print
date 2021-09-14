@@ -33,6 +33,7 @@ const PaymentService = {
       id: payment.id,
       orderSetId: payment.orderSetId,
       user: payment.user,
+      userFullName: payment.userFullName,
       description: payment.description,
       filename: payment.filename,
       filePath: payment.filePath,

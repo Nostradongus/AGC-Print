@@ -19,7 +19,7 @@
                 text-2xl
                 "
             >
-                Resolve Report
+                Resolve Issue
             </h1>
             <i @click="close" class="far fa-times-circle"></i>
 

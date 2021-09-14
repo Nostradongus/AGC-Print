@@ -168,6 +168,7 @@
 
           <div class="flex items-center justify-center">
             <button
+              v-if="!state.submitted"
               class="
                 manrope-bold
                 dowload-btn
@@ -179,6 +180,12 @@
             >
               Confirm Payment
             </button>
+            <p
+              v-else
+              class="manrope-bold absolute bottom-6 text-primary-blue text-md"
+            >
+              Confirming Payment...
+            </p>
           </div>
         </form>
       </VerifyPaymentModal>
@@ -193,7 +200,7 @@ import VerifyPaymentModal from './Modals/VerifyPaymentModal.vue';
 import { reactive, ref } from 'vue';
 import { useStore } from 'vuex';
 import useVuelidate from '@vuelidate/core';
-import { required, minValue } from '@vuelidate/validators';
+import { required, numeric, minValue } from '@vuelidate/validators';
 import axios from 'axios';
 import * as api from '../api/index.js';
 
@@ -212,6 +219,7 @@ export default {
   setup(props, { emit }) {
     const state = reactive({
       worker: null,
+      submitted: false,
     });
     const paymentData = reactive({
       paymentAcc: 'BDO',
@@ -223,7 +231,7 @@ export default {
     const showVerifyPaymentModal = ref(false);
 
     const rules = {
-      refNumber: { required },
+      refNumber: { required, numeric },
       amount: { required, minValue: minValue(1) },
     };
 
@@ -245,16 +253,34 @@ export default {
       const validated = await v.value.$validate();
 
       if (validated) {
+        state.submitted = true;
+
         try {
           // verify payment receipt
           await api.verifyPayment(props.payment.id, paymentData);
           
           // get updated payment
-          const result = await api.getPayment(props.payment.id);
+          const payment = await api.getPayment(props.payment.id);
+
+          // get updated order set
+          const orderSet = await api.getOrderSet(payment.data.orderSetId);
+
+          // create updated data object
+          const data = {
+            paymentAcc: payment.data.paymentAcc,
+            refNumber: payment.data.refNumber,
+            amount: payment.data.amount,
+            confirmed: payment.data.confirmed,
+            dateConfirmed: payment.data.dateConfirmed,
+            paidDownPayment: orderSet.data.paidDownPayment,
+            remBalance: orderSet.data.remBalance,
+          }
 
           // update UI of parent component with updated payment data
-          emit('paymentVerify', result.data);
+          emit('paymentVerify', data);
           toggleVerifyPaymentModal();
+          
+          state.submitted = false;
         } catch (err) {
           console.log(err);
         }
