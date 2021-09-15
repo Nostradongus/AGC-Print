@@ -11,6 +11,9 @@ import cloudinary from '../config/cloudinary.js';
 // eslint-disable-next-line no-unused-vars
 import fs from 'fs';
 
+// import nodemailer module for sending emails to clients
+import nodemailer from 'nodemailer';
+
 // import uniqid module for unique id generator
 import uniqid from 'uniqid';
 
@@ -238,6 +241,61 @@ const reportController = {
       return res.status(204).json(result);
     } catch (err) {
       // if error has occurred, send server error status and message
+      return res.status(500).json({ message: 'Server Error' });
+    }
+  },
+
+  // report controller method to send an email to the client for a submitted report
+  // user controller method to send an email to inform the client that their order is placed
+  sendEmailReport: async (req, res) => {
+    try {
+      // get the data of the client from the database
+      const clientData = {
+        name: req.body.name,
+        email: req.body.email,
+        orderId: req.body.id,
+      };
+
+      // create reusable transporter object using the default SMTP transport
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          // e-mail address of company 'bot'
+          user: 'sweng.nodemailer@gmail.com',
+          // password for the e-mail account
+          pass: '1234567890Test',
+        },
+      });
+
+      // send mail with defined transport object
+      const emailFormat = await transporter.sendMail({
+        // sender's e-mail address
+        from: 'sweng.nodemailer@gmail.com',
+        // receiver's e-mail address
+        to: clientData.email,
+        // subject of the e-mail
+        subject: '[Order # ' + clientData.orderId + '] Order Confirmed',
+        // content of the e-mail
+        html:
+          '<p>Dear ' +
+          clientData.name +
+          ',</p>' +
+          '<p>We have received your report for order <b>' +
+          clientData.orderId +
+          '</b>.We apologize for the inconvenience this may have caused.' +
+          'We will get back to you within 24-48 hours via phone or email.</p>' +
+          '<p>Thank you and have a great day! </p>' +
+          '<p>AGC Print </p>' +
+          '<p>[Please do not reply to this email. This is an auto-generated message]</p>',
+      });
+      // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+      logger.info('Message sent: ' + emailFormat.messageId);
+
+      return res
+        .status(201)
+        .json('Order Placed E-mail Sent To ' + clientData.email + '!');
+    } catch (err) {
+      logger.info(err);
       return res.status(500).json({ message: 'Server Error' });
     }
   },
