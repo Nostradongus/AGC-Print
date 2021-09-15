@@ -73,9 +73,16 @@
 
         <p
           class="manrope-bold left-0 -top-3.5 text-xl pt-3 px-8 text-red"
-          v-if="!state.shownOrders.length"
+          v-if="!state.shownOrders.length && state.search === ''"
         >
           No orders in "{{ state.status }}" status for now.
+        </p>
+
+        <p
+          class="manrope-bold left-0 -top-3.5 text-xl pt-3 px-8 text-red"
+          v-if="!state.shownOrders.length && state.search !== ''"
+        >
+          No orders with "{{ state.search }}" order ID.
         </p>
 
         <p

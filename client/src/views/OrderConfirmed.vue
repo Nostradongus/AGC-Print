@@ -55,6 +55,7 @@
             text-gray-600 text-md
             pt-2
             px-8
+            mb-5
           "
           >Delivery Address: {{ state.orderSet.address }} </h1
         >

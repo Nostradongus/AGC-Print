@@ -69,10 +69,10 @@
         </form>
       </div>
       <router-link class="manrope-bold text-primary-blue" to="/register">
-        <span class="absolute bottom-16 right-16">Don't have an account?</span>
+        <span class="absolute bottom-16 right-16">Don't have a client account?</span>
       </router-link>
       <router-link class="manrope-bold text-primary-blue" to="/staff-login">
-        <span class="absolute bottom-16 left-16">Sign in as a worker</span>
+        <span class="absolute bottom-16 left-16">Sign in as a staff</span>
       </router-link>
     </div>
   </div>

@@ -64,11 +64,6 @@
       <!-- payment receipt image view modal -->
       <ImageModal :showModal="showModal" @close="toggleModal">
         <div class="receipt-content flex flex-col justify-center items-center">
-          <!-- TODO: reference number to be updated soon -->
-          <!-- <h3 class="text-lg leading-6 font-medium flex-grow-0 mb-5 self-start">
-            Ref# {{ payment.refNumber }}
-          </h3> -->
-
           <img
             :src="payment.filePath"
             onerror="this.onerror=null;this.src='../src/assets/nopreview.png'"
@@ -96,13 +91,13 @@
         :verifyPayment="showVerifyPaymentModal" 
         @close="toggleVerifyPaymentModal"
       >
-        <form @submit.prevent="confirmPayment" class="items-start">
+        <form @submit.prevent="confirmPayment" class="items-start mt-7">
           <!-- payment account -->
-          <div class="flex flex-col mt-10">
+          <div class="flex flex-col mt-2">
             <div class="flex flex-row items-start">
               <label
                 for="paymentAcc"
-                class="relative manrope-bold text-primary-blue text-gray-600 text-lg mt-2"
+                class="relative manrope-bold text-primary-blue text-gray-600 text-lg mt-2.5"
               >Account: </label
               >
               <select
@@ -120,7 +115,7 @@
             <div class="flex flex-row items-start mt-2">
               <label
                 for="refNumber"
-                class="relative manrope-bold text-primary-blue text-gray-600 text-md mt-4"
+                class="relative manrope-bold text-primary-blue text-gray-600 text-md mt-2.5"
               >Reference Number #: </label
               >
               <div>
@@ -131,6 +126,7 @@
                   v-model.trim="paymentData.refNumber"
                   class="manrope-bold text-md input-text-field w-96 ml-4"
                   :class="{ 'border-red': v.refNumber.$error }"
+                  @keyup="isValidRefNumber(paymentData.refNumber)"
                 />
                 <p
                   v-if="v.refNumber.$error"
@@ -138,12 +134,18 @@
                 >
                   {{ v.refNumber.$errors[0].$message }}
                 </p>
+                <p
+                  v-if="!paymentData.refNumberValidation"
+                  class="text-red manrope-bold text-left ml-4 text-sm"
+                >
+                  Value may only contain letters and numbers
+                </p>
               </div>
             </div>
             <div class="flex flex-row items-start mt-2">
               <label
                 for="amount"
-                class="relative manrope-bold text-primary-blue text-gray-600 text-lg mt-4"
+                class="relative manrope-bold text-primary-blue text-gray-600 text-lg mt-2.5"
               >Amount Paid: </label
               >
               <div>
@@ -225,6 +227,7 @@ export default {
       paymentAcc: 'BDO',
       refNumber: null,
       amount: null,
+      refNumberValidation: true,
     })
     const store = useStore();
     const showModal = ref(false);
@@ -241,6 +244,10 @@ export default {
       state.worker = store.state.worker.worker.username
     }
 
+    function isValidRefNumber(refNumber) {
+      paymentData.refNumberValidation = /^[a-zA-Z0-9]*$/.test(refNumber);
+    }
+
     function toggleModal() {
       showModal.value = !showModal.value;
     }
@@ -252,7 +259,7 @@ export default {
     async function confirmPayment() {
       const validated = await v.value.$validate();
 
-      if (validated) {
+      if (validated && paymentData.refNumberValidation) {
         state.submitted = true;
 
         try {
@@ -309,6 +316,7 @@ export default {
              toggleVerifyPaymentModal, 
              confirmPayment,
              downloadImg,
+             isValidRefNumber,
            };
   },
 };
@@ -349,6 +357,11 @@ export default {
 }
 
 .receipt-img {
+  max-width: 100%;
+  max-height: 75%;
+}
+
+.content-img {
   max-width: 100%;
   max-height: 75%;
 }

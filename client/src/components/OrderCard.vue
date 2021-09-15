@@ -914,7 +914,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="postcss">
 .cart-card {
   transition: 1500ms;
 }
