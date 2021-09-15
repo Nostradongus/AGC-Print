@@ -224,18 +224,56 @@ const reportController = {
       return res.status(202).json(result);
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
+    }
+  },
+
+  // report controller method to add new staff note to a report from the database
+  addNote: async (req, res) => {
+    try {
+      // get report data from database
+      const report = await ReportService.getReport({ id: req.params.id });
+
+      // add new staff note to report data
+      report.notes.push(req.body.note);
+
+      // create report update object
+      const data = {
+        id: req.params.id,
+        notes: report.notes,
+      };
+
+      // update report from database with new staff note
+      const result = await ReportService.addNote(data);
+
+      // send result back to the client to indicate success
+      return res.status(204).json(result);
+    } catch (err) {
+      // if error has occurred, send server error status and message
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
   // report controller method to update the status of a report from the database
   updateReportStatus: async (req, res) => {
     try {
-      // update a report from the database
-      const result = await ReportService.updateReportStatus({
+      // get today's date
+      const date = new Date();
+      const year = date.getFullYear().toString();
+      const month = (date.getMonth() + 1).toString().padStart(2, 0);
+      const day = date.getDate().toString().padStart(2, 0);
+      const formattedDate = `${year}-${month}-${day}`;
+
+      // create update report object
+      const data = {
         id: req.params.id,
         status: req.body.status,
-      });
+        comment: req.body.comment,
+        dateUpdated: formattedDate,
+      };
+
+      // update a report from the database
+      const result = await ReportService.updateReportStatus(data);
 
       // send result back to the client to indicate success
       return res.status(204).json(result);

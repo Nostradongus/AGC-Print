@@ -68,8 +68,9 @@ export const getReport = (id) => API.get(`/report/details/${id}`);
 export const getOrderSetReport = (id) =>
   API.get(`/report/details/orderSet/${id}`);
 export const addReport = (report) => API.post('/report/add/new', report);
+export const addNote = (id, data) => API.patch(`/report/note/${id}`, data);
 export const deleteReport = (id) => API.delete(`/report/delete/${id}`);
-export const updateReportStatus = (id) => API.patch(`/report/update/${id}`);
+export const updateReportStatus = (id, data) => API.patch(`/report/update/${id}`, data);
 
 // payment receipt data api methods
 export const getAllPayments = () => API.get('/payment');

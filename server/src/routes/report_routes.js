@@ -87,6 +87,9 @@ router.delete(
   reportController.deleteReport
 );
 
+// route for adding new staff to a report from the database
+router.patch('/note/:id', token.authenticateToken, reportController.addNote);
+
 // route for updating the status of a report from the database
 router.patch(
   '/update/:id',

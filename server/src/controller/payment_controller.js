@@ -4,6 +4,9 @@ import PaymentService from '../service/payment_service.js';
 // get user service static object from service folder
 import UserService from '../service/user_service.js';
 
+// get order service static object from service folder
+import OrderService from '../service/order_service.js';
+
 // import cloudinary for cloud storage file uploading
 import cloudinary from '../config/cloudinary.js';
 
@@ -220,6 +223,26 @@ const paymentController = {
         req.params.id,
         verifiedPayment
       );
+
+      // update order set with the receipt's amount
+      const payment = await PaymentService.getPayment({ id: req.params.id });
+      const orderSet = await OrderService.getOrderSet({
+        id: payment.orderSetId,
+      });
+
+      orderSet.remBalance -= verifiedPayment.amount;
+      if (orderSet.remBalance < 0) {
+        orderSet.remBalance = 0;
+      }
+
+      if (!orderSet.paidDownPayment) {
+        orderSet.paidDownPayment = true;
+      }
+
+      await OrderService.updateOrderSet(orderSet.id, {
+        remBalance: orderSet.remBalance,
+        paidDownPayment: orderSet.paidDownPayment,
+      });
 
       // send result back to the client to indicate success
       return res.status(204).json(result);

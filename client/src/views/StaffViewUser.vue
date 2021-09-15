@@ -7,7 +7,7 @@
         <input
           type="text"
           class="h-10 lg:w-96 md:w-80 border search placeholder-primary-blue text-primary-blue"
-          placeholder="Search by username..."
+          placeholder="Search by Username..."
           v-model.trim="state.search"
           v-on:keyup="searchUsers(state.search)"
         />
@@ -18,6 +18,13 @@
         v-if="state.empty"
       >
         Loading data, please wait...
+      </p>
+
+      <p
+        class="manrope-bold left-0 -top-3.5 text-xl pt-3 px-8 text-red"
+        v-if="!state.allUsers.length && state.search !== ''"
+      >
+        No users with "{{ state.search }}" username.
       </p>
 
       <div class="max-h-screen overflow-y-scroll scrollbar-hidden mb-5">

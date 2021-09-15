@@ -84,7 +84,7 @@
             <input
               type="text"
               class="h-10 lg:w-96 md:w-80 border search placeholder-primary-blue text-primary-blue"
-              placeholder="Search by order id..."
+              placeholder="Search by Order ID..."
               v-model.trim="state.search"
               v-on:keyup="searchOrders(state.search)"
             />

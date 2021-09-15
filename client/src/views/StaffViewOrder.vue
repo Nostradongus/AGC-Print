@@ -17,7 +17,7 @@
             <input
               type="text"
               class="h-10 lg:w-96 md:w-80 border search placeholder-primary-blue text-primary-blue"
-              placeholder="Search by order id..."
+              placeholder="Search by Order ID..."
               v-model.trim="state.search"
               v-on:keyup="searchOrders(state.search)"
             />
@@ -73,9 +73,16 @@
 
         <p
           class="manrope-bold left-0 -top-3.5 text-xl pt-3 px-8 text-red"
-          v-if="!state.shownOrders.length"
+          v-if="!state.shownOrders.length && state.search === ''"
         >
           No orders in "{{ state.status }}" status for now.
+        </p>
+
+        <p
+          class="manrope-bold left-0 -top-3.5 text-xl pt-3 px-8 text-red"
+          v-if="!state.shownOrders.length && state.search !== ''"
+        >
+          No orders with "{{ state.search }}" order ID.
         </p>
 
         <p

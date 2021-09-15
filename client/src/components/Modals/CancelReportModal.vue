@@ -19,7 +19,7 @@
                 text-2xl
                 "
             >
-                Cancel Report
+                Cancel Issue
             </h1>
             <i @click="close" class="far fa-times-circle"></i>
 

@@ -64,11 +64,6 @@
       <!-- payment receipt image view modal -->
       <ImageModal :showModal="showModal" @close="toggleModal">
         <div class="receipt-content flex flex-col justify-center items-center">
-          <!-- TODO: reference number to be updated soon -->
-          <!-- <h3 class="text-lg leading-6 font-medium flex-grow-0 mb-5 self-start">
-            Ref# {{ payment.refNumber }}
-          </h3> -->
-
           <img
             :src="payment.filePath"
             onerror="this.onerror=null;this.src='../src/assets/nopreview.png'"
@@ -96,13 +91,13 @@
         :verifyPayment="showVerifyPaymentModal" 
         @close="toggleVerifyPaymentModal"
       >
-        <form @submit.prevent="confirmPayment" class="items-start">
+        <form @submit.prevent="confirmPayment" class="items-start mt-7">
           <!-- payment account -->
-          <div class="flex flex-col mt-10">
+          <div class="flex flex-col mt-2">
             <div class="flex flex-row items-start">
               <label
                 for="paymentAcc"
-                class="relative manrope-bold text-primary-blue text-gray-600 text-lg mt-2"
+                class="relative manrope-bold text-primary-blue text-gray-600 text-lg mt-2.5"
               >Account: </label
               >
               <select
@@ -114,23 +109,24 @@
                 <option value="BDO" selected>BDO</option>
                 <option value="BPI">BPI</option>
                 <option value="GCash">GCash</option>
-                <option value="OTC">Over The Counter (OTC)</option>
+                <option value="Cash">Cash</option>
               </select>
             </div>
             <div class="flex flex-row items-start mt-2">
               <label
                 for="refNumber"
-                class="relative manrope-bold text-primary-blue text-gray-600 text-md mt-4"
+                class="relative manrope-bold text-primary-blue text-gray-600 text-md mt-2.5"
               >Reference Number #: </label
               >
               <div>
                 <input
                   id="refNumber"
                   name="refNumber"
-                  type="number"
+                  type="text"
                   v-model.trim="paymentData.refNumber"
                   class="manrope-bold text-md input-text-field w-96 ml-4"
                   :class="{ 'border-red': v.refNumber.$error }"
+                  @keyup="isValidRefNumber(paymentData.refNumber)"
                 />
                 <p
                   v-if="v.refNumber.$error"
@@ -138,12 +134,18 @@
                 >
                   {{ v.refNumber.$errors[0].$message }}
                 </p>
+                <p
+                  v-if="!paymentData.refNumberValidation"
+                  class="text-red manrope-bold text-left ml-4 text-sm"
+                >
+                  Value may only contain letters and numbers
+                </p>
               </div>
             </div>
             <div class="flex flex-row items-start mt-2">
               <label
                 for="amount"
-                class="relative manrope-bold text-primary-blue text-gray-600 text-lg mt-4"
+                class="relative manrope-bold text-primary-blue text-gray-600 text-lg mt-2.5"
               >Amount Paid: </label
               >
               <div>
@@ -168,6 +170,7 @@
 
           <div class="flex items-center justify-center">
             <button
+              v-if="!state.submitted"
               class="
                 manrope-bold
                 dowload-btn
@@ -179,6 +182,12 @@
             >
               Confirm Payment
             </button>
+            <p
+              v-else
+              class="manrope-bold absolute bottom-6 text-primary-blue text-md"
+            >
+              Confirming Payment...
+            </p>
           </div>
         </form>
       </VerifyPaymentModal>
@@ -193,7 +202,7 @@ import VerifyPaymentModal from './Modals/VerifyPaymentModal.vue';
 import { reactive, ref } from 'vue';
 import { useStore } from 'vuex';
 import useVuelidate from '@vuelidate/core';
-import { required, minValue } from '@vuelidate/validators';
+import { required, numeric, minValue } from '@vuelidate/validators';
 import axios from 'axios';
 import * as api from '../api/index.js';
 
@@ -212,11 +221,13 @@ export default {
   setup(props, { emit }) {
     const state = reactive({
       worker: null,
+      submitted: false,
     });
     const paymentData = reactive({
       paymentAcc: 'BDO',
       refNumber: null,
       amount: null,
+      refNumberValidation: true,
     })
     const store = useStore();
     const showModal = ref(false);
@@ -233,6 +244,10 @@ export default {
       state.worker = store.state.worker.worker.username
     }
 
+    function isValidRefNumber(refNumber) {
+      paymentData.refNumberValidation = /^[a-zA-Z0-9]*$/.test(refNumber);
+    }
+
     function toggleModal() {
       showModal.value = !showModal.value;
     }
@@ -244,17 +259,35 @@ export default {
     async function confirmPayment() {
       const validated = await v.value.$validate();
 
-      if (validated) {
+      if (validated && paymentData.refNumberValidation) {
+        state.submitted = true;
+
         try {
           // verify payment receipt
           await api.verifyPayment(props.payment.id, paymentData);
           
           // get updated payment
-          const result = await api.getPayment(props.payment.id);
+          const payment = await api.getPayment(props.payment.id);
+
+          // get updated order set
+          const orderSet = await api.getOrderSet(payment.data.orderSetId);
+
+          // create updated data object
+          const data = {
+            paymentAcc: payment.data.paymentAcc,
+            refNumber: payment.data.refNumber,
+            amount: payment.data.amount,
+            confirmed: payment.data.confirmed,
+            dateConfirmed: payment.data.dateConfirmed,
+            paidDownPayment: orderSet.data.paidDownPayment,
+            remBalance: orderSet.data.remBalance,
+          }
 
           // update UI of parent component with updated payment data
-          emit('paymentVerify', result.data);
+          emit('paymentVerify', data);
           toggleVerifyPaymentModal();
+          
+          state.submitted = false;
         } catch (err) {
           console.log(err);
         }
@@ -283,6 +316,7 @@ export default {
              toggleVerifyPaymentModal, 
              confirmPayment,
              downloadImg,
+             isValidRefNumber,
            };
   },
 };
@@ -323,6 +357,11 @@ export default {
 }
 
 .receipt-img {
+  max-width: 100%;
+  max-height: 75%;
+}
+
+.content-img {
   max-width: 100%;
   max-height: 75%;
 }

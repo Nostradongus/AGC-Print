@@ -55,7 +55,7 @@ const PaymentSchema = new mongoose.Schema(
     },
     // reference number given by account
     refNumber: {
-      type: Number,
+      type: String,
       default: null,
       required: false,
     },
