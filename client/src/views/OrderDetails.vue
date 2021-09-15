@@ -973,6 +973,16 @@ export default {
             state.order.status = updateData.status;
 
             toggleEditOrderSetModal();
+            if (updateData.status === 'Waiting for Downpayment') {
+              const emailData = {
+                name: updateData.name,
+                email: updateData.email,
+                id: state.order.id,
+                downPayment: parseFloat(state.order.price * 0.5).toFixed(2),
+                totalCost: parseFloat(state.order.price).toFixed(2),
+              };
+              await api.sendEmailProjectCost(emailData);
+            }
             if (updateData.status === 'Complete') {
               const emailData = {
                 name: updateData.name,

@@ -102,11 +102,11 @@ const workerController = {
           '<p>The total project cost and breakdown are now' +
           ' available for viewing via our order portal. You may ' +
           'check the details of your order via the My Orders Page. ' +
-          'The total cost of the project is <b>' +
+          'The total cost of the project is <b>₱' +
           payment.totalCost +
           '</b>. ' +
           'You may ' +
-          ' pay the down payment of the project amounting to <b>' +
+          ' pay the down payment of the project amounting to <b>₱' +
           payment.downPayment +
           '</b> via the following payment channels.</p>' +
           '<p>Please upload your payment slip or proof of payment via ' +
