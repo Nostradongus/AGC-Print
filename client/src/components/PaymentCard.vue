@@ -19,7 +19,10 @@
       <div v-if="payment.confirmed" class="flex-auto w-24">
         <p class="text-lg manrope-regular">₱ {{ payment.amount }}</p>
       </div>
-      <div v-if="payment.filename" class="flex flex-col justify-self-end text-center items-center w-1/6">
+      <div
+        v-if="payment.filename"
+        class="flex flex-col justify-self-end text-center items-center w-1/6"
+      >
         <button
           class="
             text-primary-blue
@@ -31,7 +34,10 @@
             focus:outline-none
             bg-gray-500
             mr-5
-            transition duration-100 ease-in-out hover:bg-light-gray
+            transition
+            duration-100
+            ease-in-out
+            hover:bg-light-gray
           "
           @click="toggleModal"
           type="button"
@@ -57,8 +63,9 @@
             bg-primary-blue
           "
           @click="toggleVerifyPaymentModal"
-          >Verify</button
         >
+          Verify
+        </button>
       </div>
 
       <!-- payment receipt image view modal -->
@@ -87,8 +94,8 @@
       </ImageModal>
 
       <!-- verify payment view modal -->
-      <VerifyPaymentModal 
-        :verifyPayment="showVerifyPaymentModal" 
+      <VerifyPaymentModal
+        :verifyPayment="showVerifyPaymentModal"
         @close="toggleVerifyPaymentModal"
       >
         <form @submit.prevent="confirmPayment" class="items-start mt-7">
@@ -97,9 +104,14 @@
             <div class="flex flex-row items-start">
               <label
                 for="paymentAcc"
-                class="relative manrope-bold text-primary-blue text-gray-600 text-lg mt-2.5"
-              >Account: </label
-              >
+                class="
+                  relative
+                  manrope-bold
+                  text-primary-blue text-gray-600 text-lg
+                  mt-2.5
+                "
+                >Account:
+              </label>
               <select
                 id="paymentAcc"
                 name="paymentAcc"
@@ -115,9 +127,14 @@
             <div class="flex flex-row items-start mt-2">
               <label
                 for="refNumber"
-                class="relative manrope-bold text-primary-blue text-gray-600 text-md mt-2.5"
-              >Reference Number #: </label
-              >
+                class="
+                  relative
+                  manrope-bold
+                  text-primary-blue text-gray-600 text-md
+                  mt-2.5
+                "
+                >Reference Number #:
+              </label>
               <div>
                 <input
                   id="refNumber"
@@ -145,9 +162,14 @@
             <div class="flex flex-row items-start mt-2">
               <label
                 for="amount"
-                class="relative manrope-bold text-primary-blue text-gray-600 text-lg mt-2.5"
-              >Amount Paid: </label
-              >
+                class="
+                  relative
+                  manrope-bold
+                  text-primary-blue text-gray-600 text-lg
+                  mt-2.5
+                "
+                >Amount Paid:
+              </label>
               <div>
                 <input
                   id="amount"
@@ -228,7 +250,7 @@ export default {
       refNumber: null,
       amount: null,
       refNumberValidation: true,
-    })
+    });
     const store = useStore();
     const showModal = ref(false);
     const showVerifyPaymentModal = ref(false);
@@ -241,7 +263,7 @@ export default {
     const v = useVuelidate(rules, paymentData);
 
     if (JSON.parse(localStorage.getItem('user')) == null) {
-      state.worker = store.state.worker.worker.username
+      state.worker = store.state.worker.worker.username;
     }
 
     function isValidRefNumber(refNumber) {
@@ -265,7 +287,7 @@ export default {
         try {
           // verify payment receipt
           await api.verifyPayment(props.payment.id, paymentData);
-          
+
           // get updated payment
           const payment = await api.getPayment(props.payment.id);
 
@@ -281,12 +303,25 @@ export default {
             dateConfirmed: payment.data.dateConfirmed,
             paidDownPayment: orderSet.data.paidDownPayment,
             remBalance: orderSet.data.remBalance,
-          }
+          };
 
           // update UI of parent component with updated payment data
           emit('paymentVerify', data);
           toggleVerifyPaymentModal();
-          
+
+          // TODO: fix sending email for downpayment
+          console.log(orderSet.data.paidDownPayment);
+          if (!orderSet.data.paidDownPayment) {
+            const emailData = {
+              name: orderSet.data.name,
+              email: orderSet.data.email,
+              id: orderSet.data.id,
+              downPayment: payment.data.amount,
+              channel: payment.data.paymentAcc,
+            };
+            await api.sendEmailProcessingOrder(emailData);
+          }
+
           state.submitted = false;
         } catch (err) {
           console.log(err);
@@ -301,23 +336,29 @@ export default {
         responseType: 'blob',
       }).then((response) => {
         // get filename and file type
-        const fileType = props.payment.filePath.substring(props.payment.filePath.lastIndexOf('.'));
-        const filename = props.payment.filename.substring(props.payment.filename.indexOf('/') + 1) + fileType;
+        const fileType = props.payment.filePath.substring(
+          props.payment.filePath.lastIndexOf('.')
+        );
+        const filename =
+          props.payment.filename.substring(
+            props.payment.filename.indexOf('/') + 1
+          ) + fileType;
 
         fileDownload(response.data, filename);
       });
     }
-    return { state, 
-             v, 
-             paymentData,
-             showModal, 
-             showVerifyPaymentModal, 
-             toggleModal, 
-             toggleVerifyPaymentModal, 
-             confirmPayment,
-             downloadImg,
-             isValidRefNumber,
-           };
+    return {
+      state,
+      v,
+      paymentData,
+      showModal,
+      showVerifyPaymentModal,
+      toggleModal,
+      toggleVerifyPaymentModal,
+      confirmPayment,
+      downloadImg,
+      isValidRefNumber,
+    };
   },
 };
 </script>

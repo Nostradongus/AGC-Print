@@ -70,7 +70,9 @@ export const getOrderSetReport = (id) =>
 export const addReport = (report) => API.post('/report/add/new', report);
 export const addNote = (id, data) => API.patch(`/report/note/${id}`, data);
 export const deleteReport = (id) => API.delete(`/report/delete/${id}`);
-export const updateReportStatus = (id, data) => API.patch(`/report/update/${id}`, data);
+export const updateReportStatus = (id, data) =>
+  API.patch(`/report/update/${id}`, data);
+export const sendEmailReport = (user) => API.post('/report/sendEmail', user);
 
 // payment receipt data api methods
 export const getAllPayments = () => API.get('/payment');
@@ -81,8 +83,15 @@ export const getOrderSetIdPayments = (orderSetId) =>
   API.get(`/payment/${orderSetId}/payments`);
 export const getPayment = (id) => API.get(`/payment/details/${id}`);
 export const addPayment = (payment) => API.post('/payment/add/new', payment);
-export const verifyPayment = (id, data) => API.patch(`/payment/update/${id}`, data);
+export const verifyPayment = (id, data) =>
+  API.patch(`/payment/update/${id}`, data);
 export const deletePayment = (id) => API.delete(`/payment/delete/${id}`);
 
 // worker data api methods
 export const getWorker = (username) => API.get(`/workers/${username}`);
+export const sendEmailProjectCost = (emailData) =>
+  API.post(`/workers/sendEmailProjectCost`, emailData);
+export const sendEmailProcessingOrder = (emailData) =>
+  API.post(`/workers/sendEmailProcessingOrder`, emailData);
+export const sendEmailOrderComplete = (emailData) =>
+  API.post(`/workers/sendEmailOrderComplete`, emailData);

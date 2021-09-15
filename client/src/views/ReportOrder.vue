@@ -2,9 +2,8 @@
   <div>
     <side-bar />
     <page-header title="Report Order">
-
-      <p 
-        class="manrope-bold text-2xl text-center text-primary-blue mt-8" 
+      <p
+        class="manrope-bold text-2xl text-center text-primary-blue mt-8"
         v-if="!state.order"
       >
         Loading data, please wait...
@@ -48,16 +47,18 @@
       </div>
       <!-- Report Form -->
       <p v-if="state.order" class="text-red manrope-bold text-center text-sm">
-         You may only submit a report once, multiple file uploads is allowed (Use CTRL or SHIFT key while choosing files). 
+        You may only submit a report once, multiple file uploads is allowed (Use
+        CTRL or SHIFT key while choosing files).
       </p>
-      <form 
+      <form
         v-if="state.order"
         @submit.prevent="submitReport"
         class="flex flex-col m-8"
-        enctype="multipart/form-data">
+        enctype="multipart/form-data"
+      >
         <div class="flex flex-row mb-3 items-center">
           <h3 class="w-1/3 text-center manrope-bold">What is the issue?</h3>
-          <select 
+          <select
             name="type"
             id="type"
             class="w-full lg:w-1/2 dropdown-field"
@@ -82,7 +83,11 @@
         <div class="flex flex-row mb-5 items-center">
           <div class="w-1/3" />
           <p
-            v-if="state.typeValidation != null && !state.typeValidation && state.alreadyReported != true"
+            v-if="
+              state.typeValidation != null &&
+              !state.typeValidation &&
+              state.alreadyReported != true
+            "
             class="text-red manrope-bold text-left text-sm"
           >
             Please select type of issue.
@@ -102,7 +107,11 @@
         <div class="flex flex-row mb-5 items-center">
           <div class="w-1/3" />
           <p
-            v-if="v.description.$error && !state.descValidation && state.alreadyReported != true"
+            v-if="
+              v.description.$error &&
+              !state.descValidation &&
+              state.alreadyReported != true
+            "
             class="text-red manrope-bold text-center text-sm"
           >
             Please explain the issue regarding the order.
@@ -124,19 +133,27 @@
         <div class="flex flex-row mb-3 items-center">
           <div class="w-1/3" />
           <p
-            v-if="state.fileValidation != null && !state.fileValidation && state.alreadyReported != true"
+            v-if="
+              state.fileValidation != null &&
+              !state.fileValidation &&
+              state.alreadyReported != true
+            "
             class="text-red manrope-bold text-left text-sm"
           >
             No File Uploaded Yet.
           </p>
           <p
-            v-if="state.fileTypeValidation != null && !state.fileTypeValidation && state.alreadyReported != true"
+            v-if="
+              state.fileTypeValidation != null &&
+              !state.fileTypeValidation &&
+              state.alreadyReported != true
+            "
             class="text-red manrope-bold text-left text-sm"
           >
             File/s must be in .jpg or .png format.
           </p>
         </div>
-        <div class="flex justify-end lg:mr-48"> 
+        <div class="flex justify-end lg:mr-48">
           <div class="flex-1">
             <router-link
               class="
@@ -237,7 +254,7 @@ export default {
 
     const rules = {
       type: { required },
-      description: { required }
+      description: { required },
     };
 
     const v = useVuelidate(rules, state);
@@ -276,9 +293,15 @@ export default {
         state.fileTypeValidation = true;
 
         // validate file type of uploaded file/s
-        for (let ctr = 0; ctr < file.value.files.length && state.fileTypeValidation; ctr++) {
+        for (
+          let ctr = 0;
+          ctr < file.value.files.length && state.fileTypeValidation;
+          ctr++
+        ) {
           // get uploaded file's extension
-          const fileExtension = file.value.files[ctr].name.substring(file.value.files[ctr].name.indexOf('.') + 1);
+          const fileExtension = file.value.files[ctr].name.substring(
+            file.value.files[ctr].name.indexOf('.') + 1
+          );
 
           // check if uploaded file contains valid file type extension
           state.fileTypeValidation = extensions.includes(fileExtension);
@@ -302,7 +325,7 @@ export default {
       e.preventDefault();
 
       state.reportSubmitted = false;
-      
+
       // get field validation results
       const validated = await v.value.$validate();
 
@@ -313,13 +336,24 @@ export default {
       state.typeValidation = state.type !== 'placeholder' ? true : false;
 
       // check if report description has been given by user
-      state.descValidation = state.description !== '' ? true : false
+      state.descValidation = state.description !== '' ? true : false;
 
-      const isValid = validated && state.fileValidation && 
-                      state.typeValidation && state.descValidation &&
-                      state.fileTypeValidation && !state.alreadyReported;
+      const isValid =
+        validated &&
+        state.fileValidation &&
+        state.typeValidation &&
+        state.descValidation &&
+        state.fileTypeValidation &&
+        !state.alreadyReported;
 
       if (isValid) {
+        const user = JSON.parse(localStorage.getItem('user'));
+        const emailData = {
+          name: user.firstname + ' ' + user.lastname,
+          email: user.email,
+          id: route.params.id,
+        };
+
         // indicate that report form has been submitted
         state.submitted = true;
 
@@ -339,7 +373,7 @@ export default {
         if (res.data != null && typeof res.data !== 'undefined') {
           // confirm that order set has been already reported
           await api.updateOrderSetReported(route.params.id, { status: true });
-          
+
           // set indicator that user report was submitted successfully
           state.reportSubmitted = true;
           state.alreadyReported = true;
@@ -354,21 +388,23 @@ export default {
           document.getElementById('report-file').value = ''; // remove recently uploaded file
 
           // go back to order details page afterwards
-          router.push({ path: `/order-details/${route.params.id}`});
+          router.push({ path: `/order-details/${route.params.id}` });
+
+          await api.sendEmailReport(emailData);
         }
       }
     }
-    
-    return { 
-             state, 
-             file, 
-             onSelectFile, 
-             onSelectType, 
-             onChange, 
-             v, 
-             submitReport,
-             route
-           };
+
+    return {
+      state,
+      file,
+      onSelectFile,
+      onSelectType,
+      onChange,
+      v,
+      submitReport,
+      route,
+    };
   },
 };
 </script>

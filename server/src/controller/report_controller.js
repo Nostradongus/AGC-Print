@@ -14,6 +14,8 @@ import fs from 'fs';
 // import nodemailer module for sending emails to clients
 import nodemailer from 'nodemailer';
 
+import logger from '../logger/index.js';
+
 // import uniqid module for unique id generator
 import uniqid from 'uniqid';
 
@@ -312,7 +314,7 @@ const reportController = {
         // receiver's e-mail address
         to: clientData.email,
         // subject of the e-mail
-        subject: '[Order # ' + clientData.orderId + '] Order Confirmed',
+        subject: '[Order # ' + clientData.orderId + '] Order Reported',
         // content of the e-mail
         html:
           '<p>Dear ' +

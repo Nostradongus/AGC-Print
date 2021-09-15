@@ -294,17 +294,18 @@
               <p class="text-primary-blue text-left text-lg manrope-bold mb-2">
                 Add comment regarding resolution (optional):
               </p>
-              <textarea 
+              <textarea
                 class="
-                  manrope-bold 
-                  text-justify 
-                  text-md
-                  w-auto h-64
-                  border-2 
-                  rounded-md 
-                  border-primary-blue 
-                  p-2 placeholder-link-water
-                " 
+                  manrope-bold
+                  text-justify text-md
+                  w-auto
+                  h-64
+                  border-2
+                  rounded-md
+                  border-primary-blue
+                  p-2
+                  placeholder-link-water
+                "
                 placeholder="Input comment here..."
                 v-model.trim="reportData.resolveComment"
               />
@@ -335,17 +336,18 @@
               <p class="text-primary-blue text-left text-lg manrope-bold mb-2">
                 Add comment regarding cancellation (optional):
               </p>
-              <textarea 
+              <textarea
                 class="
-                  manrope-bold 
-                  text-justify 
-                  text-md
-                  w-auto h-64
-                  border-2 
-                  rounded-md 
-                  border-primary-blue 
-                  p-2 placeholder-link-water
-                " 
+                  manrope-bold
+                  text-justify text-md
+                  w-auto
+                  h-64
+                  border-2
+                  rounded-md
+                  border-primary-blue
+                  p-2
+                  placeholder-link-water
+                "
                 placeholder="Input comment here..."
                 v-model.trim="reportData.cancelComment"
               />
@@ -368,22 +370,20 @@
           </CancelReportModal>
 
           <!-- add note view modal -->
-          <AddNoteModal
-            :addNote="showAddNoteModal"
-            @close="toggleAddNoteModal"
-          >
+          <AddNoteModal :addNote="showAddNoteModal" @close="toggleAddNoteModal">
             <div class="flex flex-col mt-10">
-              <textarea 
+              <textarea
                 class="
-                  manrope-bold 
-                  text-justify 
-                  text-md
-                  w-auto h-72
-                  border-2 
-                  rounded-md 
-                  border-primary-blue 
-                  p-2 placeholder-link-water
-                " 
+                  manrope-bold
+                  text-justify text-md
+                  w-auto
+                  h-72
+                  border-2
+                  rounded-md
+                  border-primary-blue
+                  p-2
+                  placeholder-link-water
+                "
                 :class="{ 'border-red': v2.note.$error }"
                 placeholder="Input note here..."
                 v-model.trim="reportData.note"
@@ -417,25 +417,40 @@
             :viewNotes="showViewNotesModal"
             @close="toggleViewNotesModal"
           >
-            <div v-if="reportData.emptyNotes" class="flex items-center justify-start mt-10">
-              <p class="text-red text-lg manrope-bold"> No notes created yet for this report. </p>
+            <div
+              v-if="reportData.emptyNotes"
+              class="flex items-center justify-start mt-10"
+            >
+              <p class="text-red text-lg manrope-bold">
+                No notes created yet for this report.
+              </p>
             </div>
             <div v-else class="overflow-y-scroll mt-7 h-96">
-              <div 
-                v-for="note in state.report.notes" 
-                :key="note" 
-                class="p-3 mt-4 bg-light-blue rounded-xl order-card text-justify manrope-bold break-all"
+              <div
+                v-for="note in state.report.notes"
+                :key="note"
+                class="
+                  p-3
+                  mt-4
+                  bg-light-blue
+                  rounded-xl
+                  order-card
+                  text-justify
+                  manrope-bold
+                  break-all
+                "
               >
                 {{ note }}
               </div>
             </div>
           </ViewNotesModal>
-          
+
           <h1
             v-if="state.worker"
             class="manrope-bold text-lg mt-10 text-primary-blue"
           >
-            {{ state.report.user }} ({{ state.report.userFullName }}) submitted a report to this order set.
+            {{ state.report.user }} ({{ state.report.userFullName }}) submitted
+            a report to this order set.
           </h1>
 
           <div class="mt-8">
@@ -487,7 +502,9 @@
               </button>
               <button
                 v-if="
-                  state.worker && state.report.status !== 'Resolved' && state.report.status !== 'Cancelled'
+                  state.worker &&
+                  state.report.status !== 'Resolved' &&
+                  state.report.status !== 'Cancelled'
                 "
                 class="
                   manrope-regular
@@ -510,7 +527,9 @@
               </button>
               <button
                 v-if="
-                  state.worker && state.report.status !== 'Resolved' && state.report.status !== 'Cancelled'
+                  state.worker &&
+                  state.report.status !== 'Resolved' &&
+                  state.report.status !== 'Cancelled'
                 "
                 class="
                   manrope-regular
@@ -534,10 +553,11 @@
             </div>
             <hr class="report-border mt-1" />
 
-            <div v-if="state.report.status === 'Resolved'" class="flex flex-col mt-3">
-              <h1 class="manrope-bold text-xl">
-                Issue Resolved.
-              </h1>
+            <div
+              v-if="state.report.status === 'Resolved'"
+              class="flex flex-col mt-3"
+            >
+              <h1 class="manrope-bold text-xl">Issue Resolved.</h1>
               <div v-if="state.report.comment" class="flex flex-row mt-3">
                 <p class="manrope-bold text-lg">Comments:</p>
                 <br />
@@ -545,13 +565,14 @@
                   {{ state.report.comment }}
                 </p>
               </div>
-              <hr class="report-border mt-3" /> 
+              <hr class="report-border mt-3" />
             </div>
 
-            <div v-if="state.report.status === 'Cancelled'" class="flex flex-col mt-3">
-              <h1 class="manrope-bold text-xl">
-                Issue Cancelled.
-              </h1>
+            <div
+              v-if="state.report.status === 'Cancelled'"
+              class="flex flex-col mt-3"
+            >
+              <h1 class="manrope-bold text-xl">Issue Cancelled.</h1>
               <div v-if="state.report.comment" class="flex flex-row mt-3">
                 <p class="manrope-bold text-lg">Comments:</p>
                 <br />
@@ -678,7 +699,7 @@
               state.order.price !== -1 &&
               state.order.status !== 'Complete' &&
               state.order.status !== 'Pending' &&
-              state.order.status !== 'Cancelled' && 
+              state.order.status !== 'Cancelled' &&
               !state.isStaff
             "
             class="
@@ -724,10 +745,10 @@ import { email, numeric, maxLength, minLength } from '@vuelidate/validators';
 
 export default {
   name: 'OrderDetails',
-  components: { 
-    SideBar, 
-    PageHeader, 
-    OrderCard, 
+  components: {
+    SideBar,
+    PageHeader,
+    OrderCard,
     EditOrderSetModal,
     ResolveReportModal,
     CancelReportModal,
@@ -771,7 +792,7 @@ export default {
     const rules = {
       note: { required },
     };
-    
+
     const v2 = useVuelidate(rules, reportData);
 
     async function resolveReport() {
@@ -801,7 +822,6 @@ export default {
       } catch (err) {
         console.log(err);
       }
-      
     }
 
     async function cancelReport() {
@@ -839,9 +859,11 @@ export default {
       if (validated) {
         try {
           // add note to report in the database
-          const result = await api.addNote(state.report.id, { note: reportData.note });
+          const result = await api.addNote(state.report.id, {
+            note: reportData.note,
+          });
 
-          // if successful, update note list in UI 
+          // if successful, update note list in UI
           if (result.status === 204) {
             // add new note to notes list
             state.report.notes.push(reportData.note);
@@ -949,8 +971,18 @@ export default {
             state.order.contactNo = updateData.contactNo;
             state.order.address = updateData.address;
             state.order.status = updateData.status;
+
+            toggleEditOrderSetModal();
+            if (updateData.status === 'Complete') {
+              const emailData = {
+                name: updateData.name,
+                email: updateData.email,
+                id: state.order.id,
+                rmBal: state.order.remBalance,
+              };
+              await api.sendEmailOrderComplete(emailData);
+            }
           }
-          toggleEditOrderSetModal();
         }
       } catch (err) {
         console.log(err);

@@ -2,17 +2,38 @@
   <div>
     <side-bar />
     <page-header title="View Users">
-      <div v-if="!state.empty" class="flex flex-row justify-start mx-8 my-8 content-end">
-        <h1 class="manrope-extrabold text-lg text-center mt-1.5 mr-3 text-primary-blue"> Search User: </h1>
+      <div
+        v-if="!state.empty"
+        class="flex flex-row justify-start mx-8 my-8 content-end"
+      >
+        <h1
+          class="
+            manrope-extrabold
+            text-lg text-center
+            mt-1.5
+            mr-3
+            text-primary-blue
+          "
+        >
+          Search User:
+        </h1>
         <input
           type="text"
-          class="h-10 lg:w-96 md:w-80 border search placeholder-primary-blue text-primary-blue"
+          class="
+            h-10
+            lg:w-96
+            md:w-80
+            border
+            search
+            placeholder-primary-blue
+            text-primary-blue
+          "
           placeholder="Search by Username..."
           v-model.trim="state.search"
           v-on:keyup="searchUsers(state.search)"
         />
       </div>
-      
+
       <p
         class="manrope-bold text-2xl text-center text-primary-blue mt-8"
         v-if="state.empty"
@@ -22,7 +43,11 @@
 
       <p
         class="manrope-bold left-0 -top-3.5 text-xl pt-3 px-8 text-red"
-        v-if="!state.allUsers.length && state.search !== ''"
+        v-if="
+          state.allUsers != null &&
+          !state.allUsers.length &&
+          state.search !== ''
+        "
       >
         No users with "{{ state.search }}" username.
       </p>

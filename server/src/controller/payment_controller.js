@@ -59,7 +59,7 @@ const paymentController = {
     }
   },
 
-  // payment receipt controller method to retrieve andreturn a specific payment receipt from the database
+  // payment receipt controller method to retrieve and return a specific payment receipt from the database
   getPayment: async (req, res) => {
     try {
       // retrieve a specific payment receipt from the database given the id data from the request
@@ -236,7 +236,10 @@ const paymentController = {
       }
 
       if (!orderSet.paidDownPayment) {
-        orderSet.paidDownPayment = true;
+        if (orderSet.price * 0.5 - verifiedPayment.amount <= 0) {
+          orderSet.paidDownPayment = true;
+          console.log(orderSet.paidDownPayment);
+        }
       }
 
       await OrderService.updateOrderSet(orderSet.id, {
