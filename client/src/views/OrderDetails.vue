@@ -1031,11 +1031,7 @@ export default {
     }
 
     function isValidName(name) {
-      if (/^[a-zA-Z ]*$/.test(name) ? true : false) {
-        state.nameValidation = true;
-      } else {
-        state.nameValidation = false;
-      }
+      state.nameValidation = /^[a-zA-Z ]*$/.test(name) ? true : false;
     }
 
     return {

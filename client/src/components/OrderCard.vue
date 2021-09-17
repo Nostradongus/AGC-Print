@@ -63,7 +63,9 @@
                   type="number"
                   v-model.trim="updateData.quantity"
                   class="manrope-regular input-text-field w-32 ml-4"
-                  :class="{ 'border-red': v.quantity.$error }"
+                  :class="{
+                    'border-red': v.quantity.$error || !state.qtyValidation,
+                  }"
                   @keyup="isValidQty(updateData.quantity)"
                 />
                 <p
@@ -505,7 +507,9 @@
           class="w-1/6 flex flex-col justify-center text-center items-center"
         >
           <div class="flex" v-if="order.price === -1">Pending Price</div>
-          <div class="flex" v-else>₱ {{ order.price }}</div>
+          <div class="flex" v-else>
+            ₱ {{ parseFloat(order.price).toFixed(2) }}
+          </div>
           <div class="flex" v-if="isStaff">
             <button
               class="
@@ -577,7 +581,8 @@ export default {
       quantity: props.order.quantity,
       width: props.order.width,
       height: props.order.height,
-      price: props.order.price === -1 ? 0 : props.order.price,
+      price:
+        props.order.price === -1 ? 0 : parseFloat(props.order.price).toFixed(2),
       remarks: props.order.remarks,
       eyelets: props.order.eyelets,
       diecut: props.order.diecut,
@@ -663,13 +668,14 @@ export default {
       // check if one of the dimension is less than or equal to 64
       // if yes, the another dimension can be greater than 64 to 120 max as a special case
       if (
-        (parseInt(updateData.width) <= 64 &&
-          parseInt(updateData.height) >= 64 &&
-          parseInt(updateData.height) <= 120) ||
-        (parseInt(updateData.width) >= 64 &&
-          parseInt(updateData.width) <= 120 &&
-          parseInt(updateData.height) <= 64) ||
-        (parseInt(updateData.width) <= 64 && parseInt(updateData.height) <= 64)
+        (parseFloat(updateData.width) <= 64 &&
+          parseFloat(updateData.height) >= 64 &&
+          parseFloat(updateData.height) <= 120) ||
+        (parseFloat(updateData.width) >= 64 &&
+          parseFloat(updateData.width) <= 120 &&
+          parseFloat(updateData.height) <= 64) ||
+        (parseFloat(updateData.width) <= 64 &&
+          parseFloat(updateData.height) <= 64)
       ) {
         state.dimValidation = true;
       } else {
@@ -696,7 +702,8 @@ export default {
       updateData.quantity = props.order.quantity;
       updateData.width = props.order.width;
       updateData.height = props.order.height;
-      updateData.price = props.order.price === -1 ? 0 : props.order.price;
+      updateData.price =
+        props.order.price === -1 ? 0 : parseFloat(props.order.price).toFixed(2);
       updateData.remarks = props.order.remarks;
       updateData.eyelets = props.order.eyelets;
       updateData.diecut = props.order.diecut;
@@ -705,6 +712,7 @@ export default {
       updateData.frameFinishing = props.order.frameFinishing;
       updateData.frameEdges = props.order.frameEdges;
       isValidPrice(updateData.price);
+      isValidQty(updateData.quantity);
 
       state.dimValidation = true;
       if (props.order.type === 'Tarpaulin') isValidEyelets(updateData.eyelets);
@@ -892,29 +900,19 @@ export default {
     }
 
     function isValidPrice(price) {
-      if (
-        /^(?!0*[.,]0*$|[.,]0*$|0*$)\d+[,.]?\d{0,2}$/.test(price) ? true : false
-      ) {
-        state.priceValidation = true;
-      } else {
-        state.priceValidation = false;
-      }
+      state.priceValidation = /^(?!0*[.,]0*$|[.,]0*$|0*$)\d+[,.]?\d{0,2}$/.test(
+        price
+      )
+        ? true
+        : false;
     }
 
     function isValidEyelets(eyelets) {
-      if (/^[0-9]*$/.test(eyelets) ? true : false) {
-        state.eyeletsValidation = true;
-      } else {
-        state.eyeletsValidation = false;
-      }
+      state.eyeletsValidation = /^[0-9]*$/.test(eyelets) ? true : false;
     }
 
     function isValidQty(quantity) {
-      if (/^[0-9]*$/.test(quantity) ? true : false) {
-        state.qtyValidation = true;
-      } else {
-        state.qtyValidation = false;
-      }
+      state.qtyValidation = /^([1-9][0-9]*)$/.test(quantity) ? true : false;
     }
 
     return {
