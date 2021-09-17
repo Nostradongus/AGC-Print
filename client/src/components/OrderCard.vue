@@ -64,12 +64,19 @@
                   v-model.trim="updateData.quantity"
                   class="manrope-regular input-text-field w-32 ml-4"
                   :class="{ 'border-red': v.quantity.$error }"
+                  @keyup="isValidQty(updateData.quantity)"
                 />
                 <p
                   class="ml-4 text-red manrope-bold text-left text-sm"
                   v-if="v.quantity.$error"
                 >
                   {{ v.quantity.$errors[0].$message }}
+                </p>
+                <p
+                  class="ml-4 text-red manrope-bold text-left text-sm"
+                  v-if="!state.qtyValidation"
+                >
+                  Value must be a positive integer
                 </p>
               </div>
             </div>
@@ -174,7 +181,7 @@
                   class="ml-8 text-red manrope-bold text-left text-sm"
                   v-if="!state.eyeletsValidation"
                 >
-                  Value must be a positive number
+                  Value must be a positive integer
                 </p>
               </div>
             </div>
@@ -563,6 +570,7 @@ export default {
       priceValidation: null,
       dimValidation: true,
       eyeletsValidation: null,
+      qtyValidation: null,
     });
 
     const updateData = reactive({
@@ -685,6 +693,14 @@ export default {
 
     function toggleEditOrderModal() {
       showEditOrderModal.value = !showEditOrderModal.value;
+      updateData.quantity = props.order.quantity;
+      updateData.width = props.order.width;
+      updateData.height = props.order.height;
+      updateData.price = props.order.price === -1 ? 0 : props.order.price;
+      updateData.remarks = props.order.remarks;
+      updateData.eyelets = props.order.eyelets;
+      updateData.diecut = props.order.diecut;
+
       updateData.frameOption = props.order.frameOption;
       updateData.frameFinishing = props.order.frameFinishing;
       updateData.frameEdges = props.order.frameEdges;
@@ -750,6 +766,7 @@ export default {
 
         if (
           validated &&
+          state.qtyValidation &&
           state.priceValidation &&
           state.dimValidation &&
           state.frameEdgesValidation &&
@@ -783,8 +800,8 @@ export default {
 
             const orderUpdate = {
               quantity: updateData.quantity,
-              width: updateData.width,
-              height: updateData.height,
+              width: parseFloat(parseFloat(updateData.width).toFixed(2)),
+              height: parseFloat(parseFloat(updateData.height).toFixed(2)),
               price: parseFloat(parseFloat(updateData.price).toFixed(2)),
               remarks: updateData.remarks,
             };
@@ -890,7 +907,14 @@ export default {
       } else {
         state.eyeletsValidation = false;
       }
-      console.log(state.eyeletsValidation);
+    }
+
+    function isValidQty(quantity) {
+      if (/^[0-9]*$/.test(quantity) ? true : false) {
+        state.qtyValidation = true;
+      } else {
+        state.qtyValidation = false;
+      }
     }
 
     return {
@@ -900,6 +924,7 @@ export default {
       showEditOrderModal,
       onChangeHeightWidth,
       isValidPrice,
+      isValidQty,
       isValidEyelets,
       updateOrder,
       toggleImageModal,
