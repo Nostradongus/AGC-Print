@@ -22,7 +22,7 @@
 
       <p
         class="manrope-bold left-0 -top-3.5 text-xl pt-3 px-8 text-red"
-        v-if="!state.allUsers.length && state.search !== ''"
+        v-if="state.allUsers != null && !state.allUsers.length && state.search !== ''"
       >
         No users with "{{ state.search }}" username.
       </p>

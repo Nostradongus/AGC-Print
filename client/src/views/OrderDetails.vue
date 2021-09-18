@@ -699,6 +699,32 @@
             :to="`/payment-order/${route.params.id}`"
             >Pay Here</router-link
           >
+          
+          <router-link
+            v-if="
+              state.order.price !== -1 &&
+              state.order.status !== 'Complete' &&
+              state.order.status !== 'Pending' &&
+              state.order.status !== 'Cancelled' && 
+              state.isStaff
+            "
+            class="
+              manrope-regular
+              text-white
+              inline-block
+              transition
+              duration-300
+              ease-in-out
+              text-center text-lg
+              hover:bg-link-water hover:text-primary-blue
+              mx-8 w-40
+              p-3
+              rounded-xl
+              bg-primary-blue
+            "
+            :to="`/payment-order/${route.params.id}`"
+            >View Payments</router-link
+          >
         </div>
       </div>
     </page-header>

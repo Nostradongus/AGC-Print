@@ -39,10 +39,7 @@ const PaymentService = {
       filePath: payment.filePath,
       dateUploaded: payment.dateUploaded,
     });
-    newPayment.save();
-
-    // return back new payment receipt data to the client
-    return newPayment;
+    await newPayment.save();
   },
 
   // this method verifies the payment receipt to the database
