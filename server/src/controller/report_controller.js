@@ -301,7 +301,7 @@ const reportController = {
         service: 'gmail',
         auth: {
           // e-mail address of company 'bot'
-          user: 'sweng.nodemailer@gmail.com',
+          user: '"AGC Print" sweng.nodemailer@gmail.com',
           // password for the e-mail account
           pass: '1234567890Test',
         },
@@ -310,7 +310,7 @@ const reportController = {
       // send mail with defined transport object
       const emailFormat = await transporter.sendMail({
         // sender's e-mail address
-        from: 'sweng.nodemailer@gmail.com',
+        from: '"AGC Print" <sweng.nodemailer@gmail.com>',
         // receiver's e-mail address
         to: clientData.email,
         // subject of the e-mail
