@@ -440,7 +440,7 @@
               >
                 <div class="flex flex-row w-full items-center">
                   <p v-if="state.worker.username !== note.staffUsername" class="manrope-extrabold text-md text-primary-blue flex-1">
-                    {{ state.worker.username }} ({{ state.worker.firstname }} {{ state.worker.lastname }})
+                    {{ note.staffUsername }} ({{ note.staffFirstname }} {{ note.staffLastname }})
                   </p>
                   <p v-if="state.worker.username === note.staffUsername" class="manrope-extrabold text-md text-primary-blue flex-1">
                     Me
