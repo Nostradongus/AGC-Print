@@ -285,14 +285,20 @@ export default {
         state.submitted = true;
 
         try {
+          // get initial order set data
+          const orderSet = await api.getOrderSet(props.payment.orderSetId);
+
           // verify payment receipt
           await api.verifyPayment(props.payment.id, paymentData);
 
           // get updated payment
           const payment = await api.getPayment(props.payment.id);
 
-          // get updated order set
-          const orderSet = await api.getOrderSet(payment.data.orderSetId);
+          // get remaining balance of order set
+          let balance = orderSet.data.remBalance - payment.data.amount;
+          if (balance < 0) {
+            balance = 0;
+          }
 
           // create updated data object
           const data = {
@@ -301,16 +307,15 @@ export default {
             amount: payment.data.amount,
             confirmed: payment.data.confirmed,
             dateConfirmed: payment.data.dateConfirmed,
-            paidDownPayment: orderSet.data.paidDownPayment,
-            remBalance: orderSet.data.remBalance,
+            paidDownPayment: true,
+            remBalance: balance,
           };
 
           // update UI of parent component with updated payment data
           emit('paymentVerify', data);
           toggleVerifyPaymentModal();
 
-          // TODO: fix sending email for downpayment
-          console.log(orderSet.data.paidDownPayment);
+          // send email if down payment is recently paid
           if (!orderSet.data.paidDownPayment) {
             const emailData = {
               name: orderSet.data.name,

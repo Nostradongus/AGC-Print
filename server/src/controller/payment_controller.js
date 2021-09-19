@@ -238,7 +238,6 @@ const paymentController = {
       if (!orderSet.paidDownPayment) {
         if (orderSet.price * 0.5 - verifiedPayment.amount <= 0) {
           orderSet.paidDownPayment = true;
-          console.log(orderSet.paidDownPayment);
         }
       }
 

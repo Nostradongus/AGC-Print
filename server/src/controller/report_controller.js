@@ -238,7 +238,7 @@ const reportController = {
 
       // create staff note object
       const staffNote = {
-        id: req.body.noteId,
+        id: req.body.id,
         note: req.body.note,
         staffUsername: req.body.staffUsername,
         staffFirstname: req.body.staffFirstname,

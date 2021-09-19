@@ -19,7 +19,7 @@
                 text-2xl
                 "
             >
-                View Notes
+                Notes
             </h1>
             <i @click="close" class="far fa-times-circle"></i>
 

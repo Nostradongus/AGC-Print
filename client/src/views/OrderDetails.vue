@@ -774,6 +774,7 @@ import { useStore } from 'vuex';
 import { reactive, onMounted, ref } from 'vue';
 import useVuelidate from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
+import uniqid from 'uniqid';
 import OrderCard from '../components/OrderCard.vue';
 import EditOrderSetModal from '../components/Modals/EditOrderSetModal.vue';
 import ResolveReportModal from '../components/Modals/ResolveReportModal.vue';
@@ -900,14 +901,12 @@ export default {
         try {
           // create staff note object
           const staffNote = {
-            noteId: state.report.notes.length,
+            id: uniqid(),
             note: reportData.note,
             staffUsername: state.worker.username,
             staffFirstname: state.worker.firstname,
             staffLastname: state.worker.lastname
           };
-
-          console.log(staffNote.noteId);
 
           // add note to report in the database
           const result = await api.addNote(state.report.id, staffNote);
