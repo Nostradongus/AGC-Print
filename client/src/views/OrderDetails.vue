@@ -1053,6 +1053,7 @@ export default {
     async function isStaff() {
       try {
         const staff = JSON.parse(localStorage.getItem('worker'));
+
         if (staff) {
           state.isStaff = true;
         }

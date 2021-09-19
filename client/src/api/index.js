@@ -45,13 +45,8 @@ export const updateOrder = (id, data) =>
   API.patch(`/order/update/order/${id}`, data);
 export const updateOrderSetReported = (id, status) =>
   API.patch(`/order/update/orderSet/reported/${id}`, status);
-
-export const sendEmailOrderPlaced = (id, name, email) =>
-  API.post('/order/cart/confirm/sendEmailOrderPlaced', {
-    id: id,
-    name: name,
-    email: email,
-  });
+export const sendEmailOrderPlaced = (emailData) =>
+  API.post('/order/cart/confirm/sendEmailOrderPlaced', emailData);
 
 // user data api methods
 export const getUsers = () => API.get('/users');

@@ -89,7 +89,7 @@ const workerController = {
       // send mail with defined transport object
       const emailFormat = await transporter.sendMail({
         // sender's e-mail address
-        from: 'sweng.nodemailer@gmail.com',
+        from: '"AGC Print" <sweng.nodemailer@gmail.com>',
         // receiver's e-mail address
         to: clientData.email,
         // subject of the e-mail
@@ -157,7 +157,7 @@ const workerController = {
       // send mail with defined transport object
       const emailFormat = await transporter.sendMail({
         // sender's e-mail address
-        from: 'sweng.nodemailer@gmail.com',
+        from: '"AGC Print" <sweng.nodemailer@gmail.com>',
         // receiver's e-mail address
         to: clientData.email,
         // subject of the e-mail
@@ -217,7 +217,7 @@ const workerController = {
       // send mail with defined transport object
       const emailFormat = await transporter.sendMail({
         // sender's e-mail address
-        from: 'sweng.nodemailer@gmail.com',
+        from: '"AGC Print" <sweng.nodemailer@gmail.com>',
         // receiver's e-mail address
         to: clientData.email,
         // subject of the e-mail

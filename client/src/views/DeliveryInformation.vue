@@ -147,7 +147,13 @@
 
           <p
             v-else
-            class="mb-8 mt-14 px-2 manrope-bold text-primary-blue text-lg text-left"
+            class="
+              mb-8
+              mt-14
+              px-2
+              manrope-bold
+              text-primary-blue text-lg text-left
+            "
           >
             Submitting details, please wait...
           </p>
@@ -207,10 +213,14 @@ export default {
 
     // to check if key inputted in first name and last name is a letter
     function isLetter(evt) {
-      evt = (evt) ? evt : window.event;
-      var charCode = (evt.which) ? evt.which : evt.keyCode;
+      evt = evt ? evt : window.event;
+      var charCode = evt.which ? evt.which : evt.keyCode;
       // if uppercase / lowercase letter or space
-      if ((charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122) || charCode === 32) {
+      if (
+        (charCode >= 65 && charCode <= 90) ||
+        (charCode >= 97 && charCode <= 122) ||
+        charCode === 32
+      ) {
         return true;
       } else {
         evt.preventDefault();
@@ -219,14 +229,18 @@ export default {
 
     // to check if first name or last name does not contain numbers and special characters
     function isName(name) {
-      const specialChars = "<>@!#$%^&*()_+[]{}?:;|'\"\\,./~`-=";
-      const numbers = "1234567890";
+      const specialChars = '<>@!#$%^&*()_+[]{}?:;|\'"\\,./~`-=';
+      const numbers = '1234567890';
 
       // default value
       state.nameValidation = true;
 
       // check if name contains special characters
-      for (let ctr = 0; ctr < specialChars.length && state.nameValidation; ctr++) {
+      for (
+        let ctr = 0;
+        ctr < specialChars.length && state.nameValidation;
+        ctr++
+      ) {
         if (name.indexOf(specialChars[ctr]) > -1) {
           state.nameValidation = false;
           return false;
@@ -272,8 +286,14 @@ export default {
         // reset field
         state.submitted = false;
 
+        const emailData = {
+          id: res.data.id,
+          name: data.name,
+          email: data.email,
+        };
+
         // send email to client
-        await api.sendEmailOrderPlaced(res.data.id, data.name, data.email);
+        await api.sendEmailOrderPlaced(emailData);
       }
     }
 
