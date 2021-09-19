@@ -41,7 +41,7 @@ const ReportService = {
   },
 
   // this method adds a staff note to the report data's notes in the database
-  addNote: async (data) =>
+  updateNote: async (data) =>
     Report.updateOne({ id: data.id }, { notes: data.notes }),
 
   // this method updates the status of an existing report data from the database

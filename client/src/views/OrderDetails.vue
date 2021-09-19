@@ -376,8 +376,7 @@
                 class="
                   manrope-bold
                   text-justify text-md
-                  w-auto
-                  h-72
+                  w-auto h-72
                   border-2
                   rounded-md
                   border-primary-blue
@@ -425,23 +424,37 @@
                 No notes created yet for this report.
               </p>
             </div>
-            <div v-else class="overflow-y-scroll mt-7 h-96">
+            <div v-else class="overflow-y-scroll mt-7 max-h-screen">
               <div
                 v-for="note in state.report.notes"
                 :key="note"
                 class="
+                  flex flex-col
                   p-3
                   mt-4
                   bg-light-blue
                   rounded-xl
                   order-card
-                  text-justify
-                  manrope-bold
-                  break-all
-                  whitespace-pre-line
+                  items-start
                 "
               >
-                {{ note }}
+                <div class="flex flex-row w-full items-center">
+                  <p v-if="state.worker.username !== note.staffUsername" class="manrope-extrabold text-md text-primary-blue flex-1">
+                    {{ state.worker.username }} ({{ state.worker.firstname }} {{ state.worker.lastname }})
+                  </p>
+                  <p v-if="state.worker.username === note.staffUsername" class="manrope-extrabold text-md text-primary-blue flex-1">
+                    Me
+                  </p>
+                  <i 
+                    v-if="state.worker.username === note.staffUsername"
+                    @click="deleteNote(note)" 
+                    class="far fa-times-circle m-0 pr-1 text-lg text-red cursor-pointer hover:text-primary-blue"
+                  ></i>
+                </div>
+                <hr class="note-border mb-1 w-full" />
+                <p class="manrope-bold text-justify break-all whitespace-pre-line">
+                  {{ note.note }}
+                </p>
               </div>
             </div>
           </ViewNotesModal>
@@ -885,29 +898,57 @@ export default {
 
       if (validated) {
         try {
-          // add note to report in the database
-          const result = await api.addNote(state.report.id, {
+          // create staff note object
+          const staffNote = {
+            noteId: state.report.notes.length,
             note: reportData.note,
-          });
+            staffUsername: state.worker.username,
+            staffFirstname: state.worker.firstname,
+            staffLastname: state.worker.lastname
+          };
+
+          console.log(staffNote.noteId);
+
+          // add note to report in the database
+          const result = await api.addNote(state.report.id, staffNote);
 
           // if successful, update note list in UI
           if (result.status === 204) {
             // add new note to notes list
-            state.report.notes.push(reportData.note);
+            state.report.notes.push(staffNote);
 
             // update view notes empty message, if empty before
             if (reportData.emptyNotes) {
               reportData.emptyNotes = false;
             }
 
-            // reset add note text field
-            reportData.note = '';
-
             // close modal
             toggleAddNoteModal();
           }
         } catch (err) {
           console.log(err);
+        }
+      }
+    }
+
+    async function deleteNote(staffNote) {
+      // delete note from report in the database
+      const result = await api.removeNote(state.report.id, { noteId: staffNote.id });
+
+      // if successful, update note list in UI 
+      if (result.status === 204) {
+        // delete note from notes list 
+        const tempNotes = [];
+        for (let ctr = 0; ctr < state.report.notes.length; ctr++) {
+          if (state.report.notes[ctr].id !== staffNote.id) {
+            tempNotes.push(state.report.notes[ctr]);
+          }
+        }
+        state.report.notes = tempNotes;
+
+        // check if notes list becomes empty after deletion
+        if (state.report.notes.length === 0) {
+          reportData.emptyNotes = true;
         }
       }
     }
@@ -940,7 +981,7 @@ export default {
     }
 
     if (JSON.parse(localStorage.getItem('user')) == null) {
-      state.worker = store.state.worker.worker.username;
+      state.worker = store.state.worker.worker;
     }
 
     onMounted(() => {
@@ -1082,6 +1123,7 @@ export default {
       resolveReport,
       cancelReport,
       addNote,
+      deleteNote,
       showEditOrderSetModal,
       showResolveReportModal,
       showCancelReportModal,
@@ -1183,6 +1225,13 @@ export default {
   @apply border-light-blue;
   @apply bg-light-blue;
   border-width: 2.5px;
+}
+
+.note-border {
+  border-style: solid;
+  @apply border-link-water;
+  @apply bg-link-water;
+  border-width: 1px;
 }
 
 .dowload-btn {

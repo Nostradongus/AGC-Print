@@ -94,6 +94,13 @@ router.delete(
   reportController.deleteReport
 );
 
+// route for delete an existing staff note in a report from the database
+router.patch(
+  '/note/remove/:id',
+  token.authenticateToken,
+  reportController.removeNote
+);
+
 // route for adding new staff to a report from the database
 router.patch('/note/:id', token.authenticateToken, reportController.addNote);
 

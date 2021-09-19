@@ -236,8 +236,17 @@ const reportController = {
       // get report data from database
       const report = await ReportService.getReport({ id: req.params.id });
 
+      // create staff note object
+      const staffNote = {
+        id: req.body.noteId,
+        note: req.body.note,
+        staffUsername: req.body.staffUsername,
+        staffFirstname: req.body.staffFirstname,
+        staffLastname: req.body.staffLastname,
+      };
+
       // add new staff note to report data
-      report.notes.push(req.body.note);
+      report.notes.push(staffNote);
 
       // create report update object
       const data = {
@@ -246,7 +255,39 @@ const reportController = {
       };
 
       // update report from database with new staff note
-      const result = await ReportService.addNote(data);
+      const result = await ReportService.updateNote(data);
+
+      // send result back to the client to indicate success
+      return res.status(204).json(result);
+    } catch (err) {
+      // if error has occurred, send server error status and message
+      return res.status(500).json({ message: 'Server Error' });
+    }
+  },
+
+  // report controller method to remove an existing staff note in a report from the database
+  removeNote: async (req, res) => {
+    try {
+      // get report data from database
+      const report = await ReportService.getReport({ id: req.params.id });
+
+      // delete existing staff note from report data
+      const tempNotes = [];
+      for (let ctr = 0; ctr < report.notes.length; ctr++) {
+        if (report.notes[ctr].id !== req.body.noteId) {
+          tempNotes.push(report.notes[ctr]);
+        }
+      }
+      report.notes = tempNotes;
+
+      // create report update object
+      const data = {
+        id: req.params.id,
+        notes: report.notes,
+      };
+
+      // update report from database with updated staff notes
+      const result = await ReportService.updateNote(data);
 
       // send result back to the client to indicate success
       return res.status(204).json(result);

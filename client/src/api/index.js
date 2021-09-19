@@ -64,6 +64,7 @@ export const getOrderSetReport = (id) =>
   API.get(`/report/details/orderSet/${id}`);
 export const addReport = (report) => API.post('/report/add/new', report);
 export const addNote = (id, data) => API.patch(`/report/note/${id}`, data);
+export const removeNote = (id, data) => API.patch(`/report/note/remove/${id}`, data);
 export const deleteReport = (id) => API.delete(`/report/delete/${id}`);
 export const updateReportStatus = (id, data) =>
   API.patch(`/report/update/${id}`, data);
