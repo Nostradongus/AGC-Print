@@ -25,7 +25,7 @@
       >
         <div>
           <div class="mb-2">
-            <h3 class="manrope-bold">Order Set Number:</h3>
+            <h3 class="manrope-bold">Order Set #:</h3>
             <p>{{ state.order.id }}</p>
           </div>
           <div class="mb-2">

@@ -140,7 +140,7 @@ export default {
         const filename = props.payment.filename.substring(props.payment.filename.indexOf('/') + 1) + fileType;
 
         // download file
-        fileDownload(response.data + filename);
+        fileDownload(response.data, filename);
       });
     }
     return { showModal, toggleModal, downloadImg };

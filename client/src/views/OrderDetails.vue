@@ -438,6 +438,7 @@
                   text-justify
                   manrope-bold
                   break-all
+                  whitespace-pre-line
                 "
               >
                 {{ note }}
@@ -899,6 +900,9 @@ export default {
               reportData.emptyNotes = false;
             }
 
+            // reset add note text field
+            reportData.note = '';
+
             // close modal
             toggleAddNoteModal();
           }
@@ -907,6 +911,7 @@ export default {
         }
       }
     }
+
     const updateRules = {
       email: { email },
       contactNo: { numeric, minLength: minLength(9), maxLength: maxLength(10) },

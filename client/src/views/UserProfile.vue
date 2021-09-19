@@ -144,10 +144,17 @@
         </div>
 
         <p
-          class="manrope-bold left-0 -top-3.5 text-xl pt-3 px-8 text-red"
-          v-if="state.shownOrders != null && state.shownOrders.length == 0"
+          class="manrope-bold left-0 -top-3.5 text-xl mb-8 pt-3 px-8 text-red"
+          v-if="state.shownOrders != null && !state.shownOrders.length && state.search === ''"
         >
           No orders in "{{ state.status }}" status for now.
+        </p>
+
+        <p
+          class="manrope-bold left-0 -top-3.5 text-xl mb-8 pt-3 px-8 text-red"
+          v-if="state.shownOrders != null && !state.shownOrders.length && state.search !== ''"
+        >
+          No orders with "{{ state.search }}" order ID.
         </p>
 
         <p
@@ -156,6 +163,7 @@
         >
           This user has not yet made any orders.
         </p>
+
         <div class="overflow-y-auto max-h-screen scrollbar-hidden">
           <OrderSetCard
             v-for="order in state.shownOrders"

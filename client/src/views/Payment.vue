@@ -55,7 +55,7 @@
               <div class="grid grid-cols-2">
                 <div>
                   <p class="text-lg manrope-regular">
-                    Order Set Number: {{ state.order.id }}
+                    Order Set #: {{ state.order.id }}
                   </p>
                   <p class="text-lg manrope-regular">
                     Total Project Cost: ₱ {{ state.order.price }}
@@ -140,7 +140,7 @@
               "
               class="text-red manrope-bold text-left text-xs mt-2"
             >
-              File must be in .jpg, .png, or .pdf format.
+              File must be in .jpg or .png format.
             </p>
             <p
               v-if="state.paymentSubmitted"
@@ -180,6 +180,11 @@
             </div>
           </div>
         </div>
+        
+        <p v-if="!state.empty && state.payment == null && state.worker != null" class="text-red manrope-bold text-center text-xl">
+          No payment receipts uploaded yet by user.
+        </p>
+
         <div
           v-if="state.payment != null"
           class="overflow-y-auto max-h-screen pt-2 pb-2"
@@ -294,7 +299,7 @@ export default {
         state.paymentFile = file.value.files[0];
 
         // valid file type extensions
-        const extensions = ['png', 'jpg', 'jpeg', 'pdf'];
+        const extensions = ['png', 'jpg', 'jpeg'];
 
         // get uploaded file's extension
         const fileExtension = state.paymentFile.name.substring(

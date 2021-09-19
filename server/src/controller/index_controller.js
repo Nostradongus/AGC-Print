@@ -170,12 +170,20 @@ const indexController = {
 
         // add new user to database
       } else {
+        // capitalize first letter of first name and last name
+        const firstname =
+          req.body.firstname.charAt(0).toUpperCase() +
+          req.body.firstname.slice(1);
+        const lastname =
+          req.body.lastname.charAt(0).toUpperCase() +
+          req.body.lastname.slice(1);
+
         // create new user object
         const user = {
           username: req.body.username.toLowerCase(),
           password: null,
-          firstname: req.body.firstname,
-          lastname: req.body.lastname,
+          firstname: firstname,
+          lastname: lastname,
           contactNo: req.body.contactNo,
           email: req.body.email,
         };
