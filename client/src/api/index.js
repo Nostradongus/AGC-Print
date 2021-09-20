@@ -41,6 +41,8 @@ export const deleteOrderSet = (id) =>
   API.delete(`/order/delete/orderSet/${id}`);
 export const updateOrderSet = (id, data) =>
   API.patch(`/order/update/orderSet/${id}`, data);
+export const setDelivery = (id, data) =>
+  API.patch(`/order/update/orderSet/delivery/${id}`, data);
 export const updateOrder = (id, data) =>
   API.patch(`/order/update/order/${id}`, data);
 export const updateOrderSetReported = (id, status) =>

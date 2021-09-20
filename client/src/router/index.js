@@ -165,7 +165,7 @@ const routes = [
     },
   },
   {
-    path: '/delivery-schedule',
+    path: '/delivery-schedule/:id',
     name: 'DeliverySchedule',
     component: DeliverySchedule,
     meta: {

@@ -89,9 +89,9 @@ const OrderSetSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    // when the order was shipped
-    dateShipped: {
-      type: String,
+    // set delivery schedule of the order set
+    deliverySched: {
+      type: Object,
       default: null,
     },
   },

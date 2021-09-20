@@ -8,7 +8,29 @@
       >
         Loading data, please wait...
       </p>
+
       <div class="p-8" v-if="!state.empty">
+        <div
+          v-if="state.order.status === 'Ready for Delivery' && state.order.deliverySched"
+          class="flex flex-col"
+        > 
+          <div class="flex flex-row">
+            <h1 class="manrope-extrabold text-2xl text-primary-blue">
+              To Be Delivered On:
+            </h1>
+            <h1 class="manrope-extrabold text-2xl ml-2">
+              {{ state.order.deliverySched.date }} at {{ state.order.deliverySched.time }}
+            </h1>
+          </div>
+          <div v-if="state.order.deliverySched.remarks" class="flex flex-row mt-3">
+            <p class="manrope-bold text-xl text-primary-blue">Remarks:</p>
+            <br />
+            <p class="manrope-bold text-xl pl-1 text-justify">
+              {{ state.order.deliverySched.remarks }}
+            </p>
+          </div>
+          <hr class="report-border mt-3 mb-5" />
+        </div>
         <!-- Order Details -->
         <div class="flex">
           <div class="flex-1">
@@ -703,7 +725,7 @@
               ease-in-out
               text-center text-lg
               hover:bg-link-water hover:text-primary-blue
-              mx-8
+              mr-8 ml-4
               p-3
               rounded-xl
               bg-primary-blue
@@ -729,13 +751,36 @@
               text-center text-lg
               hover:bg-link-water hover:text-primary-blue
               w-32
-              mx-8
+              mr-8 ml-4
               p-3
               rounded-xl
               bg-primary-blue
             "
             :to="`/payment-order/${route.params.id}`"
             >Pay Here</router-link
+          >
+          <router-link
+            v-if="
+              state.order.price !== -1 &&
+              state.order.status === 'Ready for Delivery' &&
+              !state.order.deliverySched &&
+              !state.isStaff
+            "
+            class="
+              manrope-regular
+              text-white
+              inline-block
+              transition
+              duration-300
+              ease-in-out
+              text-center text-lg
+              hover:bg-link-water hover:text-primary-blue
+              mr-8 ml-4 p-3 w-44
+              rounded-xl
+              bg-primary-blue
+            "
+            :to="`/delivery-schedule/${route.params.id}`"
+            >Schedule Delivery</router-link
           >
           
           <router-link

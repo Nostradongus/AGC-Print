@@ -157,6 +157,13 @@ router.patch(
   orderController.updateOrderSet
 );
 
+// route for setting (updating) the delivery schedule of an order set from the database
+router.patch(
+  '/update/orderSet/delivery/:id',
+  token.authenticateToken,
+  orderController.setDelivery
+);
+
 // route for updating an order from the database
 router.patch(
   '/update/order/:id',

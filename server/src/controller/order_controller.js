@@ -478,6 +478,41 @@ const orderController = {
     }
   },
 
+  // order controller method to set delivery schedule for an order set from the database
+  setDelivery: async (req, res) => {
+    try {
+      // format time
+      let formattedTime = req.body.time;
+      if (parseInt(formattedTime.split(':')[0]) < 12) {
+        formattedTime += ' AM';
+      } else if (parseInt(formattedTime.split(':')[0]) === 12) {
+        formattedTime += ' NN';
+      } else {
+        formattedTime += ' PM';
+      }
+
+      // set delivery schedule data object
+      const data = {
+        deliverySched: {
+          date: req.body.date,
+          time: formattedTime,
+          remarks: null,
+        },
+      };
+
+      // if user has remarks
+      if (typeof req.body.remarks !== 'undefined' && req.body.remarks) {
+        data.deliverySched.remarks = req.body.remarks;
+      }
+
+      // set delivery schedule for order set from the database
+      const result = await OrderService.updateOrderSet(req.params.id, data);
+      return res.status(204).json(result);
+    } catch (err) {
+      return res.status(500).json({ message: 'Server Error' });
+    }
+  },
+
   // order controller method to update an order from the database
   updateOrder: async (req, res) => {
     try {

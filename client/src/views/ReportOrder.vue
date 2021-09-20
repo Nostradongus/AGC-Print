@@ -47,7 +47,7 @@
       </div>
       <!-- Report Form -->
       <p v-if="state.order" class="text-red manrope-bold text-center text-sm">
-        You may only submit a report once, multiple file uploads is allowed (Use
+        You can only submit a report once, multiple file uploads is allowed (Use
         CTRL or SHIFT key while choosing files).
       </p>
       <form
