@@ -50,7 +50,7 @@ const routes = [
     name: 'Order',
     component: Order,
     meta: {
-      requiresAuth: true,
+      requiresUser: true,
     },
   },
   {
@@ -58,7 +58,7 @@ const routes = [
     name: 'ViewCart',
     component: ViewCart,
     meta: {
-      requiresAuth: true,
+      requiresUser: true,
     },
   },
   {
@@ -82,7 +82,7 @@ const routes = [
     name: 'DeliveryInformation',
     component: DeliveryInformation,
     meta: {
-      requiresAuth: true,
+      requiresUser: true,
     },
   },
   {
@@ -90,7 +90,7 @@ const routes = [
     name: 'OrderConfirmed',
     component: OrderConfirmed,
     meta: {
-      requiresAuth: true,
+      requiresUser: true,
     },
   },
   {
@@ -106,7 +106,7 @@ const routes = [
     name: 'MyOrders',
     component: OrderHistory,
     meta: {
-      requiresAuth: true,
+      requiresUser: true,
     },
   },
   {
@@ -122,7 +122,7 @@ const routes = [
     name: 'StaffViewOrder',
     component: StaffViewOrder,
     meta: {
-      requiresAuth: true,
+      requiresWorker: true,
     },
   },
   {
@@ -130,7 +130,7 @@ const routes = [
     name: 'StaffViewReport',
     component: StaffViewReport,
     meta: {
-      requiresAuth: true,
+      requiresWorker: true,
     },
   },
   {
@@ -138,7 +138,7 @@ const routes = [
     name: 'StaffViewPayment',
     component: StaffViewPayment,
     meta: {
-      requiresAuth: true,
+      requiresWorker: true,
     },
   },
   {
@@ -154,7 +154,7 @@ const routes = [
     name: 'StaffViewUser',
     component: StaffViewUser,
     meta: {
-      requiresAuth: true,
+      requiresWorker: true,
     },
   },
   {
@@ -178,7 +178,7 @@ const routes = [
     name: 'DeliverySchedule',
     component: DeliverySchedule,
     meta: {
-      requiresAuth: true,
+      requiresUser: true,
     },
   },
 ];
@@ -190,6 +190,8 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
+  const requiresUser = to.matched.some((record) => record.meta.requiresUser);
+  const requiresWorker = to.matched.some((record) => record.meta.requiresWorker);
   const hideForAuth = to.matched.some((record) => record.meta.hideForAuth);
   const user = localStorage.getItem('user');
   const worker = localStorage.getItem('worker');
@@ -199,9 +201,27 @@ router.beforeEach((to, from, next) => {
     } else {
       next({ name: 'Login' });
     }
-  } else if (hideForAuth) {
-    if (user != null || worker != null) {
+  } else if (requiresUser) {
+    if (user != null) {
+      next();
+    } else if (worker != null) {
+      next({ name: 'StaffViewOrder' });
+    } else {
+      next({ name: 'Login' });
+    }
+  } else if (requiresWorker) {
+    if (worker != null) {
+      next();
+    } else if (user != null) {
       next({ name: 'Order' });
+    } else {
+      next({ name: 'StaffLogin' });
+    }
+  } else if (hideForAuth) {
+    if (user != null) {
+      next({ name: 'Order' });
+    } else if (worker != null) {
+      next({ name: 'StaffViewOrder' });
     } else {
       next();
     }
