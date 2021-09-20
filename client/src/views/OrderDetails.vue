@@ -287,6 +287,7 @@
         <div v-if="state.report != null" class="mb-2">
           <!-- resolve report view modal -->
           <ResolveReportModal
+            v-if="state.worker != null"
             :resolveReport="showResolveReportModal"
             @close="toggleResolveReportModal"
           >
@@ -329,6 +330,7 @@
 
           <!-- cancel report view modal -->
           <CancelReportModal
+            v-if="state.worker != null"
             :cancelReport="showCancelReportModal"
             @close="toggleCancelReportModal"
           >
@@ -370,7 +372,7 @@
           </CancelReportModal>
 
           <!-- add note view modal -->
-          <AddNoteModal :addNote="showAddNoteModal" @close="toggleAddNoteModal">
+          <AddNoteModal v-if="state.worker != null" :addNote="showAddNoteModal" @close="toggleAddNoteModal">
             <div class="flex flex-col mt-10">
               <textarea
                 class="
@@ -413,6 +415,7 @@
 
           <!-- view notes view modal -->
           <ViewNotesModal
+            v-if="state.worker != null"
             :viewNotes="showViewNotesModal"
             @close="toggleViewNotesModal"
           >
@@ -424,7 +427,7 @@
                 No notes created yet for this report.
               </p>
             </div>
-            <div v-else class="overflow-y-scroll mt-7 max-h-screen">
+            <div v-else class="overflow-y-scroll scrollbar-hidden mt-7 max-h-screen">
               <div
                 v-for="note in state.report.notes"
                 :key="note"
