@@ -7,4 +7,6 @@
 - Developers: Joshue Jadie, Paolo Espiritu 
 - QAs: Jason Alon-alon, Julian Li
 
-README to be updated soon
+CSSWENG S14 Team 6 Project
+
+For: AGC Print, Makati City
