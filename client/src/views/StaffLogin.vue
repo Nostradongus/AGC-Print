@@ -105,8 +105,8 @@ export default {
             if (result.data.flag == 0) {
                 state.error = true;
             } else if (result.data.flag == 1) {
-            store.dispatch('loginWorker', result.data);
-            router.push({ name: `StaffViewOrder` });
+                store.dispatch('loginWorker', result.data);
+                router.push({ name: `StaffViewOrder` });
             }
             // else router.push({ name: `Error` });
         } catch (err) {
