@@ -12,6 +12,7 @@ import OrderConfirmed from '../views/OrderConfirmed.vue';
 import StaffViewOrder from '../views/StaffViewOrder.vue';
 import StaffViewReport from '../views/StaffViewReport.vue';
 import StaffViewPayment from '../views/StaffViewPayment.vue';
+import StaffViewDelivery from '../views/StaffViewDelivery.vue';
 import StaffViewUser from '../views/StaffViewUser.vue';
 import Payment from '../views/Payment.vue';
 import ReportOrder from '../views/ReportOrder.vue';
@@ -138,6 +139,14 @@ const routes = [
     component: StaffViewPayment,
     meta: {
       requiresWorker: true,
+    },
+  },
+  {
+    path: '/view-delivery-list',
+    name: 'StaffViewDelivery',
+    component: StaffViewDelivery,
+    meta: {
+      requiresAuth: true,
     },
   },
   {
