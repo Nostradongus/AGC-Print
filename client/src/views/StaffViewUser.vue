@@ -1,9 +1,9 @@
 <template>
   <div>
     <side-bar />
-    <page-header title="View Users">
+    <page-header title="Users">
       <div
-        v-if="!state.empty"
+        v-if="state.empty != null && !state.empty"
         class="flex flex-row justify-start mx-8 my-8 content-end"
       >
         <h1
@@ -36,9 +36,16 @@
 
       <p
         class="manrope-bold text-2xl text-center text-primary-blue mt-8"
-        v-if="state.empty"
+        v-if="state.empty == null"
       >
         Loading data, please wait...
+      </p>
+
+      <p
+        class="manrope-bold left-0 -top-3.5 text-xl pt-6 px-8 text-red"
+        v-if="state.empty != null && state.empty"
+      >
+        There are no users yet.
       </p>
 
       <p
@@ -83,7 +90,7 @@ export default {
     const state = reactive({
       users: null,
       allUsers: null,
-      empty: true,
+      empty: null,
       search: null,
     });
 
@@ -98,8 +105,8 @@ export default {
           state.empty = false;
         }
       } catch (err) {
+        state.empty = true;
         console.log(err);
-        state.empty = false;
       }
     }
 

@@ -9,14 +9,19 @@
           <div class="space-y-1 ml-3 mt-1">
             <div class="manrope-extrabold">{{order.name}}</div>
             <div class="text-sm manrope-regular">
-              <span class="text-md manrope-bold">Delivery Date:
+              <span class="text-md manrope-bold">
+                Delivery Date: {{ order.deliverySched.date }}
               </span>
             </div>
             <div class="text-sm manrope-regular">
-              <span class="text-sm manrope-bold">Delivery Time:</span>
+              <span class="text-sm manrope-bold">
+                Delivery Time: {{ order.deliverySched.time }} 
+              </span>
             </div>
-            <div class="text-sm manrope-regular">
-              <span class="text-sm manrope-bold">Remarks:</span>
+            <div v-if="order.deliverySched.remarks" class="text-sm manrope-regular">
+              <span class="text-sm manrope-bold">
+                Remarks: {{ order.deliverySched.remarks }}
+              </span>
             </div>
           </div>
         </div>
@@ -57,9 +62,6 @@ export default {
     order: {
       type: Object
     },
-  },
-  setup(props) {
-    
   },
 };
 </script>

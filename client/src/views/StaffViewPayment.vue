@@ -1,7 +1,7 @@
 <template>
   <div>
     <side-bar />
-    <page-header title="View Payments">
+    <page-header title="Payments">
       <p
         class="manrope-bold text-2xl text-center text-primary-blue mt-8"
         v-if="state.empty == null"
@@ -9,7 +9,7 @@
         Loading data, please wait...
       </p>
       <!-- display all user payments -->
-      <div class="h-full w-full" v-if="state.empty != null">
+      <div class="h-full w-full" v-if="state.empty != null && !state.empty">
         <!-- message and status filter option box -->
         <div class="flex items-end mb-5">
           <div class="flex-1">
@@ -28,7 +28,7 @@
               Payments are sorted by most recent to least recent
             </h1>
           </div>
-          <div class="flex flex-row items-center mr-10">
+          <div v-if="state.empty != null && !state.empty" class="flex flex-row items-center mr-10">
             <!-- status filter box label -->
             <label
               class="
@@ -118,8 +118,9 @@ export default {
         state.payments = state.paymentsBackup = result.data;
 
         // check if reports list is empty
-        state.empty = state.payments.length === 0;
+        state.empty = state.emptyStatus = state.payments.length === 0;
       } catch (err) {
+        state.empty = state.emptyStatus = true;
         console.log(err);
       }
     }

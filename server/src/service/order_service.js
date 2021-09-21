@@ -9,6 +9,14 @@ const OrderService = {
   getAllOrderSets: async () =>
     OrderSet.find({}).sort({ createdAt: 'descending' }),
 
+  // this method retrieves and returns all order sets from the database
+  // with scheduled deliveries, from most recent to least recent
+  getAllOrderSetsScheduled: async () =>
+    OrderSet.find({
+      deliverySched: { $exists: true, $ne: null },
+      status: 'Ready for Delivery',
+    }).sort({ createdAt: 'descending' }),
+
   // this method returns all orders of users for the worker to view according to filter option
   // from most recent to least recent
   getAllOrderSetsFiltered: async (status) =>

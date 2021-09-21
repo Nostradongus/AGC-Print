@@ -196,7 +196,7 @@ export default {
 
     const v = useVuelidate(rules, scheduleData);
 
-    // to initialize current date for date input's minimum value
+    // to initialize current date today 
     function initCurrentDate() {
       // get today's date for date input start value 
       const today = new Date();

@@ -18,6 +18,7 @@ export const signUp = (userData) => API.post('/register', userData);
 
 // order data api methods
 export const getAllOrderSets = () => API.get('/order');
+export const getAllOrderSetsScheduled = () => API.get('/order/orders/deliveries');
 export const getUserOrderSets = (username) => API.get(`/order/${username}`);
 export const getUserOrderSetsFiltered = (username, status) =>
   API.get(`/order/${username}/filter/${status}`);

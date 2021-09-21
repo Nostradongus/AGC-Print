@@ -1,7 +1,7 @@
 <template>
   <div>
     <side-bar />
-    <page-header title="View Reports">
+    <page-header title="Reports">
       <p
         class="manrope-bold text-2xl text-center text-primary-blue mt-8"
         v-if="state.empty == null"
@@ -9,7 +9,7 @@
         Loading data, please wait...
       </p>
       <!-- display all user reports -->
-      <div class="h-full w-full" v-if="state.empty != null">
+      <div class="h-full w-full" v-if="state.empty != null && !state.empty">
         <!-- message and status filter option box -->
         <div class="flex items-end mb-5">
           <div class="flex-1">
@@ -117,8 +117,9 @@ export default {
         state.reports = state.reportsBackup = result.data;
 
         // check if reports list is empty
-        state.empty = state.reports.length === 0;
+        state.empty = state.emptyStatus = state.reports.length === 0;
       } catch (err) {
+        state.empty = state.emptyStatus = true;
         console.log(err);
       }
     }
