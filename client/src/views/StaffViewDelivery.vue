@@ -57,6 +57,7 @@ export default {
             }
         }
 
+
         onBeforeMount(() => {
         // populate staff active orders page with active orders of clients
         if (store.state.worker.worker != null) {

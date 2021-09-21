@@ -14,6 +14,7 @@ import StaffViewReport from '../views/StaffViewReport.vue';
 import StaffViewPayment from '../views/StaffViewPayment.vue';
 import StaffViewDelivery from '../views/StaffViewDelivery.vue';
 import StaffViewUser from '../views/StaffViewUser.vue';
+import AdminViewStaff from '../views/AdminViewStaff.vue'
 import Payment from '../views/Payment.vue';
 import ReportOrder from '../views/ReportOrder.vue';
 import UserProfile from '../views/UserProfile.vue';
@@ -146,13 +147,21 @@ const routes = [
     name: 'StaffViewDelivery',
     component: StaffViewDelivery,
     meta: {
-      requiresAuth: true,
+      requiresWorker: true,
     },
   },
   {
     path: '/view-user-list',
     name: 'StaffViewUser',
     component: StaffViewUser,
+    meta: {
+      requiresWorker: true,
+    },
+  },
+  {
+    path: '/view-staff-list',
+    name: 'AdminViewStaff',
+    component: AdminViewStaff,
     meta: {
       requiresWorker: true,
     },
@@ -185,7 +194,7 @@ const routes = [
 
 const router = createRouter({
   history: createWebHistory(),
-  routes,
+  routes: routes,
 });
 
 router.beforeEach((to, from, next) => {

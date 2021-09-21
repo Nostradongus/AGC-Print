@@ -85,6 +85,7 @@ export const deletePayment = (id) => API.delete(`/payment/delete/${id}`);
 
 // worker data api methods
 export const getWorker = (username) => API.get(`/workers/${username}`);
+export const getWorkers = () => API.get('/workers');
 export const sendEmailProjectCost = (emailData) =>
   API.post(`/workers/sendEmailProjectCost`, emailData);
 export const sendEmailProcessingOrder = (emailData) =>

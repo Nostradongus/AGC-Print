@@ -18,6 +18,32 @@
     </div>
     <div style="height: 65%">
       <router-link
+        v-if="state.worker != null && state.isSystemAdmin == true"
+        class="
+          text-primary-blue
+          flex flex-row
+          justify-items-center
+          items-center
+          px-4
+          py-2
+          mt-2
+          text-xl
+          font-semibold
+          text-gray-900
+          rounded-lg
+          hover:bg-link-water
+          transition
+          duration-500
+          ease-in-out
+        "
+        to="/view-staff-list"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 pr-3" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+        </svg
+        >View Staff</router-link
+      >
+      <router-link
         v-if="state.username != null"
         class="
           text-primary-blue
@@ -387,12 +413,20 @@ export default {
       worker: null,
       error: false,
       loggingOut: false,
+      isSystemAdmin: false,
     });
 
     if (JSON.parse(localStorage.getItem('user')) != null) {
       state.username = store.state.user.user.username
     } else {
-      state.worker = store.state.worker.worker.username
+      if (store.state.worker.worker.isSystemAdmin == false){
+        state.worker = store.state.worker.worker.username
+        state.isSystemAdmin = false
+      } else {
+        state.worker = store.state.worker.worker.username
+        state.isSystemAdmin = true
+      }
+      
     }
 
     async function logoutUser() {

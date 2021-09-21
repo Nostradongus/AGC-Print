@@ -80,6 +80,7 @@ const indexController = {
               firstname: worker.firstname,
               lastname: worker.lastname,
               email: worker.email,
+              isSystemAdmin: worker.isSystemAdmin,
             };
             const accessToken = token.generateAccessToken(workerPayload);
 
