@@ -1,7 +1,7 @@
 <template>
     <div>
         <side-bar />
-        <page-header title="View Workers">
+        <page-header title="View Staff">
         <p
             class="manrope-bold text-2xl text-center text-primary-blue mt-8"
             v-if="state.empty == null"
@@ -217,7 +217,7 @@
           "
           @click="updateOrder"
         >
-          Add Worker
+          Add Staff
         </button>
         </AddStaffModal>
         <div v-if="!state.empty" class="flex flex-row justify-end mx-8 my-4 content-around">
@@ -265,7 +265,6 @@
 import StaffCard from '../components/StaffCard.vue';
 import SideBar from '../components/SideBar.vue';
 import PageHeader from '../components/PageHeader.vue';
-import DeliveryCard from '../components/DeliveryCard.vue';
 import AddStaffModal from '../components/Modals/AddStaffModal.vue';
 import { reactive, onBeforeMount, computed, ref } from 'vue';
 import { useStore } from 'vuex';
@@ -274,7 +273,6 @@ export default {
     name: 'AdminViewStaff',
     components: {
         StaffCard,
-        DeliveryCard,
         SideBar,
         PageHeader,
         AddStaffModal,
