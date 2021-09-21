@@ -32,7 +32,6 @@
                 name="firstname"
                 type="text"
                 class="manrope-regular input-text-field w-36 ml-4"
-                v-model.trim="staff.firstname"
               />
               <p class="ml-9 text-red manrope-bold text-left text-sm"></p>
             </div>
@@ -55,7 +54,6 @@
                   name="lastname"
                   type="text"
                   class="manrope-regular input-text-field w-36 ml-4"
-                  v-model.trim="staff.lastname"
                 />
                 <p class="ml-9 text-red manrope-bold text-left text-sm"></p>
               </div>
@@ -65,7 +63,7 @@
           <div>
             <div class="flex">
               <label
-                for="width"
+                for="username"
                 class="
                   relative
                   manrope-bold
@@ -77,11 +75,10 @@
               >
               <div>
                 <input
-                  id="width"
-                  name="width"
-                  type="number"
+                  id="username"
+                  name="username"
+                  type="text"
                   class="manrope-regular input-text-field w-48 ml-4"
-                  v-model.trim="staff.username"
                 />
                 <p class="ml-9 text-red manrope-bold text-left text-sm"></p>
               </div>
@@ -104,7 +101,6 @@
                   name="email"
                   type="email"
                   class="manrope-regular input-text-field w-60 ml-4"
-                  v-model.trim="staff.email"
                 />
                 <p class="ml-9 text-red manrope-bold text-left text-sm"></p>
               </div>
@@ -208,9 +204,16 @@
         </button>
       </AddStaffModal>
       <div
-        v-if="!state.empty"
-        class="flex flex-row justify-end mx-8 my-4 content-around"
+        v-if="state.empty != null"
+        class="flex flex-row justify-start mx-8 my-4 content-around"
       >
+        <p
+          class="manrope-bold left-0 -top-3.5 text-xl pt-4 px-1 text-red flex-1"
+          v-if="state.empty"
+        >
+          There are no staff yet.
+        </p>
+        <div v-else class="flex-1" />
         <button
           class="
             flex
@@ -303,6 +306,7 @@ export default {
           state.empty = false;
         }
       } catch (err) {
+        state.empty = true;
         console.log(err);
       }
     }
@@ -316,6 +320,7 @@ export default {
         toggleAddStaffModal();
         const res = await api.registerWorker(staff);
         state.workers.push(res);
+        console.log(res);
       } catch (err) {
         console.log(err);
       }
