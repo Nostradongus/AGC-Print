@@ -14,7 +14,7 @@
               text-primary-blue text-left text-2xl
             "
           >
-            Add Worker
+            Add Staff
           </h1>
           <i @click="close" class="far fa-times-circle"></i>
 

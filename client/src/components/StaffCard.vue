@@ -228,12 +228,12 @@
                     transition
                     duration-300
                     float-left
-                    ml-10
+                    absolute bottom-3 left-20
                     hover:bg-link-water hover:text-primary-blue
                 "
                 @click="toggleConfirmDeleteModal"
                 >
-                Cancel
+                    Cancel
                 </button>
                 <button
                 class="
@@ -241,18 +241,17 @@
                     confirm-btn
                     transition
                     duration-300
-                    float-right
-                    mr-10
+                    absolute bottom-3 right-20
                     hover:bg-red hover:text-white
                 "
                 >
-                Delete
+                    Delete
                 </button>
             </div>
         </ConfirmDeleteModal>
         <div class="flex p-1 z-0">
             <div class="my-auto pr-3 w-1/5">
-            <img src="../assets/logo.png" class="h-24 w-24" alt="" />
+            <img src="../assets/logo.png" class="h-24 w-24" alt="AGC Print Logo" />
             </div>
             <div class="flex-1">
             <div class="my-auto ml-3 mt-5">
@@ -296,7 +295,7 @@
                 "
                 @click="toggleConfirmDeleteModal"
                 >
-                Delete User
+                Delete Staff
                 </button>
             </div>
         </div>
@@ -341,8 +340,6 @@ export default {
     background-color: #0f4c81;
     color: white;
     border-radius: 20px;
-    bottom: 15px;
-    left: 25%;
     width: 30%;
     height: 2.5rem;
     vertical-align: middle;

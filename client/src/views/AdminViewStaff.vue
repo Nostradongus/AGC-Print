@@ -217,15 +217,14 @@
           "
           @click="updateOrder"
         >
-          Add Staff
+          Create Staff Account
         </button>
         </AddStaffModal>
         <div v-if="!state.empty" class="flex flex-row justify-end mx-8 my-4 content-around">
             <button
-                class=" flex
+                class="flex
                     manrope-regular
                     text-white
-                    inline-block
                     transition
                     duration-300
                     ease-in-out
@@ -245,12 +244,12 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 my-auto mt-1 ml-3" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
             </svg>
-                <span class="mt-1 ml-4 mr-4">Add Worker</span>
+                <span class="mt-1 ml-4 mr-4">Add Staff</span>
             </div>
             
             </button>
         </div>
-        <div class="overflow-y-auto max-h-screen scrollbar-hidden">
+        <div class="overflow-y-auto max-h-screen scrollbar-hidden mb-5">
             <StaffCard
                 v-for="worker in state.workers"
                 :key="worker.username"
