@@ -1,7 +1,7 @@
 <template>
     <div>
         <side-bar />
-        <page-header title="View Staff">
+        <page-header title="Staff">
         <p
             class="manrope-bold text-2xl text-center text-primary-blue mt-8"
             v-if="state.empty == null"
