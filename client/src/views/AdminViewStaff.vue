@@ -220,7 +220,14 @@
           Create Staff Account
         </button>
         </AddStaffModal>
-        <div v-if="!state.empty" class="flex flex-row justify-end mx-8 my-4 content-around">
+        <div v-if="state.empty != null" class="flex flex-row justify-start mx-8 my-4 content-around">
+            <p
+                class="manrope-bold left-0 -top-3.5 text-xl pt-4 px-1 text-red flex-1"
+                v-if="state.empty"
+            >
+                There are no staff yet.
+            </p>
+            <div v-else class="flex-1" />
             <button
                 class="flex
                     manrope-regular
@@ -290,11 +297,12 @@ export default {
                 const result = await api.getWorkers();
                 state.workers = result.data;
                 if (state.workers.length === 0) {
-                state.empty = true;
+                    state.empty = true;
                 } else {
-                state.empty = false;
+                    state.empty = false;
                 }
             } catch (err) {
+                state.empty = true;
                 console.log(err);
             }
         }
