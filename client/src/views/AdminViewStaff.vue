@@ -28,10 +28,10 @@
             >
             <div>
               <input
-                id="firstname"
                 name="firstname"
                 type="text"
                 class="manrope-regular input-text-field w-36 ml-4"
+                v-model.trim="staff.firstname"
               />
               <p class="ml-9 text-red manrope-bold text-left text-sm"></p>
             </div>
@@ -50,10 +50,10 @@
               >
               <div>
                 <input
-                  id="lastname"
                   name="lastname"
                   type="text"
                   class="manrope-regular input-text-field w-36 ml-4"
+                  v-model.trim="staff.lastname"
                 />
                 <p class="ml-9 text-red manrope-bold text-left text-sm"></p>
               </div>
@@ -75,10 +75,10 @@
               >
               <div>
                 <input
-                  id="username"
                   name="username"
                   type="text"
                   class="manrope-regular input-text-field w-48 ml-4"
+                  v-model.trim="staff.username"
                 />
                 <p class="ml-9 text-red manrope-bold text-left text-sm"></p>
               </div>
@@ -97,10 +97,10 @@
               >
               <div>
                 <input
-                  id="email"
                   name="email"
                   type="email"
                   class="manrope-regular input-text-field w-60 ml-4"
+                  v-model.trim="staff.email"
                 />
                 <p class="ml-9 text-red manrope-bold text-left text-sm"></p>
               </div>
@@ -123,7 +123,6 @@
                 </p>
                 <div>
                   <input
-                    id="contactno"
                     name="contactno"
                     type="number"
                     class="
@@ -154,7 +153,6 @@
               >
               <div>
                 <input
-                  id="password"
                   name="password"
                   type="password"
                   class="manrope-regular input-text-field w-60 ml-4"
@@ -177,7 +175,6 @@
               >
               <div>
                 <input
-                  id="confirmpassword"
                   name="confirmpassword"
                   type="password"
                   class="manrope-regular input-text-field w-60 ml-4"
@@ -253,9 +250,11 @@
       </div>
       <div class="overflow-y-auto max-h-screen scrollbar-hidden mb-5">
         <StaffCard
-          v-for="worker in state.workers"
+          v-for="(worker, index) in state.workers"
           :key="worker.username"
           :worker="worker"
+          @deleteWorker="deleteWorker(index, $event)"
+          @updateWorker="updateWorker(worker, index, $event)"
         />
       </div>
     </page-header>
@@ -317,12 +316,37 @@ export default {
 
     async function registerWorker() {
       try {
+        staff.contactNo = `63${staff.contactNo}`;
         toggleAddStaffModal();
         const res = await api.registerWorker(staff);
-        state.workers.push(res);
-        console.log(res);
+        if (res.status == 201) {
+          state.workers.push(res.data);
+        }
+
+        console.log(res.error);
+      } catch (err) {
+        console.log(err.response);
+      }
+    }
+
+    async function deleteWorker(index, username) {
+      try {
+        await api.deleteWorker(username);
+        state.workers.splice(index, 1);
       } catch (err) {
         console.log(err);
+      }
+    }
+
+    async function updateWorker(worker, index, update) {
+      try {
+        update.contactNo = `63${update.contactNo}`;
+        const res = {};
+        Object.keys(worker).forEach((k) => (res[k] = update[k] ?? worker[k]));
+        await api.updateWorker(update.initUsername, update);
+        state.workers[index] = res;
+      } catch (err) {
+        console.log(err.response);
       }
     }
 
@@ -341,6 +365,8 @@ export default {
       showAddStaffModal,
       toggleAddStaffModal,
       registerWorker,
+      deleteWorker,
+      updateWorker,
     };
   },
 };

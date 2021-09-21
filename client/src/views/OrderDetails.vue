@@ -11,18 +11,25 @@
 
       <div class="p-8" v-if="!state.empty">
         <div
-          v-if="state.order.status === 'Ready for Delivery' && state.order.deliverySched"
+          v-if="
+            state.order.status === 'Ready for Delivery' &&
+            state.order.deliverySched
+          "
           class="flex flex-col"
-        > 
+        >
           <div class="flex flex-row">
             <h1 class="manrope-extrabold text-2xl text-primary-blue">
               To Be Delivered On:
             </h1>
             <h1 class="manrope-extrabold text-2xl ml-2">
-              {{ state.order.deliverySched.date }} at {{ state.order.deliverySched.time }}
+              {{ state.order.deliverySched.date }} at
+              {{ state.order.deliverySched.time }}
             </h1>
           </div>
-          <div v-if="state.order.deliverySched.remarks" class="flex flex-row mt-3">
+          <div
+            v-if="state.order.deliverySched.remarks"
+            class="flex flex-row mt-3"
+          >
             <p class="manrope-bold text-xl text-primary-blue">Remarks:</p>
             <br />
             <p class="manrope-bold text-xl pl-1 text-justify">
@@ -394,13 +401,18 @@
           </CancelReportModal>
 
           <!-- add note view modal -->
-          <AddNoteModal v-if="state.worker != null" :addNote="showAddNoteModal" @close="toggleAddNoteModal">
+          <AddNoteModal
+            v-if="state.worker != null"
+            :addNote="showAddNoteModal"
+            @close="toggleAddNoteModal"
+          >
             <div class="flex flex-col mt-10">
               <textarea
                 class="
                   manrope-bold
                   text-justify text-md
-                  w-auto h-72
+                  w-auto
+                  h-72
                   border-2
                   rounded-md
                   border-primary-blue
@@ -449,7 +461,10 @@
                 No notes created yet for this report.
               </p>
             </div>
-            <div v-else class="overflow-y-scroll scrollbar-hidden mt-7 max-h-screen">
+            <div
+              v-else
+              class="overflow-y-scroll scrollbar-hidden mt-7 max-h-screen"
+            >
               <div
                 v-for="note in state.report.notes"
                 :key="note"
@@ -464,20 +479,42 @@
                 "
               >
                 <div class="flex flex-row w-full items-center">
-                  <p v-if="state.worker.username !== note.staffUsername" class="manrope-extrabold text-md text-primary-blue flex-1">
-                    {{ note.staffUsername }} ({{ note.staffFirstname }} {{ note.staffLastname }})
+                  <p
+                    v-if="state.worker.username !== note.staffUsername"
+                    class="manrope-extrabold text-md text-primary-blue flex-1"
+                  >
+                    {{ note.staffUsername }} ({{ note.staffFirstname }}
+                    {{ note.staffLastname }})
                   </p>
-                  <p v-if="state.worker.username === note.staffUsername" class="manrope-extrabold text-md text-primary-blue flex-1">
+                  <p
+                    v-if="state.worker.username === note.staffUsername"
+                    class="manrope-extrabold text-md text-primary-blue flex-1"
+                  >
                     Me
                   </p>
-                  <i 
+                  <i
                     v-if="state.worker.username === note.staffUsername"
-                    @click="deleteNote(note)" 
-                    class="far fa-times-circle m-0 pr-1 text-lg text-red cursor-pointer hover:text-primary-blue"
+                    @click="deleteNote(note)"
+                    class="
+                      far
+                      fa-times-circle
+                      m-0
+                      pr-1
+                      text-lg text-red
+                      cursor-pointer
+                      hover:text-primary-blue
+                    "
                   ></i>
                 </div>
                 <hr class="note-border mb-1 w-full" />
-                <p class="manrope-bold text-justify break-all whitespace-pre-line">
+                <p
+                  class="
+                    manrope-bold
+                    text-justify
+                    break-all
+                    whitespace-pre-line
+                  "
+                >
                   {{ note.note }}
                 </p>
               </div>
@@ -725,7 +762,8 @@
               ease-in-out
               text-center text-lg
               hover:bg-link-water hover:text-primary-blue
-              mr-8 ml-4
+              mr-8
+              ml-4
               p-3
               rounded-xl
               bg-primary-blue
@@ -751,7 +789,8 @@
               text-center text-lg
               hover:bg-link-water hover:text-primary-blue
               w-32
-              mr-8 ml-4
+              mr-8
+              ml-4
               p-3
               rounded-xl
               bg-primary-blue
@@ -775,20 +814,23 @@
               ease-in-out
               text-center text-lg
               hover:bg-link-water hover:text-primary-blue
-              mr-8 ml-4 p-3 w-44
+              mr-8
+              ml-4
+              p-3
+              w-44
               rounded-xl
               bg-primary-blue
             "
             :to="`/delivery-schedule/${route.params.id}`"
             >Schedule Delivery</router-link
           >
-          
+
           <router-link
             v-if="
               state.order.price !== -1 &&
               state.order.status !== 'Complete' &&
               state.order.status !== 'Pending' &&
-              state.order.status !== 'Cancelled' && 
+              state.order.status !== 'Cancelled' &&
               state.isStaff
             "
             class="
@@ -800,7 +842,8 @@
               ease-in-out
               text-center text-lg
               hover:bg-link-water hover:text-primary-blue
-              mx-8 w-40
+              mx-8
+              w-40
               p-3
               rounded-xl
               bg-primary-blue
@@ -953,7 +996,7 @@ export default {
             note: reportData.note,
             staffUsername: state.worker.username,
             staffFirstname: state.worker.firstname,
-            staffLastname: state.worker.lastname
+            staffLastname: state.worker.lastname,
           };
 
           // add note to report in the database
@@ -980,11 +1023,13 @@ export default {
 
     async function deleteNote(staffNote) {
       // delete note from report in the database
-      const result = await api.removeNote(state.report.id, { noteId: staffNote.id });
+      const result = await api.removeNote(state.report.id, {
+        noteId: staffNote.id,
+      });
 
-      // if successful, update note list in UI 
+      // if successful, update note list in UI
       if (result.status === 204) {
-        // delete note from notes list 
+        // delete note from notes list
         const tempNotes = [];
         for (let ctr = 0; ctr < state.report.notes.length; ctr++) {
           if (state.report.notes[ctr].id !== staffNote.id) {

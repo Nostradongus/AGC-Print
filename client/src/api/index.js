@@ -99,4 +99,9 @@ export const sendEmailOrderComplete = (emailData) =>
   API.post(`/workers/sendEmailOrderComplete`, emailData);
 
 // admin data api methods
-export const registerWorker = (staffData) => API.get('/admin/registerWorker');
+export const registerWorker = (staffData) =>
+  API.post('/admin/registerWorker', staffData);
+export const deleteWorker = (username) =>
+  API.delete(`admin/deleteWorker/${username}`);
+export const updateWorker = (username, staffData) =>
+  API.patch(`admin/updateWorker/${username}`, staffData);
