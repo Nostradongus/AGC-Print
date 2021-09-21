@@ -18,6 +18,7 @@ export const signUp = (userData) => API.post('/register', userData);
 
 // order data api methods
 export const getAllOrderSets = () => API.get('/order');
+export const getAllOrderSetsScheduled = () => API.get('/order/orders/deliveries');
 export const getUserOrderSets = (username) => API.get(`/order/${username}`);
 export const getUserOrderSetsFiltered = (username, status) =>
   API.get(`/order/${username}/filter/${status}`);
@@ -41,6 +42,8 @@ export const deleteOrderSet = (id) =>
   API.delete(`/order/delete/orderSet/${id}`);
 export const updateOrderSet = (id, data) =>
   API.patch(`/order/update/orderSet/${id}`, data);
+export const setDelivery = (id, data) =>
+  API.patch(`/order/update/orderSet/delivery/${id}`, data);
 export const updateOrder = (id, data) =>
   API.patch(`/order/update/order/${id}`, data);
 export const updateOrderSetReported = (id, status) =>

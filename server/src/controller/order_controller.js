@@ -46,6 +46,26 @@ const orderController = {
   },
 
   // order controller method to retrieve and return all order sets from the database
+  // with scheduled deliveries
+  getAllOrderSetsScheduled: async (req, res) => {
+    try {
+      // retrieve all order sets with scheduled deliveries from the database
+      const orders = await OrderService.getAllOrderSetsScheduled();
+
+      // if there are existing order sets with scheduled deliveries in the database
+      if (orders.length != 0) {
+        return res.status(200).json(orders);
+      }
+
+      // send back empty array with appropriate status code
+      return res.status(404).json(orders);
+    } catch (err) {
+      // if error has occurred, send server error status and message
+      return res.status(500).json({ message: 'Server Error' });
+    }
+  },
+
+  // order controller method to retrieve and return all order sets from the database
   // according to filter option
   getAllOrderSetsFiltered: async (req, res) => {
     try {
@@ -472,6 +492,41 @@ const orderController = {
       }
 
       const result = await OrderService.updateOrderSet(id, data);
+      return res.status(204).json(result);
+    } catch (err) {
+      return res.status(500).json({ message: 'Server Error' });
+    }
+  },
+
+  // order controller method to set delivery schedule for an order set from the database
+  setDelivery: async (req, res) => {
+    try {
+      // format time
+      let formattedTime = req.body.time;
+      if (parseInt(formattedTime.split(':')[0]) < 12) {
+        formattedTime += ' AM';
+      } else if (parseInt(formattedTime.split(':')[0]) === 12) {
+        formattedTime += ' NN';
+      } else {
+        formattedTime += ' PM';
+      }
+
+      // set delivery schedule data object
+      const data = {
+        deliverySched: {
+          date: req.body.date,
+          time: formattedTime,
+          remarks: null,
+        },
+      };
+
+      // if user has remarks
+      if (typeof req.body.remarks !== 'undefined' && req.body.remarks) {
+        data.deliverySched.remarks = req.body.remarks;
+      }
+
+      // set delivery schedule for order set from the database
+      const result = await OrderService.updateOrderSet(req.params.id, data);
       return res.status(204).json(result);
     } catch (err) {
       return res.status(500).json({ message: 'Server Error' });

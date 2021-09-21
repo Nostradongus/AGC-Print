@@ -1,20 +1,49 @@
 <template>
     <div>
         <side-bar />
-        <page-header title="View Scheduled Deliveries">
-        <p
-            class="manrope-bold text-2xl text-center text-primary-blue mt-8"
-            v-if="state.empty == null"
-        >
-            Loading data, please wait...
-        </p>
-        <div class="overflow-y-auto max-h-screen scrollbar-hidden">
-            <DeliveryCard
-                v-for="order in state.shownOrders"
-                :key="order.id"
-                :order="order"
-            />
-        </div>
+        <page-header title="Scheduled Deliveries">
+            <p
+                class="manrope-bold text-2xl text-center text-primary-blue mt-8"
+                v-if="state.empty == null"
+            >
+                Loading data, please wait...
+            </p>
+
+            <p
+                class="manrope-bold left-0 -top-3.5 text-xl pt-6 px-8 text-red"
+                v-if="state.empty"
+            >
+                There are no orders ready for delivery yet.
+            </p>
+            
+            <div class="h-full w-full" v-if="state.empty != null && !state.empty">
+                <!-- message and status filter option box -->
+                <div class="flex items-end mb-5">
+                    <div class="flex-1">
+                        <!-- delivery schedules sort message -->
+                        <h1
+                            class="
+                                manrope-extrabold
+                                left-0
+                                -top-3.5
+                                text-lg
+                                pt-8
+                                px-8
+                                text-primary-blue
+                            "
+                        >
+                            Delivery time is in MILITARY format (24 hours)
+                        </h1>
+                    </div>
+                </div>
+                <div v-if="!state.empty" class="overflow-y-auto max-h-screen scrollbar-hidden">
+                    <DeliveryCard
+                        v-for="order in state.scheduledOrders"
+                        :key="order.id"
+                        :order="order"
+                    />
+                </div>
+            </div>
         </page-header>
     </div>
 </template>
@@ -37,22 +66,21 @@ export default {
         const store = useStore();
         const state = reactive({
             empty: null,
-            shownOrders: null,
-            allOrders: null
+            scheduledOrders: null,
         });
 
-        async function getInitUsersOrders() {
+        async function getInitScheduledOrders() {
             try {
                 // get all active orders of users
-                const result = await api.getAllOrderSets();
-                state.shownOrders = state.allOrders = result.data;
-                if (state.shownOrders.length === 0) {
-                state.empty = true;
-                state.shownOrders = null;
+                const result = await api.getAllOrderSetsScheduled();
+                if (result.status === 200) {
+                    state.scheduledOrders = result.data;
+                    state.empty = false;
                 } else {
-                state.empty = false;
+                    state.empty = true;
                 }
             } catch (err) {
+                state.empty = true;
                 console.log(err);
             }
         }
@@ -61,12 +89,13 @@ export default {
         onBeforeMount(() => {
         // populate staff active orders page with active orders of clients
         if (store.state.worker.worker != null) {
-            getInitUsersOrders();
+            getInitScheduledOrders();
         } else {
             state.empty = false;
         }
         });
-        return {state, getInitUsersOrders};
+
+        return { state, getInitScheduledOrders };
     },
     
 };

@@ -48,6 +48,13 @@ const orderFileUpload = multer({ storage: multer.diskStorage({}) });
 // route for getting all orders from the database
 router.get('/', token.authenticateToken, orderController.getAllOrderSets);
 
+// route for getting all orders with scheduled deliveries from the database
+router.get(
+  '/orders/deliveries',
+  token.authenticateToken,
+  orderController.getAllOrderSetsScheduled
+);
+
 // route for getting all orders of a user from the database
 router.get(
   '/:username',
@@ -155,6 +162,13 @@ router.patch(
   '/update/orderSet/:id',
   token.authenticateToken,
   orderController.updateOrderSet
+);
+
+// route for setting (updating) the delivery schedule of an order set from the database
+router.patch(
+  '/update/orderSet/delivery/:id',
+  token.authenticateToken,
+  orderController.setDelivery
 );
 
 // route for updating an order from the database

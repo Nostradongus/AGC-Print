@@ -1,7 +1,7 @@
 <template>
   <div>
     <side-bar />
-    <page-header title="View Orders">
+    <page-header title="Orders">
       <p
         class="manrope-bold text-2xl text-center text-primary-blue mt-8"
         v-if="state.empty == null"
@@ -9,7 +9,7 @@
         Loading data, please wait...
       </p>
       <!-- display all orders of user -->
-      <div class="flex-1" v-if="state.empty != null">
+      <div class="flex-1" v-if="state.empty != null && state.shownOrders != null">
         <!-- message and status filter option box -->
         <div class="grid grid-cols-2">
           <div v-if="!state.empty" class="flex flex-row justify-start mx-8 my-8 content-around">
