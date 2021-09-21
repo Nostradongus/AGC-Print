@@ -55,7 +55,7 @@
                         <input
                         id="lastname"
                         name="lastname"
-                        type="number"
+                        type="text"
                         class="manrope-regular input-text-field w-36 ml-4"
                         />
                         <p
@@ -69,7 +69,7 @@
                 <div>
                     <div class="flex">
                     <label
-                        for="width"
+                        for="username"
                         class="
                         relative
                         manrope-bold
@@ -81,9 +81,9 @@
                     >
                     <div>
                         <input
-                        id="width"
-                        name="width"
-                        type="number"
+                        id="username"
+                        name="username"
+                        type="text"
                         class="manrope-regular input-text-field w-48 ml-4"
                         />
                         <p
