@@ -18,7 +18,8 @@ export const signUp = (userData) => API.post('/register', userData);
 
 // order data api methods
 export const getAllOrderSets = () => API.get('/order');
-export const getAllOrderSetsScheduled = () => API.get('/order/orders/deliveries');
+export const getAllOrderSetsScheduled = () =>
+  API.get('/order/orders/deliveries');
 export const getUserOrderSets = (username) => API.get(`/order/${username}`);
 export const getUserOrderSetsFiltered = (username, status) =>
   API.get(`/order/${username}/filter/${status}`);
@@ -67,7 +68,8 @@ export const getOrderSetReport = (id) =>
   API.get(`/report/details/orderSet/${id}`);
 export const addReport = (report) => API.post('/report/add/new', report);
 export const addNote = (id, data) => API.patch(`/report/note/${id}`, data);
-export const removeNote = (id, data) => API.patch(`/report/note/remove/${id}`, data);
+export const removeNote = (id, data) =>
+  API.patch(`/report/note/remove/${id}`, data);
 export const deleteReport = (id) => API.delete(`/report/delete/${id}`);
 export const updateReportStatus = (id, data) =>
   API.patch(`/report/update/${id}`, data);
@@ -95,3 +97,6 @@ export const sendEmailProcessingOrder = (emailData) =>
   API.post(`/workers/sendEmailProcessingOrder`, emailData);
 export const sendEmailOrderComplete = (emailData) =>
   API.post(`/workers/sendEmailOrderComplete`, emailData);
+
+// admin data api methods
+export const registerWorker = (staffData) => API.get('/admin/registerWorker');

@@ -5,9 +5,6 @@ import WorkerService from '../service/worker_service.js';
 import bcrypt from 'bcrypt';
 const saltRounds = 10;
 
-// for jwtoken session management
-import token from '../middleware/token.js';
-
 // for server-side (backend) validation
 import { validationResult } from 'express-validator';
 
