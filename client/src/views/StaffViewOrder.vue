@@ -9,14 +9,35 @@
         Loading data, please wait...
       </p>
       <!-- display all orders of user -->
-      <div class="flex-1" v-if="state.empty != null && state.shownOrders != null">
+      <div
+        class="flex-1"
+        v-if="state.empty != null && state.shownOrders != null"
+      >
         <!-- message and status filter option box -->
         <div class="grid grid-cols-2">
-          <div v-if="!state.empty" class="flex flex-row justify-start mx-8 my-8 content-around">
-            <h1 class="manrope-extrabold text-lg text-center mt-1.5 mr-3 text-primary-blue"> Search Order: </h1>
+          <div class="flex flex-row justify-start mx-8 my-8 content-around">
+            <h1
+              class="
+                manrope-extrabold
+                text-lg text-center
+                mt-1.5
+                mr-3
+                text-primary-blue
+              "
+            >
+              Search Order:
+            </h1>
             <input
               type="text"
-              class="h-10 lg:w-96 md:w-80 border search placeholder-primary-blue text-primary-blue"
+              class="
+                h-10
+                lg:w-96
+                md:w-80
+                border
+                search
+                placeholder-primary-blue
+                text-primary-blue
+              "
               placeholder="Search by Order ID..."
               v-model.trim="state.search"
               v-on:keyup="searchOrders(state.search)"
@@ -73,14 +94,22 @@
 
         <p
           class="manrope-bold left-0 -top-3.5 text-xl pt-3 px-8 text-red"
-          v-if="state.shownOrders != null && !state.shownOrders.length && state.search === ''"
+          v-if="
+            state.shownOrders != null &&
+            !state.shownOrders.length &&
+            state.search === ''
+          "
         >
           No orders in "{{ state.status }}" status for now.
         </p>
 
         <p
           class="manrope-bold left-0 -top-3.5 text-xl pt-3 px-8 text-red"
-          v-if="state.shownOrders != null && !state.shownOrders.length && state.search !== ''"
+          v-if="
+            state.shownOrders != null &&
+            !state.shownOrders.length &&
+            state.search !== ''
+          "
         >
           No orders with "{{ state.search }}" order ID.
         </p>

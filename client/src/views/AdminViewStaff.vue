@@ -210,7 +210,39 @@
         >
           There are no staff yet.
         </p>
-        <div v-else class="flex-1" />
+        <div v-else class="flex-1">
+          <div
+            v-if="state.empty != null && !state.empty"
+            class="flex flex-row justify-start mt-4 content-end"
+          >
+            <h1
+              class="
+                manrope-extrabold
+                text-lg text-center
+                mt-1.5
+                mr-3
+                text-primary-blue
+              "
+            >
+              Search Staff:
+            </h1>
+            <input
+              type="text"
+              class="
+                h-10
+                lg:w-96
+                md:w-80
+                border
+                search
+                placeholder-primary-blue
+                text-primary-blue
+              "
+              placeholder="Search by Username..."
+              v-model.trim="state.search"
+              v-on:keyup="searchWorker(state.search)"
+            />
+          </div>
+        </div>
         <button
           class="
             flex
@@ -248,6 +280,14 @@
           </div>
         </button>
       </div>
+      <p
+        class="manrope-bold left-0 -top-3.5 text-xl pt-3 px-8 text-red"
+        v-if="
+          state.workers != null && !state.workers.length && state.search !== ''
+        "
+      >
+        No users with "{{ state.search }}" username.
+      </p>
       <div class="overflow-y-auto max-h-screen scrollbar-hidden mb-5">
         <StaffCard
           v-for="(worker, index) in state.workers"
@@ -266,7 +306,7 @@ import StaffCard from '../components/StaffCard.vue';
 import SideBar from '../components/SideBar.vue';
 import PageHeader from '../components/PageHeader.vue';
 import AddStaffModal from '../components/Modals/AddStaffModal.vue';
-import { reactive, onBeforeMount, ref } from 'vue';
+import { reactive, onBeforeMount, ref, computed } from 'vue';
 import { useStore } from 'vuex';
 import * as api from '../api';
 export default {
@@ -283,6 +323,8 @@ export default {
     const state = reactive({
       empty: null,
       workers: null,
+      search: null,
+      allWorkers: null,
     });
     const staff = reactive({
       firstname: null,
@@ -298,7 +340,7 @@ export default {
       try {
         // get all workers
         const result = await api.getWorkers();
-        state.workers = result.data;
+        state.workers = state.allWorkers = result.data;
         if (state.workers.length === 0) {
           state.empty = true;
         } else {
@@ -350,6 +392,14 @@ export default {
       }
     }
 
+    function searchWorker(search) {
+      state.workers = computed(() => {
+        return state.allWorkers.filter((worker) => {
+          return worker.username.match(search);
+        });
+      });
+    }
+
     onBeforeMount(() => {
       // populate staff list
       if (store.state.worker.worker != null) {
@@ -367,6 +417,7 @@ export default {
       registerWorker,
       deleteWorker,
       updateWorker,
+      searchWorker,
     };
   },
 };
