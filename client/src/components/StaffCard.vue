@@ -28,6 +28,7 @@
                 type="text"
                 class="manrope-regular input-text-field w-36 ml-4"
                 v-model.trim="staffData.firstname"
+                :placeholder="props.worker.firstname"
               />
               <p class="ml-9 text-red manrope-bold text-left text-sm"></p>
             </div>
@@ -50,6 +51,7 @@
                   type="text"
                   class="manrope-regular input-text-field w-36 ml-4"
                   v-model.trim="staffData.lastname"
+                  :placeholder="props.worker.lastname"
                 />
                 <p class="ml-9 text-red manrope-bold text-left text-sm"></p>
               </div>
@@ -59,7 +61,7 @@
           <div>
             <div class="flex">
               <label
-                for="width"
+                for="username"
                 class="
                   relative
                   manrope-bold
@@ -67,17 +69,11 @@
                   mt-4
                   text-primary-blue
                 "
-                >Username</label
+                >Username:</label
               >
-              <div>
-                <input
-                  name="username"
-                  type="text"
-                  class="manrope-regular input-text-field w-48 ml-4"
-                  v-model.trim="staffData.username"
-                />
-                <p class="ml-9 text-red manrope-bold text-left text-sm"></p>
-              </div>
+              <h1 class="manrope-regular mt-4 ml-4">
+                {{ props.worker.username }}
+              </h1>
             </div>
             <div class="flex">
               <label
@@ -89,7 +85,7 @@
                   mt-4
                   text-primary-blue
                 "
-                >E-mail address</label
+                >E-mail address:</label
               >
               <div>
                 <input
@@ -97,6 +93,7 @@
                   type="email"
                   class="manrope-regular input-text-field w-60 ml-4"
                   v-model.trim="staffData.email"
+                  :placeholder="props.worker.email"
                 />
                 <p class="ml-9 text-red manrope-bold text-left text-sm"></p>
               </div>
@@ -131,6 +128,7 @@
                       ml-9
                     "
                     v-model.trim="staffData.contactNo"
+                    :placeholder="contactNo"
                   />
                 </div>
               </div>
@@ -322,26 +320,34 @@ export default {
   },
   setup(props, { emit }) {
     const staffData = reactive({
-      initUsername: props.worker.username,
-      initEmail: props.worker.email,
-      firstname: props.worker.firstname,
-      lastname: props.worker.lastname,
       username: props.worker.username,
-      email: props.worker.email,
-      contactNo: parseInt(
+      initEmail: props.worker.email,
+      firstname: null,
+      lastname: null,
+      email: null,
+      contactNo: null,
+      password: null,
+      confirmPassword: null,
+    });
+    const showEditStaffModal = ref(false);
+    const showConfirmDeleteModal = ref(false);
+    const contactNo = ref(
+      parseInt(
         props.worker.contactNo.replace(
           props.worker.contactNo.substring(0, 2),
           ''
         )
-      ),
-      password: props.worker.password,
-      confirmPassword: props.worker.password,
-    });
-    const showEditStaffModal = ref(false);
-    const showConfirmDeleteModal = ref(false);
+      )
+    );
 
     function toggleEditStaffModal() {
       showEditStaffModal.value = !showEditStaffModal.value;
+      staffData.firstname = null;
+      staffData.lastname = null;
+      staffData.email = null;
+      staffData.contactNo = null;
+      staffData.password = null;
+      staffData.confirmPassword = null;
     }
 
     function toggleConfirmDeleteModal() {
@@ -360,14 +366,38 @@ export default {
 
     async function updateWorker() {
       try {
-        toggleEditStaffModal();
+        // const update = {};
+        // if (staffData.firstname) {
+        //   update['firstname'] = staffData.firstname;
+        // }
+        // if (staffData.lastname) {
+        //   update['lastname'] = staffData.lastname;
+        // }
+        // if (staffData.email) {
+        //   update['email'] = staffData.email;
+        // }
+        // if (staffData.contactNo) {
+        //   update['contactNo'] = staffData.contactNo;
+        // }
+        // if (staffData.password) {
+        //   update['password'] = staffData.password;
+        // }
+        // if (staffData.confirmPassword) {
+        //   update['confirmPassword'] = staffData.confirmPassword;
+        // }
+        if (staffData.contactNo) {
+          staffData.contactNo = `63${staffData.contactNo}`;
+        }
         emit('updateWorker', staffData);
+        toggleEditStaffModal();
       } catch (err) {
         console.log(err.response);
       }
     }
 
     return {
+      props,
+      contactNo,
       showEditStaffModal,
       showConfirmDeleteModal,
       toggleEditStaffModal,

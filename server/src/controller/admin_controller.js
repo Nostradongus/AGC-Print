@@ -130,16 +130,8 @@ const adminController = {
         // return with bad request and error message
         return res.status(400).json({ message: 'Incorrect inputs.' });
       } else {
-        const workerData = null;
-        if (req.body.username != req.body.initUsername) {
-          // check if username already exists in the database
-          workerData = await WorkerService.getWorker({
-            username: req.body.username.toLowerCase(),
-          });
-        }
-
-        const emailData = null;
-        if (req.body.email != req.body.initEmail) {
+        let emailData = null;
+        if (req.body.email != req.body.initEmail && !req.body.email) {
           // check if email already exists in the database
           emailData = await WorkerService.getWorker({
             email: req.body.email,
@@ -151,15 +143,8 @@ const adminController = {
         const validEmailAt = req.body.email.split('@');
         const validEmailDot = req.body.email.split('.');
 
-        // if worker already exists in the database
-        if (workerData != null) {
-          const details = {
-            error: 'Username already exists',
-            usernameError: true,
-          };
-          return res.status(400).json(details);
-          // if email already exists
-        } else if (emailData != null) {
+        // if email already exists
+        if (emailData != null) {
           const details = {
             error: 'E-mail already exists',
             emailError: true,
@@ -183,7 +168,11 @@ const adminController = {
           return res.status(400).json(details);
 
           // if password and confirm password fields do not match each other
-        } else if (req.body.password !== req.body.confirmPassword) {
+        } else if (
+          req.body.password !== req.body.confirmPassword &&
+          !req.body.password &&
+          !req.body.confirmPassword
+        ) {
           const details = {
             error:
               'Password and Confirm Password fields do not match each other.',
@@ -215,6 +204,7 @@ const adminController = {
       }
       return res.status(204).json(result);
     } catch (err) {
+      console.log(err);
       // if error has occurred, send server error status and message
       return res.status(500).json({ message: 'Server Error' });
     }
