@@ -32,6 +32,7 @@ router.delete(
 router.patch(
   '/updateWorker/:username',
   token.authenticateToken,
+  validator.validateWorkerProfileUpdate(),
   adminController.updateWorker
 );
 

@@ -382,10 +382,15 @@ export default {
 
     async function updateWorker(worker, index, update) {
       try {
-        update.contactNo = `63${update.contactNo}`;
         const res = {};
         Object.keys(worker).forEach((k) => (res[k] = update[k] ?? worker[k]));
-        await api.updateWorker(update.initUsername, update);
+        console.log(update);
+        console.log(res);
+        if (update.confirmPassword) {
+          res['confirmPassword'] = update.confirmPassword;
+        }
+        await api.updateWorker(update.username, res);
+        delete res['confirmPassword'];
         state.workers[index] = res;
       } catch (err) {
         console.log(err.response);
