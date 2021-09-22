@@ -433,10 +433,15 @@ export default {
       state.loggingOut = true;
       try {
         await api.signOut();
-        store.dispatch('logoutUser');
-        store.dispatch('logoutWorker');
-        store.dispatch('resetOrder');
-        router.push({ name: 'Login' });
+
+        if (JSON.parse(localStorage.getItem('user')) != null) {
+          store.dispatch('logoutUser');
+          store.dispatch('resetOrder');
+          router.push({ name: 'Login' });
+        } else {
+          store.dispatch('logoutWorker');
+          router.push({ name: 'StaffLogin' });
+        }
       } catch (err) {
         state.error = true;
       }
