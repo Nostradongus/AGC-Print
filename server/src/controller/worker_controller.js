@@ -1,8 +1,6 @@
 // get worker service static object from service folder
 import WorkerService from '../service/worker_service.js';
 
-import UserService from '../service/user_service.js';
-
 import nodemailer from 'nodemailer';
 
 import logger from '../logger/index.js';
@@ -248,7 +246,6 @@ const workerController = {
         .status(201)
         .json('Order Complete E-mail Sent To ' + clientData.email + '!');
     } catch (err) {
-      console.log(err);
       return res.status(500).json({ message: 'Server Error' });
     }
   },

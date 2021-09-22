@@ -54,9 +54,9 @@
           <h3 class="w-1/3 text-center manrope-bold">Date of Delivery</h3>
           <input 
             v-model="scheduleData.date" 
-            @change="validateTime"
-            class="w-full lg:w-1/2 border-2 manrope-bold pl-1" 
-            :class="{ 'border-red': v.date.$error }"
+            @change="validateDate"
+            class="w-full lg:w-1/2 manrope-bold" 
+            :class="{ 'border-red': v.date.$error || !state.dateValidation }"
             type="date" 
             :min="state.currDate" />
         </div>
@@ -68,13 +68,18 @@
           >
             Please input desired date of delivery.
           </p>
+          <p
+            v-if="!state.dateValidation"
+            class="text-red manrope-bold text-left text-sm"
+          >
+            Invalid date! Please input a correct date.
+          </p>
         </div>
         <div class="flex flex-row mb-2 items-center">
-          <h3 class="w-1/3 text-center manrope-bold">Estimated Time of Delivery</h3>
+          <h3 class="w-1/3 text-center manrope-bold">Time of Delivery</h3>
           <input 
-            v-model="scheduleData.time" 
-            @change="validateTime"
-            class="w-full lg:w-1/2 border-2 manrope-bold pl-1" 
+            v-model="scheduleData.time"
+            class="w-full lg:w-1/2 manrope-bold" 
             :class="{ 'border-red': v.time.$error || !state.timeValidation }"
             type="time" />
         </div>
@@ -177,6 +182,7 @@ export default {
     const state = reactive({
       currDate: null,
       order: null,
+      dateValidation: true,
       timeValidation: true,
       submitted: false,
     });
@@ -204,7 +210,7 @@ export default {
       // initialize current date today
       const year = today.getFullYear();
       let month = today.getMonth() + 1;
-      let day = today.getDate();
+      let day = today.getDate() + 1; // starting day should be tomorrow
       // format month and day if needed
       if (month < 10) {
         month = "0" + month;
@@ -215,6 +221,30 @@ export default {
 
       // set current date
       state.currDate = `${year}-${month}-${day}`;
+    }
+
+    // to validate date inputted
+    function validateDate() {
+      // get date values from current date and inputted date
+      const currDate = state.currDate.split("-");
+      const inputDate = scheduleData.date.split("-");
+
+      // temporary set date validation value to true
+      state.dateValidation = true;
+
+      // check year first, year inputted should not be less than the current year
+      if (parseInt(inputDate[0]) < parseInt(currDate[0]) || inputDate[0].length !== 4) {
+        state.dateValidation = false;
+      } else if (parseInt(inputDate[0]) === parseInt(currDate[0])) {
+        // check month afterwards, month inputted should not be less than the current month
+        if (parseInt(inputDate[1]) < parseInt(currDate[1])) {
+          state.dateValidation = false;
+        }
+        // check day afterwards, day inputted should be tomorrow after the current day or so on
+        else if (parseInt(inputDate[1]) === parseInt(currDate[1]) && parseInt(inputDate[2]) + 1 <= parseInt(currDate[2])) {
+          state.dateValidation = false;
+        }
+      }
     }
 
     // to validate time inputted
@@ -282,7 +312,7 @@ export default {
       }
     }
 
-    return { state, route, v, scheduleData, validateTime, submitSchedule };
+    return { state, route, v, scheduleData, validateDate, validateTime, submitSchedule };
   },
 };
 </script>
