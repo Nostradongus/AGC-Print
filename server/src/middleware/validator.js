@@ -46,6 +46,8 @@ const validator = {
         .withMessage('Please input a valid email.'),
       // checks contact number input field
       check('contactNo')
+        .isNumeric()
+        .withMessage('Contact number must consists of numbers only')
         .notEmpty()
         .withMessage('Please input your contact number.'),
       // checks repeat password input field

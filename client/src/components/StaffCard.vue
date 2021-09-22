@@ -29,8 +29,14 @@
                 class="manrope-regular input-text-field w-36 ml-4"
                 v-model.trim="staffData.firstname"
                 :placeholder="props.worker.firstname"
+                :class="{ 'border-red': vUpdateWorker.firstname.$error }"
               />
-              <p class="ml-9 text-red manrope-bold text-left text-sm"></p>
+              <p
+                class="ml-4 text-red manrope-bold text-left text-sm"
+                v-if="vUpdateWorker.firstname.$error"
+              >
+                {{ vUpdateWorker.firstname.$errors[0].$message }}
+              </p>
             </div>
             <div class="flex">
               <label
@@ -43,6 +49,7 @@
                   ml-4
                   text-primary-blue
                 "
+                :class="{ 'border-red': vUpdateWorker.lastname.$error }"
                 >Last name</label
               >
               <div>
@@ -52,8 +59,14 @@
                   class="manrope-regular input-text-field w-36 ml-4"
                   v-model.trim="staffData.lastname"
                   :placeholder="props.worker.lastname"
+                  :class="{ 'border-red': vUpdateWorker.lastname.$error }"
                 />
-                <p class="ml-9 text-red manrope-bold text-left text-sm"></p>
+                <p
+                  class="ml-4 text-red manrope-bold text-left text-sm"
+                  v-if="vUpdateWorker.lastname.$error"
+                >
+                  {{ vUpdateWorker.lastname.$errors[0].$message }}
+                </p>
               </div>
             </div>
           </div>
@@ -94,8 +107,14 @@
                   class="manrope-regular input-text-field w-60 ml-4"
                   v-model.trim="staffData.email"
                   :placeholder="props.worker.email"
+                  :class="{ 'border-red': vUpdateWorker.email.$error }"
                 />
-                <p class="ml-9 text-red manrope-bold text-left text-sm"></p>
+                <p
+                  class="ml-4 text-red manrope-bold text-left text-sm"
+                  v-if="vUpdateWorker.email.$error"
+                >
+                  {{ vUpdateWorker.email.$errors[0].$message }}
+                </p>
               </div>
             </div>
             <div class="flex">
@@ -129,7 +148,14 @@
                     "
                     v-model.trim="staffData.contactNo"
                     :placeholder="contactNo"
+                    :class="{ 'border-red': vUpdateWorker.contactNo.$error }"
                   />
+                  <p
+                    class="ml-9 text-red manrope-bold text-left text-sm"
+                    v-if="vUpdateWorker.contactNo.$error"
+                  >
+                    {{ vUpdateWorker.contactNo.$errors[0].$message }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -151,8 +177,15 @@
                   type="password"
                   class="manrope-regular input-text-field w-60 ml-4"
                   v-model.trim="staffData.password"
+                  :class="{ 'border-red': vUpdateWorker.password.$error }"
+                  @keyup="isValidPassword()"
                 />
-                <p class="ml-9 text-red manrope-bold text-left text-sm"></p>
+                <p
+                  class="ml-4 text-red manrope-bold text-left text-sm"
+                  v-if="vUpdateWorker.password.$error"
+                >
+                  {{ vUpdateWorker.password.$errors[0].$message }}
+                </p>
               </div>
             </div>
             <div class="flex">
@@ -172,9 +205,18 @@
                   name="confirmpassword"
                   type="password"
                   class="manrope-regular input-text-field w-60 ml-4"
-                  v-model="staffData.confirmPassword"
+                  v-model.trim="staffData.confirmPassword"
+                  :class="{
+                    'border-red': !updateWorkerValidation.passwordValidation,
+                  }"
+                  @keyup="isValidPassword()"
                 />
-                <p class="ml-9 text-red manrope-bold text-left text-sm"></p>
+                <p
+                  class="ml-4 text-red manrope-bold text-left text-sm"
+                  v-if="!updateWorkerValidation.passwordValidation"
+                >
+                  Passwords does not match.
+                </p>
               </div>
             </div>
           </div>
@@ -307,6 +349,15 @@
 import EditStaffModal from './Modals/EditStaffModal.vue';
 import ConfirmDeleteModal from './Modals/ConfirmDeleteModal.vue';
 import { reactive, ref } from 'vue';
+import {
+  alpha,
+  email,
+  numeric,
+  maxLength,
+  minLength,
+} from '@vuelidate/validators';
+import useVuelidate from '@vuelidate/core';
+import * as api from '../api';
 export default {
   name: 'StaffCard',
   components: {
@@ -329,6 +380,25 @@ export default {
       password: null,
       confirmPassword: null,
     });
+
+    const updateWorkerValidation = reactive({
+      passwordValidation: true,
+    });
+
+    const updateWorkerRules = {
+      firstname: { alpha },
+      lastname: { alpha },
+      email: { email },
+      contactNo: {
+        numeric,
+        minLength: minLength(9),
+        maxLength: maxLength(10),
+      },
+      password: { minLength: minLength(8) },
+    };
+
+    const vUpdateWorker = useVuelidate(updateWorkerRules, staffData);
+
     const showEditStaffModal = ref(false);
     const showConfirmDeleteModal = ref(false);
     const contactNo = ref(
@@ -342,12 +412,9 @@ export default {
 
     function toggleEditStaffModal() {
       showEditStaffModal.value = !showEditStaffModal.value;
-      staffData.firstname = null;
-      staffData.lastname = null;
-      staffData.email = null;
-      staffData.contactNo = null;
-      staffData.password = null;
-      staffData.confirmPassword = null;
+      setAll(staffData, null);
+      staffData.username = props.worker.username;
+      staffData.initEmail = props.worker.email;
     }
 
     function toggleConfirmDeleteModal() {
@@ -366,33 +433,45 @@ export default {
 
     async function updateWorker() {
       try {
-        // const update = {};
-        // if (staffData.firstname) {
-        //   update['firstname'] = staffData.firstname;
-        // }
-        // if (staffData.lastname) {
-        //   update['lastname'] = staffData.lastname;
-        // }
-        // if (staffData.email) {
-        //   update['email'] = staffData.email;
-        // }
-        // if (staffData.contactNo) {
-        //   update['contactNo'] = staffData.contactNo;
-        // }
-        // if (staffData.password) {
-        //   update['password'] = staffData.password;
-        // }
-        // if (staffData.confirmPassword) {
-        //   update['confirmPassword'] = staffData.confirmPassword;
-        // }
-        if (staffData.contactNo) {
-          staffData.contactNo = `63${staffData.contactNo}`;
+        const validated = await vUpdateWorker.value.$validate();
+        if (validated && checkBoolean(updateWorkerValidation)) {
+          const data = JSON.parse(JSON.stringify(staffData));
+          const username = staffData.username;
+          toggleEditStaffModal();
+          const res = await api.updateWorker(username, data);
+          emit('updateWorker', res.data);
+          updateWorkerValidation.passwordValidation = true;
         }
-        emit('updateWorker', staffData);
-        toggleEditStaffModal();
       } catch (err) {
         console.log(err.response);
       }
+    }
+
+    function setAll(obj, val) {
+      Object.keys(obj).forEach(function (index) {
+        obj[index] = val;
+      });
+    }
+
+    function isValidPassword() {
+      updateWorkerValidation.passwordValidation =
+        (staffData.confirmPassword === staffData.password ? true : false) &&
+        staffData.confirmPassword &&
+        staffData.password;
+      if (!staffData.confirmPassword && !staffData.password) {
+        updateWorkerValidation.passwordValidation = true;
+      }
+      console.log(
+        staffData.confirmPassword +
+          ' ' +
+          staffData.password +
+          ' ' +
+          updateWorkerValidation.passwordValidation
+      );
+    }
+
+    function checkBoolean(obj) {
+      return Object.values(obj).every(Boolean);
     }
 
     return {
@@ -405,6 +484,9 @@ export default {
       deleteWorker,
       updateWorker,
       staffData,
+      isValidPassword,
+      vUpdateWorker,
+      updateWorkerValidation,
     };
   },
 };

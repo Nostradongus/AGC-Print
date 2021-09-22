@@ -124,7 +124,7 @@ const adminController = {
 
       // check if there are validation errors
       const validationError = validationResult(req);
-
+      console.log(validationError);
       // if validation errors occur
       if (!validationError.isEmpty()) {
         // return with bad request and error message
@@ -137,30 +137,39 @@ const adminController = {
             email: req.body.email,
           });
         }
+        let validContactNo = null;
+        let validEmailAt = null;
+        let validEmailDot = null;
 
         // contact number and email format check
-        const validContactNo = req.body.contactNo[0] + req.body.contactNo[1];
-        const validEmailAt = req.body.email.split('@');
-        const validEmailDot = req.body.email.split('.');
+        if (req.body.contactNo) {
+          validContactNo = req.body.contactNo[0] + req.body.contactNo[1];
+        }
+        if (req.body.email) {
+          validEmailAt = req.body.email.split('@');
+          validEmailDot = req.body.email.split('.');
+        }
 
-        // if email already exists
-        if (emailData != null) {
-          const details = {
-            error: 'E-mail already exists',
-            emailError: true,
-          };
-          return res.status(400).json(details);
+        if (req.body.email) {
+          // if email already exists
+          if (emailData != null) {
+            const details = {
+              error: 'E-mail already exists',
+              emailError: true,
+            };
+            return res.status(400).json(details);
 
-          // email does not follow valid format
-        } else if (validEmailAt.length < 2 || validEmailDot.length < 2) {
-          const details = {
-            error: 'Email does not follow valid format.',
-            emailError: true,
-          };
-          return res.status(400).json(details);
+            // email does not follow valid format
+          } else if (validEmailAt.length < 2 || validEmailDot.length < 2) {
+            const details = {
+              error: 'Email does not follow valid format.',
+              emailError: true,
+            };
+            return res.status(400).json(details);
+          }
         }
         // if contact number inputted does not match the valid format (starts with "63")
-        else if (validContactNo !== '63') {
+        else if (validContactNo !== '63' && req.body.contactNo) {
           const details = {
             error: 'Contact number must start with "63".',
             contactNoError: true,
@@ -170,8 +179,8 @@ const adminController = {
           // if password and confirm password fields do not match each other
         } else if (
           req.body.password !== req.body.confirmPassword &&
-          !req.body.password &&
-          !req.body.confirmPassword
+          req.body.password &&
+          req.body.confirmPassword
         ) {
           const details = {
             error:
@@ -183,17 +192,30 @@ const adminController = {
           // add new worker to database
         } else {
           // create new worker object
-          const worker = {
-            username: req.body.username.toLowerCase(),
-            password: null,
-            firstname: req.body.firstname,
-            lastname: req.body.lastname,
-            contactNo: req.body.contactNo,
-            email: req.body.email,
-          };
+          const worker = {};
 
+          if (req.body.username) {
+            worker['username'] = req.body.username.toLowerCase();
+          }
           // hash password
-          worker.password = await bcrypt.hash(req.body.password, saltRounds);
+          if (req.body.password) {
+            worker['password'] = await bcrypt.hash(
+              req.body.password,
+              saltRounds
+            );
+          }
+          if (req.body.firstname) {
+            worker['firstname'] = req.body.firstname;
+          }
+          if (req.body.lastname) {
+            worker['lastname'] = req.body.lastname;
+          }
+          if (req.body.contactNo) {
+            worker['contactNo'] = `63${req.body.contactNo}`;
+          }
+          if (req.body.email) {
+            worker['email'] = req.body.email;
+          }
 
           // add worker to database and get result back
           const result = await AdminService.updateWorker(username, worker);
