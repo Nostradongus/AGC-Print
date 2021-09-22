@@ -48,6 +48,13 @@ const orderFileUpload = multer({ storage: multer.diskStorage({}) });
 // route for getting all orders from the database
 router.get('/', token.authenticateToken, orderController.getAllOrderSets);
 
+// route for getting all orders with scheduled deliveries from the database
+router.get(
+  '/orders/deliveries',
+  token.authenticateToken,
+  orderController.getAllOrderSetsScheduled
+);
+
 // route for getting all orders of a user from the database
 router.get(
   '/:username',
@@ -150,18 +157,25 @@ router.delete(
   orderController.deleteOrderSet
 );
 
-// route for updating the status of an order set from the database
+// route for updating an order set from the database
 router.patch(
-  '/update/orderSet/status/:id',
+  '/update/orderSet/:id',
   token.authenticateToken,
-  orderController.updateOrderSetStatus
+  orderController.updateOrderSet
 );
 
-// route for updating the price of an order set from the database
+// route for setting (updating) the delivery schedule of an order set from the database
 router.patch(
-  '/update/orderSet/price/:id',
+  '/update/orderSet/delivery/:id',
   token.authenticateToken,
-  orderController.updateOrderSetPrice
+  orderController.setDelivery
+);
+
+// route for updating an order from the database
+router.patch(
+  '/update/order/:id',
+  token.authenticateToken,
+  orderController.updateOrder
 );
 
 // route for updating the reported indicator of an order set from the database
@@ -169,20 +183,6 @@ router.patch(
   '/update/orderSet/reported/:id',
   token.authenticateToken,
   orderController.updateOrderSetReported
-);
-
-// route for updating the status of an order from the database
-router.patch(
-  '/update/order/status/:id',
-  token.authenticateToken,
-  orderController.updateOrderStatus
-);
-
-// route for updating the price of an order from the database
-router.patch(
-  '/update/order/price/:id',
-  token.authenticateToken,
-  orderController.updateOrderPrice
 );
 
 // export order routes

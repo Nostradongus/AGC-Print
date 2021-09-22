@@ -30,37 +30,38 @@
           </div>
           <div class="flex flex-row items-center mr-10">
             <!-- status filter box label -->
-            <p
+            <label
               class="
                 manrope-bold
                 left-0
                 -top-3.5
                 text-lg
-                pt-8
+                pt-1
                 px-3
                 text-primary-blue
               "
             >
               Filter Orders By Status:
-            </p>
-            <!-- status filter box -->
-            <select
-              name="type"
-              id="type"
-              class="w-full md:w-60 md:h-1/2 dropdown-field mt-8"
-              v-model="state.status"
-              @change="onSelectStatus"
-            >
-              <option value="All">All</option>
-              <option value="Pending">Pending</option>
-              <option value="Waiting for Downpayment">
-                Waiting for Downpayment
-              </option>
-              <option value="Processing">Processing</option>
-              <option value="Ready for Delivery">Ready for Delivery</option>
-              <option value="Complete">Complete</option>
-              <option value="Cancelled">Cancelled</option>
-            </select>
+              
+              <!-- status filter box -->
+              <select
+                name="type"
+                id="type"
+                class="w-full md:w-60 md:h-1/2 dropdown-field mt-8 ml-2"
+                v-model="state.status"
+                @change="onSelectStatus"
+              >
+                <option value="All">All</option>
+                <option value="Pending">Pending</option>
+                <option value="Waiting for Downpayment">
+                  Waiting for Downpayment
+                </option>
+                <option value="Processing">Processing</option>
+                <option value="Ready for Delivery">Ready for Delivery</option>
+                <option value="Complete">Complete</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+            </label>
           </div>
         </div>
         <p

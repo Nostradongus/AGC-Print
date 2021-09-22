@@ -1,46 +1,39 @@
 <template>
   <transition name="modal-animation">
-    <div v-show="previewOrders" class="modal flex justify-center items-center">
+    <div v-show="editOrderSet" class="modal flex justify-center items-center">
       <transition name="modal-animation-inner">
-        <div
-          v-show="previewOrders"
-          class="modal-inner flex flex-col"
-        >
+        <div v-show="editOrderSet" class="modal-inner flex flex-col">
           <!-- modal header -->
           <h1
             class="
-              manrope-extrabold 
+              manrope-extrabold
               absolute
               top-2
               left-2
-              px-2 
-              text-primary-blue 
-              text-left 
-              text-lg
+              px-2
+              text-primary-blue text-left text-2xl
             "
           >
-            Orders:
+            Edit Order Set
           </h1>
           <i @click="close" class="far fa-times-circle"></i>
 
           <!-- horizontal divider -->
-          <hr 
+          <hr
             class="
-              border-primary-blue 
-              bg-primary-blue 
-              manrope-bold 
-              border-solid 
-              border-2
+              border-primary-blue
+              bg-primary-blue
+              manrope-bold
+              border-solid border-2
               mb-0.5
               absolute
-              top-10 
-              right-0 
-              w-full 
+              top-10
+              right-0
+              w-full
               justify-center
             "
-          >
-
-          <!-- order list contents -->
+          />
+          <!-- edit orderset form contents -->
           <slot />
         </div>
       </transition>
@@ -50,7 +43,7 @@
 
 <script>
 export default {
-  props: ['previewOrders'],
+  props: ['editOrderSet'],
   setup(props, { emit }) {
     const close = () => {
       emit('close');
@@ -58,7 +51,7 @@ export default {
 
     return { close };
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -74,8 +67,7 @@ export default {
 
 .modal-inner {
   position: relative;
-  max-width: 640px;
-  width: 40%;
+  max-width: 960px;
   height: 75%;
   border-radius: 10px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
@@ -95,5 +87,29 @@ export default {
       color: #0f4c81;
     }
   }
+}
+
+.modal-animation-enter-active,
+.modal-animation-leave-active {
+  transition: all 0.3s cubic-bezier(0.52, 0.02, 0.19, 1.02);
+}
+
+.modal-animation-enter-from,
+.modal-animation-leave-to {
+  opacity: 0;
+}
+
+.modal-animation-inner-enter-active {
+  transition: all 0.3s cubic-bezier(0.52, 0.02, 0.19, 1.02);
+}
+
+.modal-animation-inner-enter-from {
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+.modal-animation-inner-leave-to {
+  opacity: 0;
+  transform: scale(0.8);
 }
 </style>

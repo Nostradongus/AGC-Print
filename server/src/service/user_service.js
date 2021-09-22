@@ -6,9 +6,12 @@ import { SALT_ROUNDS } from '../config/constants.js';
 // create service object that contains methods for user account data manipulation
 const UserService = {
   // this method retrieves and returns all user account data in the database
-  getUsers: async () => User.find({}),
+  getUsers: async () =>
+    User.find({}).sort({ firstname: 1, lastname: 1, username: 1 }),
+
   // this method retrieves and returns a specific user account data based on given data
   getUser: async (data) => User.findOne(data),
+
   // this method adds a new user account data to the User collection in the database
   addUser: async (user) => {
     // create new User data object
@@ -23,10 +26,12 @@ const UserService = {
     // add new user account data to the User collection
     return newUser.save();
   },
+
   // this method updates the number of orders made by the user
   // executed when a newly created order set was assigned a user order number
   updateUserOrderNumber: async (username, orderNum) =>
     User.updateOne({ username: username }, { orderNum: orderNum }),
+
   updateUser: async (data) => {
     try {
       const user = await UserService.getUser({

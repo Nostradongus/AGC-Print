@@ -18,6 +18,32 @@
     </div>
     <div style="height: 65%">
       <router-link
+        v-if="state.worker != null && state.isSystemAdmin == true"
+        class="
+          text-primary-blue
+          flex flex-row
+          justify-items-center
+          items-center
+          px-4
+          py-2
+          mt-2
+          text-xl
+          font-semibold
+          text-gray-900
+          rounded-lg
+          hover:bg-link-water
+          transition
+          duration-500
+          ease-in-out
+        "
+        to="/view-staff-list"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 pr-3" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+        </svg
+        >Manage Staff</router-link
+      >
+      <router-link
         v-if="state.username != null"
         class="
           text-primary-blue
@@ -52,6 +78,37 @@
           />
         </svg>
         New Order</router-link
+      >
+      <router-link
+        v-if="state.worker != null"
+        class="
+          text-primary-blue
+          flex flex-row
+          justify-items-center
+          items-center
+          px-4
+          py-2
+          mt-2
+          text-xl
+          font-semibold
+          text-gray-900
+          rounded-lg
+          hover:bg-link-water
+          transition
+          duration-500
+          ease-in-out
+        "
+        to="/view-user-list"
+      >
+        <svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          class="h-10 w-10 pr-3" 
+          viewBox="0 0 20 20" 
+          fill="currentColor">
+          <path 
+            d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
+        </svg>
+        View Users</router-link
       >
       <router-link
         v-if="state.worker != null"
@@ -142,7 +199,7 @@
           duration-500
           ease-in-out
         "
-        to=""
+        to="/view-report-list"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -156,6 +213,76 @@
             clip-rule="evenodd"
           /></svg
         >View Reports</router-link
+      >
+      <router-link
+        v-if="state.worker != null"
+        class="
+          text-primary-blue
+          flex flex-row
+          justify-items-center
+          items-center
+          px-4
+          py-2
+          mt-2
+          text-xl
+          font-semibold
+          text-gray-900
+          rounded-lg
+          hover:bg-link-water
+          transition
+          duration-500
+          ease-in-out
+        "
+        to="/view-payment-list"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-10 w-10 pr-2 pt-1.5 pl-0.5"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path 
+            fill-rule="evenodd"
+            d="M1.92.506a.5.5 0 0 1 .434.14L3 1.293l.646-.647a.5.5 0 0 1 .708 0L5 1.293l.646-.647a.5.5 0 0 1 .708 0L7 1.293l.646-.647a.5.5 0 0 1 .708 0L9 1.293l.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .801.13l.5 1A.5.5 0 0 1 15 2v12a.5.5 0 0 1-.053.224l-.5 1a.5.5 0 0 1-.8.13L13 14.707l-.646.647a.5.5 0 0 1-.708 0L11 14.707l-.646.647a.5.5 0 0 1-.708 0L9 14.707l-.646.647a.5.5 0 0 1-.708 0L7 14.707l-.646.647a.5.5 0 0 1-.708 0L5 14.707l-.646.647a.5.5 0 0 1-.708 0L3 14.707l-.646.647a.5.5 0 0 1-.801-.13l-.5-1A.5.5 0 0 1 1 14V2a.5.5 0 0 1 .053-.224l.5-1a.5.5 0 0 1 .367-.27zm.217 1.338L2 2.118v11.764l.137.274.51-.51a.5.5 0 0 1 .707 0l.646.647.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.509.509.137-.274V2.118l-.137-.274-.51.51a.5.5 0 0 1-.707 0L12 1.707l-.646.647a.5.5 0 0 1-.708 0L10 1.707l-.646.647a.5.5 0 0 1-.708 0L8 1.707l-.646.647a.5.5 0 0 1-.708 0L6 1.707l-.646.647a.5.5 0 0 1-.708 0L4 1.707l-.646.647a.5.5 0 0 1-.708 0l-.509-.51z"
+            clip-rule="evenodd"
+          />
+          <path 
+            fill-rule="evenodd"
+            d="M3 4.5a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm8-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5z"
+            clip-rule="evenodd"
+          /></svg
+        >View Payments</router-link
+      >
+      <router-link
+        v-if="state.worker != null"
+        class="
+          text-primary-blue
+          flex flex-row
+          justify-items-center
+          items-center
+          px-4
+          py-2
+          mt-2
+          text-xl
+          font-semibold
+          text-gray-900
+          rounded-lg
+          hover:bg-link-water
+          transition
+          duration-500
+          ease-in-out
+        "
+        to="/view-delivery-list"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" 
+        class="h-10 w-10 pr-3" 
+        viewBox="0 0 20 20" 
+        fill="currentColor">
+        <path fill-rule="evenodd" 
+        d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" 
+        clip-rule="evenodd" />
+        </svg
+        >View Schedules</router-link
       >
       <router-link
         v-if="state.username != null"
@@ -286,12 +413,20 @@ export default {
       worker: null,
       error: false,
       loggingOut: false,
+      isSystemAdmin: false,
     });
 
     if (JSON.parse(localStorage.getItem('user')) != null) {
       state.username = store.state.user.user.username
     } else {
-      state.worker = store.state.worker.worker.username
+      if (store.state.worker.worker.isSystemAdmin == false){
+        state.worker = store.state.worker.worker.username
+        state.isSystemAdmin = false
+      } else {
+        state.worker = store.state.worker.worker.username
+        state.isSystemAdmin = true
+      }
+      
     }
 
     async function logoutUser() {

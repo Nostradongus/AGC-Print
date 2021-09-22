@@ -3,7 +3,7 @@
     <side-bar />
     <page-header title="Payment Portal">
       <div class="pr-8 pl-8 pt-4">
-        <div class="bg-light-blue rounded-xl p-6 mx-auto mb-8 h-30">
+        <div v-if="state.worker == null" class="bg-light-blue rounded-xl p-6 mx-auto mb-8 h-30">
           <p class="text-lg manrope-bold">
             You can pay through the following channels:
           </p>
@@ -55,14 +55,13 @@
               <div class="grid grid-cols-2">
                 <div>
                   <p class="text-lg manrope-regular">
-                    Order Set Number: {{ state.order.id }}
+                    Order Set #: {{ state.order.id }}
                   </p>
                   <p class="text-lg manrope-regular">
                     Total Project Cost: ₱ {{ state.order.price }}
                   </p>
                 </div>
                 <div>
-                  <!-- TODO: to be updated -->
                   <p
                     v-if="!state.order.paidDownPayment"
                     class="text-lg manrope-regular"
@@ -72,14 +71,40 @@
                   <p v-else class="text-lg manrope-regular">
                     Downpayment: Already Paid
                   </p>
-                  <p class="text-lg manrope-regular">
-                    Remaining Balance: To Be Updated
+                  <p 
+                    v-if="state.order.remBalance > 0"
+                    class="text-lg manrope-regular"
+                  >
+                    Remaining Balance: ₱ {{ state.order.remBalance }}
+                  </p>
+                  <p v-else class="text-lg manrope-regular">
+                    Remaining Balance: Already Paid
                   </p>
                 </div>
               </div>
             </div>
           </div>
-          <div class="p-4 w-4/12">
+          <div v-if="state.worker" class="p-4 w-6/12">
+            <div class="bg-light-blue rounded-xl p-6 mx-auto mb-8 h-30">
+              <div class="flex flex-row items-center justify-center">
+                <p class="text-sm manrope-bold truncate max-w-xs">
+                  Uploaded by: {{ state.order.user }} ({{ state.order.userFullName }})
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <div v-if="state.order.remBalance <= 0 && state.worker == null" class="p-4 w-5/12">
+            <div class="bg-light-blue rounded-xl p-6 mx-auto mb-8 h-30">
+              <div class="flex flex-row items-center justify-center">
+                <p class="text-md manrope-bold text-primary-blue truncate max-w-xs">
+                  Order Set Fully Paid!
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div v-if="state.worker == null && state.order.remBalance > 0" class="p-4 w-4/12">
             <p class="manrope-bold text-md mb-3">
               Upload Payment Receipt Here:
             </p>
@@ -115,7 +140,7 @@
               "
               class="text-red manrope-bold text-left text-xs mt-2"
             >
-              File must be in .jpg, .png, or .pdf format.
+              File must be in .jpg or .png format.
             </p>
             <p
               v-if="state.paymentSubmitted"
@@ -124,7 +149,7 @@
               Receipt Uploaded!
             </p>
           </div>
-          <div class="w-2/12 mt-8">
+          <div v-if="state.worker == null && state.order.remBalance > 0" class="w-2/12 mt-8">
             <div>
               <button
                 class="
@@ -155,15 +180,21 @@
             </div>
           </div>
         </div>
+        
+        <p v-if="!state.empty && state.payment == null && state.worker != null" class="text-red manrope-bold text-center text-xl">
+          No payment receipts uploaded yet by user.
+        </p>
+
         <div
           v-if="state.payment != null"
-          class="overflow-y-auto max-h-80 pt-2 pb-2"
+          class="overflow-y-auto max-h-screen pt-2 pb-2"
         >
           <!-- list of submitted payments by user -->
           <payment-card
             v-for="payment in state.payment"
             :key="payment.id"
             :payment="payment"
+            @paymentVerify="updatePayment(payment, $event)"
           />
         </div>
         <div class="flex items-end mt-8 mb-8">
@@ -213,19 +244,24 @@ export default {
   },
   setup() {
     let file = ref(null);
+    const store = useStore();
     const route = useRoute();
     let state = reactive({
+      worker: null,
       order: null,
       payment: null,
       fileValidation: null,
       fileTypeValidation: null,
       paymentSubmitted: false,
       paymentFile: null,
-      curDate: null,
       downPayment: null,
       submitted: false,
       empty: true,
     });
+
+    if (JSON.parse(localStorage.getItem('user')) == null) {
+      state.worker = store.state.worker.worker.username
+    }
 
     onMounted(() => {
       getOrderDetails();
@@ -263,7 +299,7 @@ export default {
         state.paymentFile = file.value.files[0];
 
         // valid file type extensions
-        const extensions = ['png', 'jpg', 'jpeg', 'pdf'];
+        const extensions = ['png', 'jpg', 'jpeg'];
 
         // get uploaded file's extension
         const fileExtension = state.paymentFile.name.substring(
@@ -275,6 +311,19 @@ export default {
       } else {
         state.fileTypeValidation = null;
       }
+    }
+
+    async function updatePayment(payment, data) {
+      // update specified payment card
+      payment.paymentAcc = data.paymentAcc;
+      payment.refNumber = data.refNumber;
+      payment.amount = data.amount;
+      payment.confirmed = data.confirmed;
+      payment.dateConfirmed = data.dateConfirmed;
+
+      // order set payment details
+      state.order.paidDownPayment = data.paidDownPayment;
+      state.order.remBalance = data.remBalance;
     }
 
     async function submitPayment(e) {
@@ -315,7 +364,7 @@ export default {
       }
     }
 
-    return { state, file, onSelectFile, submitPayment, route };
+    return { state, file, onSelectFile, updatePayment, submitPayment, route };
   },
 };
 </script>

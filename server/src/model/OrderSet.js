@@ -1,7 +1,6 @@
 // import mongoose module for schema modeling
 import mongoose from 'mongoose';
 
-// TODO: update with down payment attribute; confirmation
 // order set schema for a set of orders in the application
 const OrderSetSchema = new mongoose.Schema(
   {
@@ -12,6 +11,11 @@ const OrderSetSchema = new mongoose.Schema(
     },
     // user who made the order/s
     user: {
+      type: String,
+      required: true,
+    },
+    // full name (first name and last name) of user
+    userFullName: {
       type: String,
       required: true,
     },
@@ -57,6 +61,11 @@ const OrderSetSchema = new mongoose.Schema(
       type: Number,
       default: -1,
     },
+    // remaining balance not yet paid to the order set
+    remBalance: {
+      type: Number,
+      default: -1,
+    },
     // current status of the order set
     status: {
       type: String,
@@ -80,9 +89,9 @@ const OrderSetSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    // when the order was shipped
-    dateShipped: {
-      type: String,
+    // set delivery schedule of the order set
+    deliverySched: {
+      type: Object,
       default: null,
     },
   },

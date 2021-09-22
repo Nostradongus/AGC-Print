@@ -11,7 +11,7 @@
               <!-- NOTE: USE IF ACCESSING FROM CLOUDINARY -->
               <img
                 :src="o.filePath"
-                onerror="this.onerror=null;this.src='http://localhost:5000/assets/nopreview.png'"
+                onerror="this.onerror=null;this.src='../src/assets/nopreview.png'"
                 alt="Order Image"
                 class="order-img"
                 border="0"
@@ -107,7 +107,7 @@
 </template>
 
 <script>
-import OrderPreviewModal from './OrderPreviewModal.vue';
+import OrderPreviewModal from './Modals/OrderPreviewModal.vue';
 import { reactive, ref, onBeforeMount } from 'vue';
 import * as api from '../api/index.js';
 

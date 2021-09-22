@@ -13,6 +13,9 @@
 </template>
 
 <script>
+import { reactive } from 'vue';
+import { useStore } from 'vuex';
+
 export default {
   name: 'PageHeader',
   props: {
@@ -21,6 +24,21 @@ export default {
       required: true,
       default: 'Header Title',
     },
+  },
+  setup() {
+    const store = useStore();
+    const state = reactive({
+      username: null,
+      worker: null,
+    });
+
+    if (JSON.parse(localStorage.getItem('user')) != null) {
+      state.username = store.state.user.user.username;
+    } else {
+      state.worker = store.state.worker.worker.username;
+    }
+
+    return { state };
   },
 };
 </script>

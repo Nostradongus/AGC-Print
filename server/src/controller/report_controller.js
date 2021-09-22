@@ -1,12 +1,20 @@
 // get report service static object from service folder
 import ReportService from '../service/report_service.js';
 
+// get user service static object from service folder
+import UserService from '../service/user_service.js';
+
 // import cloudinary for cloud storage file uploading
 import cloudinary from '../config/cloudinary.js';
 
 // import fs module for file manipulation
 // eslint-disable-next-line no-unused-vars
 import fs from 'fs';
+
+// import nodemailer module for sending emails to clients
+import nodemailer from 'nodemailer';
+
+import logger from '../logger/index.js';
 
 // import uniqid module for unique id generator
 import uniqid from 'uniqid';
@@ -18,11 +26,38 @@ const reportController = {
     try {
       // retrieve all reports from the database
       const reports = await ReportService.getAllReports();
-      // send the array of reports back to the client
-      return res.status(200).json(reports);
+
+      // if there are existing reports in the database
+      if (reports.length != 0) {
+        // send back array of reports to client
+        return res.status(200).json(reports);
+      }
+
+      // send empty array back to client with appropriate status code
+      return res.status(404).json(reports);
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
+    }
+  },
+
+  // report controller method to retrieve and return all reports from the database according to given status
+  getFilteredReports: async (req, res) => {
+    try {
+      // retrieve all reports from the database according to given status
+      const reports = await ReportService.getFilteredReports(req.params.status);
+
+      // if there are existing reports in the database
+      if (reports.length != 0) {
+        // send array of reports back to client
+        return res.status(200).json(reports);
+      }
+
+      // send empty array back to client with appropriate status code
+      return res.status(404).json(reports);
+    } catch (err) {
+      // if error has occurred, send server error status and message
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -39,7 +74,7 @@ const reportController = {
       return res.status(404).json({ message: 'Report not found!' });
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -59,7 +94,7 @@ const reportController = {
       return res.status(404).json({ message: 'Report not found!' });
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -69,17 +104,15 @@ const reportController = {
       const reports = await ReportService.getUserReports(req.params.username);
 
       // if there are reports from user, send data back to client
-      if (reports != null) {
+      if (reports.length != 0) {
         return res.status(200).json(reports);
       }
 
-      // if no reports yet from user, send message
-      return res
-        .status(404)
-        .json({ message: 'No reports created from user yet!' });
+      // if no reports yet from user, send back empty array with appropriate status code
+      return res.status(404).json(reports);
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -156,12 +189,16 @@ const reportController = {
         files.push(file);
       }
 
+      // get user's first name and last name
+      const user = await UserService.getUser({ username: req.user.username });
+
       // create new report object
       const report = {
         id: uniqueId,
         orderSetId: req.body.orderSetId,
         type: req.body.type,
         user: req.user.username,
+        userFullName: user.firstname + ' ' + user.lastname,
         description: req.body.description,
         files: files,
         status: 'Not Yet Resolved',
@@ -175,7 +212,7 @@ const reportController = {
       return res.status(201).json(result);
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -186,27 +223,161 @@ const reportController = {
       const result = await ReportService.deleteReport({ id: req.params.id });
 
       // send result back to the client to indicate success
-      return res.status(200).json(result);
+      return res.status(202).json(result);
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
+    }
+  },
+
+  // report controller method to add new staff note to a report from the database
+  addNote: async (req, res) => {
+    try {
+      // get report data from database
+      const report = await ReportService.getReport({ id: req.params.id });
+
+      // create staff note object
+      const staffNote = {
+        id: req.body.id,
+        note: req.body.note,
+        staffUsername: req.body.staffUsername,
+        staffFirstname: req.body.staffFirstname,
+        staffLastname: req.body.staffLastname,
+      };
+
+      // add new staff note to report data
+      report.notes.push(staffNote);
+
+      // create report update object
+      const data = {
+        id: req.params.id,
+        notes: report.notes,
+      };
+
+      // update report from database with new staff note
+      const result = await ReportService.updateNote(data);
+
+      // send result back to the client to indicate success
+      return res.status(204).json(result);
+    } catch (err) {
+      // if error has occurred, send server error status and message
+      return res.status(500).json({ message: 'Server Error' });
+    }
+  },
+
+  // report controller method to remove an existing staff note in a report from the database
+  removeNote: async (req, res) => {
+    try {
+      // get report data from database
+      const report = await ReportService.getReport({ id: req.params.id });
+
+      // delete existing staff note from report data
+      const tempNotes = [];
+      for (let ctr = 0; ctr < report.notes.length; ctr++) {
+        if (report.notes[ctr].id !== req.body.noteId) {
+          tempNotes.push(report.notes[ctr]);
+        }
+      }
+      report.notes = tempNotes;
+
+      // create report update object
+      const data = {
+        id: req.params.id,
+        notes: report.notes,
+      };
+
+      // update report from database with updated staff notes
+      const result = await ReportService.updateNote(data);
+
+      // send result back to the client to indicate success
+      return res.status(204).json(result);
+    } catch (err) {
+      // if error has occurred, send server error status and message
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
   // report controller method to update the status of a report from the database
   updateReportStatus: async (req, res) => {
     try {
-      // update a report from the database
-      const result = await ReportService.updateReportStatus({
+      // get today's date
+      const date = new Date();
+      const year = date.getFullYear().toString();
+      const month = (date.getMonth() + 1).toString().padStart(2, 0);
+      const day = date.getDate().toString().padStart(2, 0);
+      const formattedDate = `${year}-${month}-${day}`;
+
+      // create update report object
+      const data = {
         id: req.params.id,
         status: req.body.status,
-      });
+        comment: req.body.comment,
+        dateUpdated: formattedDate,
+      };
+
+      // update a report from the database
+      const result = await ReportService.updateReportStatus(data);
 
       // send result back to the client to indicate success
       return res.status(204).json(result);
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
+    }
+  },
+
+  // report controller method to send an email to the client for a submitted report
+  // user controller method to send an email to inform the client that their order is placed
+  sendEmailReport: async (req, res) => {
+    try {
+      // get the data of the client from the database
+      const clientData = {
+        name: req.body.name,
+        email: req.body.email,
+        orderId: req.body.id,
+      };
+
+      // create reusable transporter object using the default SMTP transport
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          // e-mail address of company 'bot'
+          user: '"AGC Print" sweng.nodemailer@gmail.com',
+          // password for the e-mail account
+          pass: '1234567890Test',
+        },
+      });
+
+      // send mail with defined transport object
+      const emailFormat = await transporter.sendMail({
+        // sender's e-mail address
+        from: '"AGC Print" <sweng.nodemailer@gmail.com>',
+        // receiver's e-mail address
+        to: clientData.email,
+        // subject of the e-mail
+        subject: '[Order # ' + clientData.orderId + '] Order Reported',
+        // content of the e-mail
+        html:
+          '<p>Dear ' +
+          clientData.name +
+          ',</p>' +
+          '<p>We have received your report for order <b>' +
+          clientData.orderId +
+          '</b>.We apologize for the inconvenience this may have caused.' +
+          'We will get back to you within 24-48 hours via phone or email.</p>' +
+          '<p>Thank you and have a great day! </p>' +
+          '<p>AGC Print </p>' +
+          '<p>[Please do not reply to this email. This is an auto-generated message]</p>',
+      });
+      // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+      logger.info('Message sent: ' + emailFormat.messageId);
+
+      return res
+        .status(201)
+        .json('Order Placed E-mail Sent To ' + clientData.email + '!');
+    } catch (err) {
+      logger.info(err);
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 };

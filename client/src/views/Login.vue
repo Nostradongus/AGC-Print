@@ -3,7 +3,7 @@
     <div class="login-rectangle relative m-auto">
       <img class="w-40 h-40 m-auto mt-8" src="../assets/logo.png" />
       <p class="manrope-regular text-3xl text-center mt-2 mb-4">
-        Sign in to your account
+        Client Sign In
       </p>
       <p
         class="manrope-bold error-msg-field text-center mb-8"
@@ -20,7 +20,7 @@
               name="username"
               type="text"
               class="manrope-regular login-text-field"
-              v-model="state.username"
+              v-model.trim="state.username"
             />
             <label
               for="email"
@@ -40,7 +40,7 @@
               name="password"
               type="password"
               class="manrope-regular login-text-field"
-              v-model="state.password"
+              v-model.trim="state.password"
             />
             <label
               for="password"
@@ -69,7 +69,10 @@
         </form>
       </div>
       <router-link class="manrope-bold text-primary-blue" to="/register">
-        <span class="absolute bottom-16 right-16">Don't have an account?</span>
+        <span class="absolute bottom-16 right-16">Don't have a client account?</span>
+      </router-link>
+      <router-link class="manrope-bold text-primary-blue" to="/staff-login">
+        <span class="absolute bottom-16 left-16">Sign in as a staff</span>
       </router-link>
     </div>
   </div>
@@ -106,8 +109,7 @@ export default {
           store.dispatch('loginUser', result.data);
           router.push({ name: 'MyOrders' });
         } else if (result.data.flag == 1) {
-          store.dispatch('loginWorker', result.data);
-          router.push({ name: `StaffViewOrder` });
+          state.error = true;
         }
         // else router.push({ name: `Error` });
       } catch (err) {

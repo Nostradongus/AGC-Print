@@ -48,6 +48,13 @@ const reportFileUpload = multer({ storage: multer.diskStorage({}) });
 // route for getting all reports from the database
 router.get('/', token.authenticateToken, reportController.getAllReports);
 
+// route for getting all reports from the database according to given status
+router.get(
+  '/filter/:status',
+  token.authenticateToken,
+  reportController.getFilteredReports
+);
+
 // route for getting all reports of a user from the database
 router.get(
   '/:username',
@@ -73,12 +80,29 @@ router.post(
   reportController.addReport
 );
 
+// route for sending email to inform the client that their report is noted
+router.post(
+  '/sendEmail',
+  token.authenticateToken,
+  reportController.sendEmailReport
+);
+
 // route for deleting a report from the database
 router.delete(
   '/delete/:id',
   token.authenticateToken,
   reportController.deleteReport
 );
+
+// route for delete an existing staff note in a report from the database
+router.patch(
+  '/note/remove/:id',
+  token.authenticateToken,
+  reportController.removeNote
+);
+
+// route for adding new staff to a report from the database
+router.patch('/note/:id', token.authenticateToken, reportController.addNote);
 
 // route for updating the status of a report from the database
 router.patch(

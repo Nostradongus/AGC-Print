@@ -14,14 +14,13 @@ const PaymentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    // name of the bank used by the client to pay
-    paymentAcc: {
-      type: String,
-      default: null,
-      required: false,
-    },
     // user who uploaded the payment receipt
     user: {
+      type: String,
+      required: true,
+    },
+    // full name (first and last name) of user who made the report
+    userFullName: {
       type: String,
       required: true,
     },
@@ -48,9 +47,15 @@ const PaymentSchema = new mongoose.Schema(
       default: null,
       required: false,
     },
+    // name of the bank used by the client to pay
+    paymentAcc: {
+      type: String,
+      default: null,
+      required: false,
+    },
     // reference number given by account
     refNumber: {
-      type: Number,
+      type: String,
       default: null,
       required: false,
     },

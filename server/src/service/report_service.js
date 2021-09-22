@@ -7,6 +7,11 @@ const ReportService = {
   // from most recent to least recent
   getAllReports: async () => Report.find({}).sort({ createdAt: 'descending' }),
 
+  // this method retrieves and returns all report data in the database according to given status
+  // from most recent to least recent
+  getFilteredReports: async (status) =>
+    Report.find({ status: status }).sort({ createdAt: 'descending' }),
+
   // this method retrieves and returns a specific report data based on the given report id
   getReport: async (id) => Report.findOne(id),
 
@@ -23,6 +28,7 @@ const ReportService = {
       orderSetId: report.orderSetId,
       type: report.type,
       user: report.user,
+      userFullName: report.userFullName,
       description: report.description,
       files: report.files,
       status: report.status,
@@ -34,9 +40,20 @@ const ReportService = {
     return report;
   },
 
+  // this method adds a staff note to the report data's notes in the database
+  updateNote: async (data) =>
+    Report.updateOne({ id: data.id }, { notes: data.notes }),
+
   // this method updates the status of an existing report data from the database
   updateReportStatus: async (data) =>
-    Report.updateOne({ id: data.id }, { status: data.status }),
+    Report.updateOne(
+      { id: data.id },
+      {
+        status: data.status,
+        comment: data.comment,
+        dateUpdated: data.dateUpdated,
+      }
+    ),
 
   // this method deletes an existing report from the database
   deleteReport: async (id) => Report.deleteOne(id),

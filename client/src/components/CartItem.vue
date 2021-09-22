@@ -1,8 +1,8 @@
 <template>
   <div class="px-8 pt-3 pb-5">
     <div class="bg-light-blue rounded-xl p-4 mx-auto mb-0.5 h-30 cart-card">
-      <div class="flex p-3">
-        <div class="flex items-center w-1/5 h-1/5">
+      <div class="flex flex-row justify-items-center p-3">
+        <div class="flex items-center w-1/4 h-1/4">
           <!-- NOTE: USE IF ACCESSING FILE FROM LOCAL STORAGE -->
           <!-- <img
             :src="`http://localhost:5000/order_images/${order.filename}`"
@@ -14,13 +14,13 @@
           <!-- NOTE: USE IF ACCESSING FILE WITH CLOUDINARY -->
           <img
             :src="order.filePath"
-            onerror="this.onerror=null;this.src='http://localhost:5000/assets/nopreview.png'"
+            onerror="this.onerror=null;this.src='../src/assets/nopreview.png'"
             alt="Order Image" 
             class="order-img"
             border="0"
           />
         </div>
-        <div class="w-1/3 flex flex-col justify-center items-center">
+        <div class="w-1/2 flex flex-col items-center justify-center">
           <div class="ml-3 space-y-1 pr-3">
             <div class="text-md manrope-regular">
               <span class="text-md manrope-bold"> Type:</span>
@@ -62,7 +62,7 @@
               <span class="text-md manrope-bold">Die-cut:</span>
               {{ order.diecut }}
             </div>
-            <div class="text-md manrope-regular">
+            <div class="text-md manrope-regular truncate w-52">
               <span v-if="order.remarks !== ''" class="text-md manrope-bold">Remarks:</span>
               {{ order.remarks }}
             </div>

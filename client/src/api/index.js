@@ -18,6 +18,8 @@ export const signUp = (userData) => API.post('/register', userData);
 
 // order data api methods
 export const getAllOrderSets = () => API.get('/order');
+export const getAllOrderSetsScheduled = () =>
+  API.get('/order/orders/deliveries');
 export const getUserOrderSets = (username) => API.get(`/order/${username}`);
 export const getUserOrderSetsFiltered = (username, status) =>
   API.get(`/order/${username}/filter/${status}`);
@@ -39,22 +41,16 @@ export const addOrderSet = (orders) => API.post('/order/cart/confirm', orders);
 export const deleteOrder = (id) => API.delete(`/order/delete/${id}`);
 export const deleteOrderSet = (id) =>
   API.delete(`/order/delete/orderSet/${id}`);
-export const updateOrderSetStatus = (id, status) =>
-  API.patch(`/order/update/orderSet/status/${id}`, status);
-export const updateOrderStatus = (id, status) =>
-  API.patch(`/order/update/order/status/${id}`, status);
+export const updateOrderSet = (id, data) =>
+  API.patch(`/order/update/orderSet/${id}`, data);
+export const setDelivery = (id, data) =>
+  API.patch(`/order/update/orderSet/delivery/${id}`, data);
+export const updateOrder = (id, data) =>
+  API.patch(`/order/update/order/${id}`, data);
 export const updateOrderSetReported = (id, status) =>
   API.patch(`/order/update/orderSet/reported/${id}`, status);
-export const updateOrderSetPrice = (id, price) =>
-  API.patch(`/order/update/orderSet/price/${id}`, price);
-export const updateOrderPrice = (id, price) =>
-  API.patch(`/order/update/order/price/${id}`, price);
-export const sendEmailOrderPlaced = (id, name, email) =>
-  API.post('/order/cart/confirm/sendEmailOrderPlaced', {
-    id: id,
-    name: name,
-    email: email,
-  });
+export const sendEmailOrderPlaced = (emailData) =>
+  API.post('/order/cart/confirm/sendEmailOrderPlaced', emailData);
 
 // user data api methods
 export const getUsers = () => API.get('/users');
@@ -64,21 +60,48 @@ export const patchUser = (username, data) =>
 
 // report data api methods
 export const getAllReports = () => API.get('/report');
+export const getFilteredReports = (status) =>
+  API.get(`/report/filter/${status}`);
 export const getUserReports = (username) => API.get(`/report/${username}`);
 export const getReport = (id) => API.get(`/report/details/${id}`);
-export const getOrderSetReport = (id) => API.get(`/report/details/orderSet/${id}`);
+export const getOrderSetReport = (id) =>
+  API.get(`/report/details/orderSet/${id}`);
 export const addReport = (report) => API.post('/report/add/new', report);
+export const addNote = (id, data) => API.patch(`/report/note/${id}`, data);
+export const removeNote = (id, data) =>
+  API.patch(`/report/note/remove/${id}`, data);
 export const deleteReport = (id) => API.delete(`/report/delete/${id}`);
-export const updateReportStatus = (id) => API.patch(`/report/update/${id}`);
+export const updateReportStatus = (id, data) =>
+  API.patch(`/report/update/${id}`, data);
+export const sendEmailReport = (user) => API.post('/report/sendEmail', user);
 
 // payment receipt data api methods
 export const getAllPayments = () => API.get('/payment');
+export const getFilteredPayments = (status) =>
+  API.get(`/payment/filter/${status}`);
 export const getUserPayments = (username) => API.get(`/payment/${username}`);
 export const getOrderSetIdPayments = (orderSetId) =>
   API.get(`/payment/${orderSetId}/payments`);
-export const getPayment = (id) => API.get(`/report/details/${id}`);
+export const getPayment = (id) => API.get(`/payment/details/${id}`);
 export const addPayment = (payment) => API.post('/payment/add/new', payment);
-export const deletePayment = (id) => API.delete(`/report/delete/${id}`);
+export const verifyPayment = (id, data) =>
+  API.patch(`/payment/update/${id}`, data);
+export const deletePayment = (id) => API.delete(`/payment/delete/${id}`);
 
 // worker data api methods
 export const getWorker = (username) => API.get(`/workers/${username}`);
+export const getWorkers = () => API.get('/workers');
+export const sendEmailProjectCost = (emailData) =>
+  API.post(`/workers/sendEmailProjectCost`, emailData);
+export const sendEmailProcessingOrder = (emailData) =>
+  API.post(`/workers/sendEmailProcessingOrder`, emailData);
+export const sendEmailOrderComplete = (emailData) =>
+  API.post(`/workers/sendEmailOrderComplete`, emailData);
+
+// admin data api methods
+export const registerWorker = (staffData) =>
+  API.post('/admin/registerWorker', staffData);
+export const deleteWorker = (username) =>
+  API.delete(`admin/deleteWorker/${username}`);
+export const updateWorker = (username, staffData) =>
+  API.patch(`admin/updateWorker/${username}`, staffData);

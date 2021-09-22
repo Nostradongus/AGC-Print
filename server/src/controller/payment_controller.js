@@ -1,6 +1,12 @@
 // get payment service static object from service folder
 import PaymentService from '../service/payment_service.js';
 
+// get user service static object from service folder
+import UserService from '../service/user_service.js';
+
+// get order service static object from service folder
+import OrderService from '../service/order_service.js';
+
 // import cloudinary for cloud storage file uploading
 import cloudinary from '../config/cloudinary.js';
 
@@ -20,19 +26,40 @@ const paymentController = {
       const payments = await PaymentService.getAllPayments();
 
       // if there are existing payment receipt data from the database
-      if (payments != null && payments.length != 0) {
+      if (payments.length != 0) {
         return res.status(200).json(payments);
       }
 
-      // send the array of payments back to the client
-      return res.status(404).json({ message: 'No Payment Data Found!' });
+      // send the empty array of payments back to the client with appropriate status code
+      return res.status(404).json(payments);
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
-  // payment receipt controller method to retrieve andreturn a specific payment receipt from the database
+  // payment receipt controller method to retrieve and return all payment receipts from the database with the given status
+  getFilteredPayments: async (req, res) => {
+    try {
+      // retrieve all payment receipts from the database according to given status
+      const payments = await PaymentService.getFilteredPayments(
+        req.params.status
+      );
+
+      // if there are existing payment receipt data from the database
+      if (payments.length != 0) {
+        return res.status(200).json(payments);
+      }
+
+      // send the empty array of payments back to the client with appropriate status code
+      return res.status(404).json(payments);
+    } catch (err) {
+      // if error has occurred, send server error status and message
+      return res.status(500).json({ message: 'Server Error' });
+    }
+  },
+
+  // payment receipt controller method to retrieve and return a specific payment receipt from the database
   getPayment: async (req, res) => {
     try {
       // retrieve a specific payment receipt from the database given the id data from the request
@@ -45,7 +72,7 @@ const paymentController = {
       return res.status(404).json({ message: 'Payment receipt not found!' });
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -57,17 +84,15 @@ const paymentController = {
       );
 
       // if there are payment receipts uploaded from user, send data back to client
-      if (payments != null && payments.length != 0) {
+      if (payments.length != 0) {
         return res.status(200).json(payments);
       }
 
-      // if no payment receipts uploaded yet from user, send message
-      return res
-        .status(404)
-        .json({ message: 'No payment receipts uploaded from user yet!' });
+      // if no payment receipts uploaded yet from user, send back empty array with appropriate status code
+      return res.status(404).json(payments);
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -79,17 +104,15 @@ const paymentController = {
       );
 
       // if there are payment receipts uploaded from user, send data back to client
-      if (payments != null && payments.length != 0) {
+      if (payments.length != 0) {
         return res.status(200).json(payments);
       }
 
-      // if no payment receipts uploaded yet from user, send message
-      return res
-        .status(404)
-        .json({ message: 'No payment receipts uploaded from user yet!' });
+      // if no payment receipts uploaded yet from user, send back empty array with appropriate status code
+      return res.status(404).json(payments);
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -152,11 +175,15 @@ const paymentController = {
         folder: folder,
       });
 
+      // get first and last name of user
+      const user = await UserService.getUser({ username: req.user.username });
+
       // create new payment receipt object
       const payment = {
         id: uniqueId,
         orderSetId: req.body.orderSetId,
         user: req.user.username,
+        userFullName: user.firstname + ' ' + user.lastname,
         filename: result.public_id,
         filePath: result.secure_url,
         dateUploaded: formattedDate,
@@ -169,23 +196,64 @@ const paymentController = {
       return res.status(201).json(receipt);
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
-  // payment receipt controller method to update a payment's payment account from the database
-  updatePaymentAcc: async (req, res) => {
+
+  // payment receipt controller method to verify a payment receipt to the database
+  verifyPayment: async (req, res) => {
     try {
-      const result = await PaymentService.updatePaymentAcc({
-        id: req.params.id,
+      // get today's date
+      const date = new Date();
+      const year = date.getFullYear().toString();
+      const month = (date.getMonth() + 1).toString().padStart(2, 0);
+      const day = date.getDate().toString().padStart(2, 0);
+      const formattedDate = `${year}-${month}-${day}`;
+
+      // create verified payment data
+      const verifiedPayment = {
         paymentAcc: req.body.paymentAcc,
+        refNumber: req.body.refNumber,
+        amount: parseFloat(req.body.amount),
+        confirmed: true,
+        dateConfirmed: formattedDate,
+      };
+
+      const result = await PaymentService.verifyPayment(
+        req.params.id,
+        verifiedPayment
+      );
+
+      // update order set with the receipt's amount
+      const payment = await PaymentService.getPayment({ id: req.params.id });
+      const orderSet = await OrderService.getOrderSet({
+        id: payment.orderSetId,
       });
+
+      orderSet.remBalance -= verifiedPayment.amount;
+      if (orderSet.remBalance < 0) {
+        orderSet.remBalance = 0;
+      }
+
+      if (!orderSet.paidDownPayment) {
+        if (orderSet.price * 0.5 - verifiedPayment.amount <= 0) {
+          orderSet.paidDownPayment = true;
+        }
+      }
+
+      await OrderService.updateOrderSet(orderSet.id, {
+        remBalance: orderSet.remBalance,
+        paidDownPayment: orderSet.paidDownPayment,
+      });
+
       // send result back to the client to indicate success
-      res.status(204).json(result);
+      return res.status(204).json(result);
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
+
   // payment receipt controller method to delete a payment receipt from the database
   deletePayment: async (req, res) => {
     try {
@@ -193,10 +261,10 @@ const paymentController = {
       const result = await PaymentService.deletePayment({ id: req.params.id });
 
       // send result back to the client to indicate success
-      return res.status(200).json(result);
+      return res.status(202).json(result);
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 };

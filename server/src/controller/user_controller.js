@@ -11,8 +11,15 @@ const userController = {
     try {
       // retrieve all users from the database
       const users = await UserService.getUsers();
-      // send the array of users back to the client
-      return res.status(200).json(users);
+
+      // if there are existing users in the database
+      if (users.length != 0) {
+        // send the array of users back to the client
+        return res.status(200).json(users);
+      }
+
+      // send empty array back to client with appropriate status code
+      return res.status(404).json(users);
     } catch (err) {
       // if error has occurred, send server error status and message
       logger.info(err);

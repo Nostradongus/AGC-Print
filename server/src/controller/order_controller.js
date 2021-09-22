@@ -32,14 +32,36 @@ const orderController = {
       // retrieve all orders from the database
       const orders = await OrderService.getAllOrderSets();
 
-      if (orders != null && orders.length != 0) {
+      // if there are existing order sets in the database
+      if (orders.length != 0) {
         return res.status(200).json(orders);
       }
 
-      return res.status(404).json({ message: 'No Orders Yet!' });
+      // send back empty array with appropriate status code
+      return res.status(404).json(orders);
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
+    }
+  },
+
+  // order controller method to retrieve and return all order sets from the database
+  // with scheduled deliveries
+  getAllOrderSetsScheduled: async (req, res) => {
+    try {
+      // retrieve all order sets with scheduled deliveries from the database
+      const orders = await OrderService.getAllOrderSetsScheduled();
+
+      // if there are existing order sets with scheduled deliveries in the database
+      if (orders.length != 0) {
+        return res.status(200).json(orders);
+      }
+
+      // send back empty array with appropriate status code
+      return res.status(404).json(orders);
+    } catch (err) {
+      // if error has occurred, send server error status and message
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -51,13 +73,16 @@ const orderController = {
         req.params.status
       );
 
-      if (orders == null && orders.length != 0) {
+      // if there are existing orders in the database
+      if (orders.length != 0) {
+        // send array of orders back to the client
         return res.status(200).json(orders);
       }
 
-      return res.status(404).json({ message: 'No Orders Yet!' });
+      // send empty array back to client with appropriate status code
+      return res.status(404).json(orders);
     } catch (err) {
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -66,13 +91,16 @@ const orderController = {
     try {
       const orders = await OrderService.getUserOrderSets(req.params.username);
 
-      if (orders != null && orders.length != 0) {
+      // if there are existing orders in the database
+      if (orders.length != 0) {
+        // send array of orders back to the client
         return res.status(200).json(orders);
       }
 
-      return res.status(404).json({ message: 'No Orders Yet!' });
+      // send empty array back to client with appropriate status code
+      return res.status(404).json(orders);
     } catch (err) {
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -80,18 +108,18 @@ const orderController = {
   // according to filter option
   getUserOrderSetsFiltered: async (req, res) => {
     try {
-      const orders = await OrderService.getUserPastOrderSets(
+      const orders = await OrderService.getUserOrderSetsFiltered(
         req.params.username,
         req.params.status
       );
 
-      if (orders == null && orders.length != 0) {
+      if (orders.length != 0) {
         return res.status(200).json(orders);
       }
 
-      return res.status(404).json({ message: 'No Orders Yet!' });
+      return res.status(404).json(orders);
     } catch (err) {
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -102,13 +130,13 @@ const orderController = {
         req.params.username
       );
 
-      if (orders == null && orders.length != 0) {
+      if (orders.length != 0) {
         return res.status(200).json(orders);
       }
 
-      return res.status(404).json({ message: 'No Orders Yet!' });
+      return res.status(404).json(orders);
     } catch (err) {
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -117,13 +145,13 @@ const orderController = {
     try {
       const orders = await OrderService.getAllActiveOrderSets();
 
-      if (orders != null) {
+      if (orders.length != 0) {
         return res.status(200).json(orders);
       }
-      return res.status(404).json({ message: 'No Active Orders Yet!' });
+
+      return res.status(404).json(orders);
     } catch (err) {
-      console.log(err);
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -132,12 +160,13 @@ const orderController = {
     try {
       const orders = await OrderService.getAllPastOrderSets();
 
-      if (orders != null) {
+      if (orders.length != 0) {
         return res.status(200).json(orders);
       }
-      return res.status(404).json({ message: 'No Past Orders Yet!' });
+
+      return res.status(404).json(orders);
     } catch (err) {
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -154,7 +183,7 @@ const orderController = {
       return res.status(404).json({ message: 'Order not found!' });
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -171,7 +200,7 @@ const orderController = {
       return res.status(404).json({ message: 'Order set not found' });
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -181,14 +210,14 @@ const orderController = {
       // retrieve a specific order set from the database given the id data from the request
       const orders = await OrderService.getOrdersFromOrderSet(req.params.id);
       // if order set exists in the database, send the data back to the client
-      if (orders != null && orders.length !== 0) {
+      if (orders.length !== 0) {
         return res.status(200).json(orders);
       }
       // if order does not exist, send error status and message
-      return res.status(404).json({ message: 'Orders not found!' });
+      return res.status(404).json(orders);
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -210,15 +239,15 @@ const orderController = {
         req.body.orders[ctr].orderSetId = uniqueId;
       }
 
-      // get number of orders made by user
-      const orderNum = (
-        await UserService.getUser({ username: req.user.username })
-      ).orderNum;
+      // get number of orders made by user and user's first name and last name
+      const user = await UserService.getUser({ username: req.user.username });
+      const orderNum = user.orderNum;
 
       // add generated unique id and date to order set
       const orderSet = new OrderSet({
         id: uniqueId,
         user: req.user.username,
+        userFullName: user.firstname + ' ' + user.lastname,
         userOrderNum: orderNum.toString(),
         name: req.body.name,
         email: req.body.email,
@@ -241,7 +270,7 @@ const orderController = {
       return res.status(200).json(newOrderSet);
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -412,10 +441,10 @@ const orderController = {
       const result = await OrderService.deleteOrder({ id: req.params.id });
 
       // send result back to the client to indicate success
-      return res.status(200).json(result);
+      return res.status(202).json(result);
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -428,44 +457,133 @@ const orderController = {
       const result = await OrderService.deleteOrderSet({ id: req.params.id });
 
       // send order data back to the client to indicate success
-      return res.status(200).json(result);
+      return res.status(202).json(result);
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
-  // order controller method to update the status of an order set from the database
-  updateOrderSetStatus: async (req, res) => {
+  // order controller method to update an order set from the database
+  updateOrderSet: async (req, res) => {
     try {
-      // update an order set from the database
-      const result = await OrderService.updateOrderSetStatus({
-        id: req.params.id,
-        status: req.body.status,
-      });
+      const id = req.params.id;
+      // data to be set on the order set
+      const data = {};
 
-      // send result back to the client to indicate success
+      if (req.body.name) {
+        data['name'] = req.body.name;
+      }
+      if (req.body.email) {
+        data['email'] = req.body.email;
+      }
+      if (req.body.contactNo) {
+        data['contactNo'] = `63${req.body.contactNo}`;
+      }
+      if (req.body.address) {
+        data['address'] = req.body.address;
+      }
+      if (req.body.status) {
+        data['status'] = req.body.status;
+      }
+      if (req.body.price) {
+        data['price'] = parseFloat(parseFloat(req.body.price).toFixed(2));
+        data['remBalance'] = parseFloat(parseFloat(req.body.price).toFixed(2));
+      }
+
+      const result = await OrderService.updateOrderSet(id, data);
       return res.status(204).json(result);
     } catch (err) {
-      // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
-  // order controller method to update the price of an order set from the database
-  updateOrderSetPrice: async (req, res) => {
+  // order controller method to set delivery schedule for an order set from the database
+  setDelivery: async (req, res) => {
     try {
-      // update an order set from the database
-      const result = await OrderService.updateOrderSetPrice({
-        id: req.params.id,
-        price: req.body.price,
-      });
+      // format time
+      let formattedTime = req.body.time;
+      if (parseInt(formattedTime.split(':')[0]) < 12) {
+        formattedTime += ' AM';
+      } else if (parseInt(formattedTime.split(':')[0]) === 12) {
+        formattedTime += ' NN';
+      } else {
+        formattedTime += ' PM';
+      }
+
+      // set delivery schedule data object
+      const data = {
+        deliverySched: {
+          date: req.body.date,
+          time: formattedTime,
+          remarks: null,
+        },
+      };
+
+      // if user has remarks
+      if (typeof req.body.remarks !== 'undefined' && req.body.remarks) {
+        data.deliverySched.remarks = req.body.remarks;
+      }
+
+      // set delivery schedule for order set from the database
+      const result = await OrderService.updateOrderSet(req.params.id, data);
+      return res.status(204).json(result);
+    } catch (err) {
+      return res.status(500).json({ message: 'Server Error' });
+    }
+  },
+
+  // order controller method to update an order from the database
+  updateOrder: async (req, res) => {
+    try {
+      const id = req.params.id;
+
+      const data = {};
+
+      // General details of each order
+      if (req.body.quantity) {
+        data['quantity'] = req.body.quantity;
+      }
+      if (req.body.width) {
+        data['width'] = req.body.width;
+      }
+      if (req.body.height) {
+        data['height'] = req.body.height;
+      }
+      if (req.body.price) {
+        data['price'] = parseFloat(parseFloat(req.body.price).toFixed(2));
+      }
+      if (req.body.remarks) {
+        data['remarks'] = req.body.remarks;
+      }
+
+      // Tarpaulin only details
+      if (req.body.eyelets) {
+        data['eyelets'] = req.body.eyelets;
+      }
+
+      // Sticker only details
+      if (req.body.diecut) {
+        data['diecut'] = req.body.diecut;
+      }
+
+      // Canvas Print only details
+      if (req.body.frameOption) {
+        data['frameOption'] = req.body.frameOption;
+      }
+      if (req.body.frameEdges) {
+        data['frameEdges'] = req.body.frameEdges;
+      }
+      if (req.body.frameFinishing) {
+        data['frameFinishing'] = req.body.frameFinishing;
+      }
 
       // send result back to the client to indicate success
+      const result = await OrderService.updateOrder(id, data);
       return res.status(204).json(result);
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -479,44 +597,10 @@ const orderController = {
       });
 
       // send result back to the client to indicate success
-      res.status(204).json(result);
+      return res.status(204).json(result);
     } catch (err) {
       // if error has occurred, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
-    }
-  },
-
-  // order controller method to update the status of an order from the database
-  updateOrderStatus: async (req, res) => {
-    try {
-      // update an order from the database
-      const result = await OrderService.updateOrderStatus({
-        id: req.params.id,
-        status: req.body.status,
-      });
-
-      // send result back to the client to indicate success
-      return res.status(204).json(result);
-    } catch (err) {
-      // if error has occured, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
-    }
-  },
-
-  // order controller method to update the price of an order from the database
-  updateOrderPrice: async (req, res) => {
-    try {
-      // update an order from the database
-      const result = await OrderService.updateOrderPrice({
-        id: req.params.id,
-        price: req.body.price,
-      });
-
-      // send result back to the client to indicate success
-      return res.status(204).json(result);
-    } catch (err) {
-      // if error has occured, send server error status and message
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
@@ -544,7 +628,7 @@ const orderController = {
       // send mail with defined transport object
       const emailFormat = await transporter.sendMail({
         // sender's e-mail address
-        from: 'sweng.nodemailer@gmail.com',
+        from: '"AGC Print" <sweng.nodemailer@gmail.com>',
         // receiver's e-mail address
         to: clientData.email,
         // subject of the e-mail
@@ -572,7 +656,7 @@ const orderController = {
         .json('Order Placed E-mail Sent To ' + clientData.email + '!');
     } catch (err) {
       logger.info(err);
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 };

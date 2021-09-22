@@ -13,8 +13,15 @@ const workerController = {
     try {
       // retrieve all workers from the database
       const workers = await WorkerService.getWorkers();
-      // send the array of workers back to the client
-      return res.status(200).json(workers);
+
+      // if there are workers (staff) from the database
+      if (workers.length != 0) {
+        // send back array of workers to client
+        return res.status(200).json(workers);
+      }
+
+      // send back empty array with appropriate status code
+      return res.status(404).json(workers);
     } catch (err) {
       // if error has occurred, send server error status and message
       res.status(500).json({ message: 'Server Error' });
@@ -56,8 +63,12 @@ const workerController = {
   // worker controller method to send an email to inform the client about the project cost
   sendEmailProjectCost: async (req, res) => {
     try {
-      // get the data of the client from the database
-      const clientData = await UserService.getUser(req.body.username);
+      // get the data of the client
+      const clientData = {
+        name: req.body.name,
+        email: req.body.email,
+        orderId: req.body.id,
+      };
       // order set id of the placed order
       const payment = {
         downPayment: req.body.downPayment,
@@ -78,11 +89,11 @@ const workerController = {
       // send mail with defined transport object
       const emailFormat = await transporter.sendMail({
         // sender's e-mail address
-        from: 'sweng.nodemailer@gmail.com',
+        from: '"AGC Print" <sweng.nodemailer@gmail.com>',
         // receiver's e-mail address
         to: clientData.email,
         // subject of the e-mail
-        subject: 'Automated Email Test',
+        subject: '[Order # ' + clientData.orderId + '] Total Cost of Order',
         // content of the e-mail
         html:
           '<p>Dear ' +
@@ -91,11 +102,11 @@ const workerController = {
           '<p>The total project cost and breakdown are now' +
           ' available for viewing via our order portal. You may ' +
           'check the details of your order via the My Orders Page. ' +
-          'The total cost of the project is <b>' +
+          'The total cost of the project is <b>₱' +
           payment.totalCost +
           '</b>. ' +
           'You may ' +
-          ' pay the down payment of the project amounting to <b>' +
+          ' pay the down payment of the project amounting to <b>₱' +
           payment.downPayment +
           '</b> via the following payment channels.</p>' +
           '<p>Please upload your payment slip or proof of payment via ' +
@@ -113,15 +124,19 @@ const workerController = {
         .status(201)
         .json('Project Cost E-mail Sent To ' + clientData.email + '!');
     } catch (err) {
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
   // worker controller method to send an email to inform the client that their order is being processed
   sendEmailProcessingOrder: async (req, res) => {
     try {
-      // get the data of the client from the database
-      const clientData = await UserService.getUser(req.body.username);
+      // get the data of the client
+      const clientData = {
+        name: req.body.name,
+        email: req.body.email,
+        orderId: req.body.id,
+      };
       // order set id of the placed order
       const payment = {
         downPayment: req.body.downPayment,
@@ -142,17 +157,17 @@ const workerController = {
       // send mail with defined transport object
       const emailFormat = await transporter.sendMail({
         // sender's e-mail address
-        from: 'sweng.nodemailer@gmail.com',
+        from: '"AGC Print" <sweng.nodemailer@gmail.com>',
         // receiver's e-mail address
         to: clientData.email,
         // subject of the e-mail
-        subject: 'Automated Email Test',
+        subject: '[Order # ' + clientData.orderId + '] Processing Order',
         // content of the e-mail
         html:
           '<p>Dear ' +
           clientData.name +
           ',</p>' +
-          '<p>We have received your down payment amounting to <b>' +
+          '<p>We have received your down payment amounting to <b>₱' +
           payment.downPayment +
           '</b> paid via <b>' +
           payment.channel +
@@ -170,15 +185,19 @@ const workerController = {
         .status(201)
         .json('Processing Order E-mail Sent To ' + clientData.email + '!');
     } catch (err) {
-      res.status(500).json({ message: 'Server Error' });
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 
   // worker controller method to send an email to inform the client that their order is complete
   sendEmailOrderComplete: async (req, res) => {
     try {
-      // get the data of the client from the database
-      const clientData = await UserService.getUser(req.body.username);
+      // get the data of the client
+      const clientData = {
+        name: req.body.name,
+        email: req.body.email,
+        orderId: req.body.id,
+      };
       // order set id of the placed order
       const payment = {
         rmBal: req.body.rmBal,
@@ -198,18 +217,18 @@ const workerController = {
       // send mail with defined transport object
       const emailFormat = await transporter.sendMail({
         // sender's e-mail address
-        from: 'sweng.nodemailer@gmail.com',
+        from: '"AGC Print" <sweng.nodemailer@gmail.com>',
         // receiver's e-mail address
         to: clientData.email,
         // subject of the e-mail
-        subject: 'Automated Email Test',
+        subject: '[Order # ' + clientData.orderId + '] Order Completed',
         // content of the e-mail
         html:
           '<p>Dear ' +
           clientData.name +
           ',</p>' +
           '<p>Your order has been completed. You may pay the remaining ' +
-          'balance amounting to <b>' +
+          'balance amounting to <b>₱' +
           payment.rmBal +
           '</b> via the following payment channels. ' +
           'Please upload the payment slip / proof of payment. You ' +
@@ -229,7 +248,8 @@ const workerController = {
         .status(201)
         .json('Order Complete E-mail Sent To ' + clientData.email + '!');
     } catch (err) {
-      res.status(500).json({ message: 'Server Error' });
+      console.log(err);
+      return res.status(500).json({ message: 'Server Error' });
     }
   },
 };

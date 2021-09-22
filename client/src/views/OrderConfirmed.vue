@@ -13,7 +13,7 @@
           pt-8
           px-8
           "
-          >Thank you for ordering! Here are the details of your orders:</h1
+          >Thank you for ordering! Here are the details of your order/s:</h1
         >
 
         <!-- delivery information details -->
@@ -23,7 +23,7 @@
             left-0
             -top-3.5
             text-gray-600 text-md
-            pt-8
+            pt-5
             px-8
           "
           >Name: {{ state.orderSet.name }} </h1
@@ -57,6 +57,20 @@
             px-8
           "
           >Delivery Address: {{ state.orderSet.address }} </h1
+        >
+
+        <h1
+          class="
+            manrope-extrabold
+            text-primary-blue
+            left-0
+            text-gray-600 text-md
+            pt-2
+            px-8
+            mt-5
+            mb-5
+          "
+          >Please check your email ({{ state.orderSet.email }}) for future updates regarding the order/s. </h1
         >
 
         <!-- display all recently placed orders of user -->
