@@ -286,7 +286,7 @@
           state.workers != null && !state.workers.length && state.search !== ''
         "
       >
-        No users with "{{ state.search }}" username.
+        No staff with "{{ state.search }}" username.
       </p>
       <div class="overflow-y-auto max-h-screen scrollbar-hidden mb-5">
         <StaffCard
