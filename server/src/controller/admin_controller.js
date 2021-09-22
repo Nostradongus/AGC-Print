@@ -201,7 +201,6 @@ const adminController = {
             lastname: req.body.lastname,
             contactNo: req.body.contactNo,
             email: req.body.email,
-            isSystemAdmin: req.body.isSystemAdmin,
           };
 
           // hash password
@@ -216,7 +215,6 @@ const adminController = {
       }
       return res.status(204).json(result);
     } catch (err) {
-      console.log(err);
       // if error has occurred, send server error status and message
       return res.status(500).json({ message: 'Server Error' });
     }
