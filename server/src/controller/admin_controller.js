@@ -124,7 +124,6 @@ const adminController = {
 
       // check if there are validation errors
       const validationError = validationResult(req);
-      console.log(validationError);
       // if validation errors occur
       if (!validationError.isEmpty()) {
         // return with bad request and error message
@@ -136,10 +135,19 @@ const adminController = {
           emailData = await WorkerService.getWorker({
             email: req.body.email,
           });
+
+          if (emailData != null) {
+            const details = {
+              error: 'E-mail already exists',
+              emailError: true,
+            };
+            return res.status(400).json(details);
+          }
         }
+
+        let validEmailAt = '';
+        let validEmailDot = '';
         let validContactNo = null;
-        let validEmailAt = null;
-        let validEmailDot = null;
 
         // contact number and email format check
         if (req.body.contactNo) {
@@ -150,23 +158,16 @@ const adminController = {
           validEmailDot = req.body.email.split('.');
         }
 
-        if (req.body.email) {
-          // if email already exists
-          if (emailData != null) {
-            const details = {
-              error: 'E-mail already exists',
-              emailError: true,
-            };
-            return res.status(400).json(details);
-
-            // email does not follow valid format
-          } else if (validEmailAt.length < 2 || validEmailDot.length < 2) {
-            const details = {
-              error: 'Email does not follow valid format.',
-              emailError: true,
-            };
-            return res.status(400).json(details);
-          }
+        // if email already exists
+        if (
+          (validEmailAt.length < 2 || validEmailDot.length < 2) &&
+          req.body.email
+        ) {
+          const details = {
+            error: 'Email does not follow valid format.',
+            emailError: true,
+          };
+          return res.status(400).json(details);
         }
         // if contact number inputted does not match the valid format (starts with "63")
         else if (validContactNo !== '63' && req.body.contactNo) {
@@ -211,7 +212,7 @@ const adminController = {
             worker['lastname'] = req.body.lastname;
           }
           if (req.body.contactNo) {
-            worker['contactNo'] = `63${req.body.contactNo}`;
+            worker['contactNo'] = req.body.contactNo;
           }
           if (req.body.email) {
             worker['email'] = req.body.email;
@@ -224,7 +225,6 @@ const adminController = {
           return res.status(201).json(result);
         }
       }
-      return res.status(204).json(result);
     } catch (err) {
       console.log(err);
       // if error has occurred, send server error status and message

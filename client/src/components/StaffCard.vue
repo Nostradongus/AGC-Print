@@ -438,12 +438,20 @@ export default {
           const data = JSON.parse(JSON.stringify(staffData));
           const username = staffData.username;
           toggleEditStaffModal();
+          if (data.contactNo) {
+            data.contactNo = `63${data.contactNo}`;
+          }
+
           const res = await api.updateWorker(username, data);
+          contactNo.value = parseInt(
+            res.data.contactNo.replace(res.data.contactNo.substring(0, 2), '')
+          );
+          console.log(contactNo);
           emit('updateWorker', res.data);
           updateWorkerValidation.passwordValidation = true;
         }
       } catch (err) {
-        console.log(err.response);
+        console.log(err);
       }
     }
 
@@ -461,13 +469,6 @@ export default {
       if (!staffData.confirmPassword && !staffData.password) {
         updateWorkerValidation.passwordValidation = true;
       }
-      console.log(
-        staffData.confirmPassword +
-          ' ' +
-          staffData.password +
-          ' ' +
-          updateWorkerValidation.passwordValidation
-      );
     }
 
     function checkBoolean(obj) {
