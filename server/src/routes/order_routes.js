@@ -129,13 +129,6 @@ router.post(
   orderController.addOrderSet
 );
 
-// route for sending email to inform the client that their order is confirmed
-router.post(
-  '/cart/confirm/sendEmailOrderPlaced',
-  token.authenticateToken,
-  orderController.sendEmailOrderPlaced
-);
-
 // route for deleting an order from cart
 router.delete(
   '/cart/delete/:filename',

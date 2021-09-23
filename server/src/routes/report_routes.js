@@ -80,13 +80,6 @@ router.post(
   reportController.addReport
 );
 
-// route for sending email to inform the client that their report is noted
-router.post(
-  '/sendEmail',
-  token.authenticateToken,
-  reportController.sendEmailReport
-);
-
 // route for deleting a report from the database
 router.delete(
   '/delete/:id',
