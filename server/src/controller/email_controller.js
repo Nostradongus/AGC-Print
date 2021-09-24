@@ -514,7 +514,7 @@ const sendEmail = {
           '<p>A new payment has been made for the order # <b> ' +
           clientData.orderId +
           '</b></p>' +
-          '<p>You may view the payment receipt via the order management portal.</p>' +
+          '<p>You may view the payment receipt via the payment portal of the order.</p>' +
           '<p>Thank you and have a great day! </p>' +
           '<p>[Please do not reply to this email. This is an auto-generated message]</p>',
       });
