@@ -177,6 +177,7 @@ export default {
           state.empty = false;
         }
       } catch (err) {
+        state.empty = true;
         console.log(err);
       }
     }
