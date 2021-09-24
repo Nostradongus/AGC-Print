@@ -448,9 +448,7 @@ export default {
           data.contactNo = `63${data.contactNo}`;
           const res = await api.registerWorker(data);
           if (res.status == 201) {
-            if (state.workers.length === 0) {
-              state.empty = false;
-            }
+            state.empty = false;
             state.workers.push(res.data);
           }
         } else {
