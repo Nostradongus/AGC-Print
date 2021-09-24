@@ -198,10 +198,6 @@ const sendEmail = {
         email: req.body.email,
         orderId: req.body.id,
       };
-      // order set id of the placed order
-      const payment = {
-        rmBal: req.body.rmBal,
-      };
 
       // create reusable transporter object using the default SMTP transport
       const transporter = nodemailer.createTransport({
