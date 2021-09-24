@@ -803,7 +803,7 @@
             <div class="flex flex-row mb-2">
               <p class="manrope-bold text-lg text-primary-blue">Description:</p>
               <br />
-              <p class="text-lg pl-1 text-justify">
+              <p class="text-lg pl-1 text-justify break-all whitespace-pre-line">
                 {{ state.report.description }}
               </p>
             </div>
