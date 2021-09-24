@@ -91,7 +91,7 @@
                   type="text"
                   class="manrope-regular input-text-field w-48 ml-4"
                   v-model.trim="staff.username"
-                  @keypress="isValidUsername(staff.username)"
+                  @keypress="isValidUsername()"
                   :class="{
                     'border-red': !addWorkerValidation.usernameValidation,
                   }"
@@ -451,7 +451,15 @@ export default {
             state.workers.push(res.data);
           }
         } else {
+          // if (!addWorkerValidation.usernameValidation) {
+          //   addWorkerValidation.usernameValidation = false;
+          // }
+          // if (!addWorkerValidation.passwordValidation) {
+          //   addWorkerValidation.passwordValidation = false;
+          // }
           setAll(addWorkerValidation, false);
+          isValidUsername();
+          isValidPassword();
           console.log(addWorkerValidation);
         }
 
@@ -494,9 +502,9 @@ export default {
       });
     }
 
-    function isValidUsername(username) {
+    function isValidUsername() {
       addWorkerValidation.usernameValidation =
-        (/^[a-zA-Z0-9_]*$/.test(username) ? true : false) &&
+        (/^[a-zA-Z0-9_]*$/.test(staff.username) ? true : false) &&
         staff.username != null;
     }
 
