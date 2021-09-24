@@ -400,7 +400,7 @@ const sendEmail = {
           clientData.orderId +
           '</b> is ready for delivery and you may now set your preferred schedule for the delivery.  ' +
           'You may access this by viewing the details of your order then clicking on the schedule delivery ' +
-          'button located at the bottom of the page. The date that you set is subject to approval by our staff.</p>' +
+          'button located at the bottom of the page. The date that you set is subject for approval by our staff.</p>' +
           '<p>Thank you and have a great day! </p>' +
           '<p>AGC Print </p>' +
           '<p>[Please do not reply to this email. This is an auto-generated message]</p>',
