@@ -13,10 +13,10 @@
           <br />
           <div class="grid grid-cols-3">
             <div>
-              <p class="text-lg manrope-bold">Banco De Oro:</p>
+              <p class="text-lg manrope-bold">Banco De Oro (BDO):</p>
               <p class="text-lg manrope-regular">Account Name: AGC Print</p>
               <p class="text-lg manrope-regular">
-                Account Number: 123456789012
+                Account Number: 000170007138
               </p>
               <p class="text-lg manrope-regular">
                 Account Branch: BDO Kamagong
@@ -28,7 +28,7 @@
                 Account Name: Jem Nepomuceno
               </p>
               <p class="text-lg manrope-regular">
-                Account Number: 123456789012
+                Account Number: 3719531236
               </p>
               <p class="text-lg manrope-regular">Account Branch: BPI Dian</p>
             </div>
@@ -38,7 +38,7 @@
                 Account Name: Jem Nepomuceno
               </p>
               <p class="text-lg manrope-regular">
-                Account Number: 123456789012
+                Account Number: 09178170119
               </p>
             </div>
           </div>
