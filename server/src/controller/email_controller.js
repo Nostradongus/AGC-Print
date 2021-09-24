@@ -375,7 +375,7 @@ const sendEmail = {
     try {
       // get the data of the client
       const clientData = {
-        orderId: req.body.id,
+        orderId: req.body,
       };
 
       // create reusable transporter object using the default SMTP transport
@@ -489,7 +489,7 @@ const sendEmail = {
     try {
       // get the data of the client
       const clientData = {
-        orderId: req.body.id,
+        orderId: req.body,
       };
 
       // create reusable transporter object using the default SMTP transport
