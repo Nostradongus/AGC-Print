@@ -17,14 +17,123 @@
           "
           class="flex flex-col"
         >
+          <RescheduleDeliveryModal
+            v-if="state.worker != null"
+            :rescheduleDelivery="showRescheduleDeliveryModal"
+            @close="toggleRescheduleDeliveryModal"
+          >
+            <div class="flex flex-col mt-7">
+              <div class="flex flex-row items-start">
+                <label
+                  for="date"
+                  class="
+                    relative
+                    manrope-bold
+                    text-primary-blue text-gray-600 text-lg
+                    mt-2.5
+                  "
+                  >Date of Delivery:
+                </label>
+                <div class="pt-0.5">
+                  <input
+                    id="date"
+                    name="date"
+                    type="date"
+                    @change="validateDate"
+                    v-model="rescheduleData.date"
+                    :min="rescheduleData.currDate"
+                    class="manrope-bold text-md input-text-field w-96 ml-4"
+                    :class="{ 'border-red': v3.date.$error || !rescheduleData.dateValidation }"
+                  />
+                  <p
+                    v-if="v3.date.$error"
+                    class="text-red manrope-bold text-left ml-4 text-sm"
+                  >
+                    Please input desired date of delivery.
+                  </p>
+                  <p
+                    v-if="!rescheduleData.dateValidation"
+                    class="text-red manrope-bold text-left ml-4 text-sm"
+                  >
+                    Invalid date! Please input a correct date.
+                  </p>
+                </div>
+              </div>
+              <div class="flex flex-row items-start mt-2">
+                <label
+                  for="time"
+                  class="
+                    relative
+                    manrope-bold
+                    text-primary-blue text-gray-600 text-lg
+                    mt-2.5
+                  "
+                  >Time of Delivery:
+                </label>
+                <div class="pt-0.5">
+                  <input
+                    id="time"
+                    name="time"
+                    type="time"
+                    v-model="rescheduleData.time"
+                    class="manrope-bold text-md input-text-field w-96 ml-4"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center justify-center">
+              <button
+                v-if="!rescheduleData.submitted"
+                class="
+                  manrope-bold
+                  dowload-btn
+                  transition
+                  duration-300
+                  hover:bg-link-water hover:text-primary-blue
+                  flex-shrink
+                "
+                @click="rescheduleDelivery"
+              >
+                Reschedule
+              </button>
+              <p
+                v-else
+                class="manrope-bold absolute bottom-6 text-primary-blue text-md"
+              >
+                Rescheduling Delivery...
+              </p>
+            </div>
+          </RescheduleDeliveryModal>
+
           <div class="flex flex-row">
-            <h1 class="manrope-extrabold text-2xl text-primary-blue">
-              To Be Delivered On:
-            </h1>
-            <h1 class="manrope-extrabold text-2xl ml-2">
-              {{ state.order.deliverySched.date }} at
-              {{ state.order.deliverySched.time }}
-            </h1>
+            <div class="flex-1 flex flex-row">
+              <h1 class="manrope-extrabold text-2xl text-primary-blue">
+                To Be Delivered On:
+              </h1>
+              <h1 class="manrope-extrabold text-2xl ml-2">
+                {{ state.order.deliverySched.date }} at
+                {{ state.order.deliverySched.time }}
+              </h1>
+              <button
+                v-if="state.isStaff"
+                class="
+                  manrope-regular
+                  text-white
+                  inline-block
+                  transition
+                  duration-300
+                  ease-in-out
+                  text-center text-md
+                  hover:bg-link-water hover:text-primary-blue
+                  w-32 h-10 ml-5 -mt-1
+                  rounded-xl
+                  bg-primary-blue
+                "
+                @click="toggleRescheduleDeliveryModal"
+              >
+                Reschedule
+              </button>
+            </div>
           </div>
           <div
             v-if="state.order.deliverySched.remarks"
@@ -872,6 +981,7 @@ import ResolveReportModal from '../components/Modals/ResolveReportModal.vue';
 import CancelReportModal from '../components/Modals/CancelReportModal.vue';
 import AddNoteModal from '../components/Modals/AddNoteModal.vue';
 import ViewNotesModal from '../components/Modals/ViewNotesModal.vue';
+import RescheduleDeliveryModal from '../components/Modals/RescheduleDeliveryModal.vue';
 import * as api from '../api';
 import { email, numeric, maxLength, minLength } from '@vuelidate/validators';
 
@@ -886,6 +996,7 @@ export default {
     CancelReportModal,
     AddNoteModal,
     ViewNotesModal,
+    RescheduleDeliveryModal,
   },
   setup() {
     const showEditOrderSetModal = ref(false);
@@ -893,6 +1004,7 @@ export default {
     const showCancelReportModal = ref(false);
     const showAddNoteModal = ref(false);
     const showViewNotesModal = ref(false);
+    const showRescheduleDeliveryModal = ref(false);
     const route = useRoute();
     const store = useStore();
     const state = reactive({
@@ -926,6 +1038,110 @@ export default {
     };
 
     const v2 = useVuelidate(rules, reportData);
+
+    const rescheduleData = reactive({
+      date: null,
+      time: null,
+      remarks: '',
+      currDate: null,
+      dateValidation: true,
+      timeValidation: true,
+      submitted: false,
+    });
+
+    const rescheduleRules = {
+      date: { required },
+      time: { required },
+    };
+
+    const v3 = useVuelidate(rescheduleRules, rescheduleData);
+
+    // to initialize current date today 
+    function initCurrentDate() {
+      // get today's date for date input start value 
+      const today = new Date();
+
+      // initialize current date today
+      const year = today.getFullYear();
+      let month = today.getMonth() + 1;
+      let day = today.getDate() + 1; // starting day should be tomorrow
+      // format month and day if needed
+      if (month < 10) {
+        month = "0" + month;
+      }
+      if (day < 10) {
+        day = "0" + day;
+      }
+
+      // set current date
+      rescheduleData.currDate = `${year}-${month}-${day}`;
+    }
+
+    // to validate date inputted
+    function validateDate() {
+      // get date values from current date and inputted date
+      const currDate = rescheduleData.currDate.split("-");
+      const inputDate = rescheduleData.date.split("-");
+
+      // temporary set date validation value to true
+      rescheduleData.dateValidation = true;
+
+      // check year first, year inputted should not be less than the current year
+      if (parseInt(inputDate[0]) < parseInt(currDate[0]) || inputDate[0].length !== 4) {
+        rescheduleData.dateValidation = false;
+      } else if (parseInt(inputDate[0]) === parseInt(currDate[0])) {
+        // check month afterwards, month inputted should not be less than the current month
+        if (parseInt(inputDate[1]) < parseInt(currDate[1])) {
+          rescheduleData.dateValidation = false;
+        }
+        // check day afterwards, day inputted should be tomorrow after the current day or so on
+        else if (parseInt(inputDate[1]) === parseInt(currDate[1]) && parseInt(inputDate[2]) + 1 <= parseInt(currDate[2])) {
+          rescheduleData.dateValidation = false;
+        }
+      }
+    }
+
+    async function rescheduleDelivery() {
+      // get date validation result
+      const validated = await v3.value.$validate();
+
+      if (validated && rescheduleData.dateValidation) {
+        // indicate that reschedule delivery form has been submitted
+        rescheduleData.submitted = true;
+
+        // create reschedule delivery object
+        const delivery = {
+          date: rescheduleData.date,
+          time: rescheduleData.time,
+          remarks: rescheduleData.remarks,
+        };
+
+        // reschedule delivery for order set
+        const res = await api.setDelivery(route.params.id, delivery);
+
+        // reset submission indicator
+        rescheduleData.submitted = false;
+
+        // if database query successful
+        if (res.status === 204) {
+          // close reschedule delivery modal view
+          toggleRescheduleDeliveryModal();
+
+          // set updated schedule delivery data
+          state.order.deliverySched.date = rescheduleData.date;
+          state.order.deliverySched.time = rescheduleData.time;
+
+          // format updated time
+          if (parseInt(rescheduleData.time.split(':')[0]) < 12) {
+            state.order.deliverySched.time += ' AM';
+          } else if (parseInt(rescheduleData.time.split(':')[0]) === 12) {
+            state.order.deliverySched.time += ' NN';
+          } else {
+            state.order.deliverySched.time += ' PM';
+          }
+        }
+      }
+    }
 
     async function resolveReport() {
       try {
@@ -1072,12 +1288,17 @@ export default {
       showViewNotesModal.value = !showViewNotesModal.value;
     }
 
+    function toggleRescheduleDeliveryModal() {
+      showRescheduleDeliveryModal.value = !showRescheduleDeliveryModal.value;
+    }
+
     if (JSON.parse(localStorage.getItem('user')) == null) {
       state.worker = store.state.worker.worker;
     }
 
     onMounted(() => {
       loadOrder();
+      initCurrentDate();
       isStaff();
     });
 
@@ -1113,6 +1334,13 @@ export default {
           if (state.report.notes.length != 0) {
             reportData.emptyNotes = false;
           }
+        }
+
+        // if order set has a scheduled delivery by client
+        if (state.order.deliverySched != null) {
+          rescheduleData.date = state.order.deliverySched.date;
+          rescheduleData.time = state.order.deliverySched.time.split(" ")[0];
+          rescheduleData.remarks = state.order.deliverySched.remarks;
         }
 
         state.empty = false;
@@ -1204,24 +1432,30 @@ export default {
       route,
       updateData,
       reportData,
+      rescheduleData,
       v,
       v2,
+      v3,
       orderUpdate,
       toggleEditOrderSetModal,
       toggleResolveReportModal,
       toggleCancelReportModal,
       toggleAddNoteModal,
       toggleViewNotesModal,
+      toggleRescheduleDeliveryModal,
       resolveReport,
       cancelReport,
       addNote,
       deleteNote,
+      validateDate,
       showEditOrderSetModal,
       showResolveReportModal,
       showCancelReportModal,
       showAddNoteModal,
       showViewNotesModal,
+      showRescheduleDeliveryModal,
       updateOrderSet,
+      rescheduleDelivery,
       isValidName,
     };
   },

@@ -28,8 +28,15 @@
                 type="text"
                 class="manrope-regular input-text-field w-36 ml-4"
                 v-model.trim="staffData.firstname"
+                :placeholder="props.worker.firstname"
+                :class="{ 'border-red': vUpdateWorker.firstname.$error }"
               />
-              <p class="ml-9 text-red manrope-bold text-left text-sm"></p>
+              <p
+                class="ml-4 text-red manrope-bold text-left text-sm"
+                v-if="vUpdateWorker.firstname.$error"
+              >
+                {{ vUpdateWorker.firstname.$errors[0].$message }}
+              </p>
             </div>
             <div class="flex">
               <label
@@ -42,6 +49,7 @@
                   ml-4
                   text-primary-blue
                 "
+                :class="{ 'border-red': vUpdateWorker.lastname.$error }"
                 >Last name</label
               >
               <div>
@@ -50,8 +58,15 @@
                   type="text"
                   class="manrope-regular input-text-field w-36 ml-4"
                   v-model.trim="staffData.lastname"
+                  :placeholder="props.worker.lastname"
+                  :class="{ 'border-red': vUpdateWorker.lastname.$error }"
                 />
-                <p class="ml-9 text-red manrope-bold text-left text-sm"></p>
+                <p
+                  class="ml-4 text-red manrope-bold text-left text-sm"
+                  v-if="vUpdateWorker.lastname.$error"
+                >
+                  {{ vUpdateWorker.lastname.$errors[0].$message }}
+                </p>
               </div>
             </div>
           </div>
@@ -59,7 +74,7 @@
           <div>
             <div class="flex">
               <label
-                for="width"
+                for="username"
                 class="
                   relative
                   manrope-bold
@@ -67,17 +82,11 @@
                   mt-4
                   text-primary-blue
                 "
-                >Username</label
+                >Username:</label
               >
-              <div>
-                <input
-                  name="username"
-                  type="text"
-                  class="manrope-regular input-text-field w-48 ml-4"
-                  v-model.trim="staffData.username"
-                />
-                <p class="ml-9 text-red manrope-bold text-left text-sm"></p>
-              </div>
+              <h1 class="manrope-regular mt-4 ml-4">
+                {{ props.worker.username }}
+              </h1>
             </div>
             <div class="flex">
               <label
@@ -89,7 +98,7 @@
                   mt-4
                   text-primary-blue
                 "
-                >E-mail address</label
+                >E-mail address:</label
               >
               <div>
                 <input
@@ -97,8 +106,15 @@
                   type="email"
                   class="manrope-regular input-text-field w-60 ml-4"
                   v-model.trim="staffData.email"
+                  :placeholder="props.worker.email"
+                  :class="{ 'border-red': vUpdateWorker.email.$error }"
                 />
-                <p class="ml-9 text-red manrope-bold text-left text-sm"></p>
+                <p
+                  class="ml-4 text-red manrope-bold text-left text-sm"
+                  v-if="vUpdateWorker.email.$error"
+                >
+                  {{ vUpdateWorker.email.$errors[0].$message }}
+                </p>
               </div>
             </div>
             <div class="flex">
@@ -131,7 +147,15 @@
                       ml-9
                     "
                     v-model.trim="staffData.contactNo"
+                    :placeholder="contactNo"
+                    :class="{ 'border-red': vUpdateWorker.contactNo.$error }"
                   />
+                  <p
+                    class="ml-9 text-red manrope-bold text-left text-sm"
+                    v-if="vUpdateWorker.contactNo.$error"
+                  >
+                    {{ vUpdateWorker.contactNo.$errors[0].$message }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -153,8 +177,15 @@
                   type="password"
                   class="manrope-regular input-text-field w-60 ml-4"
                   v-model.trim="staffData.password"
+                  :class="{ 'border-red': vUpdateWorker.password.$error }"
+                  @keyup="isValidPassword()"
                 />
-                <p class="ml-9 text-red manrope-bold text-left text-sm"></p>
+                <p
+                  class="ml-4 text-red manrope-bold text-left text-sm"
+                  v-if="vUpdateWorker.password.$error"
+                >
+                  {{ vUpdateWorker.password.$errors[0].$message }}
+                </p>
               </div>
             </div>
             <div class="flex">
@@ -174,9 +205,18 @@
                   name="confirmpassword"
                   type="password"
                   class="manrope-regular input-text-field w-60 ml-4"
-                  v-model="staffData.confirmPassword"
+                  v-model.trim="staffData.confirmPassword"
+                  :class="{
+                    'border-red': !updateWorkerValidation.passwordValidation,
+                  }"
+                  @keyup="isValidPassword()"
                 />
-                <p class="ml-9 text-red manrope-bold text-left text-sm"></p>
+                <p
+                  class="ml-4 text-red manrope-bold text-left text-sm"
+                  v-if="!updateWorkerValidation.passwordValidation"
+                >
+                  Passwords does not match.
+                </p>
               </div>
             </div>
           </div>
@@ -309,6 +349,15 @@
 import EditStaffModal from './Modals/EditStaffModal.vue';
 import ConfirmDeleteModal from './Modals/ConfirmDeleteModal.vue';
 import { reactive, ref } from 'vue';
+import {
+  alpha,
+  email,
+  numeric,
+  maxLength,
+  minLength,
+} from '@vuelidate/validators';
+import useVuelidate from '@vuelidate/core';
+import * as api from '../api';
 export default {
   name: 'StaffCard',
   components: {
@@ -322,26 +371,50 @@ export default {
   },
   setup(props, { emit }) {
     const staffData = reactive({
-      initUsername: props.worker.username,
-      initEmail: props.worker.email,
-      firstname: props.worker.firstname,
-      lastname: props.worker.lastname,
       username: props.worker.username,
-      email: props.worker.email,
-      contactNo: parseInt(
+      initEmail: props.worker.email,
+      firstname: null,
+      lastname: null,
+      email: null,
+      contactNo: null,
+      password: null,
+      confirmPassword: null,
+    });
+
+    const updateWorkerValidation = reactive({
+      passwordValidation: true,
+    });
+
+    const updateWorkerRules = {
+      firstname: { alpha },
+      lastname: { alpha },
+      email: { email },
+      contactNo: {
+        numeric,
+        minLength: minLength(9),
+        maxLength: maxLength(10),
+      },
+      password: { minLength: minLength(8) },
+    };
+
+    const vUpdateWorker = useVuelidate(updateWorkerRules, staffData);
+
+    const showEditStaffModal = ref(false);
+    const showConfirmDeleteModal = ref(false);
+    const contactNo = ref(
+      parseInt(
         props.worker.contactNo.replace(
           props.worker.contactNo.substring(0, 2),
           ''
         )
-      ),
-      password: props.worker.password,
-      confirmPassword: props.worker.password,
-    });
-    const showEditStaffModal = ref(false);
-    const showConfirmDeleteModal = ref(false);
+      )
+    );
 
     function toggleEditStaffModal() {
       showEditStaffModal.value = !showEditStaffModal.value;
+      setAll(staffData, null);
+      staffData.username = props.worker.username;
+      staffData.initEmail = props.worker.email;
     }
 
     function toggleConfirmDeleteModal() {
@@ -360,14 +433,51 @@ export default {
 
     async function updateWorker() {
       try {
-        toggleEditStaffModal();
-        emit('updateWorker', staffData);
+        const validated = await vUpdateWorker.value.$validate();
+        if (validated && checkBoolean(updateWorkerValidation)) {
+          const data = JSON.parse(JSON.stringify(staffData));
+          const username = staffData.username;
+          toggleEditStaffModal();
+          if (data.contactNo) {
+            data.contactNo = `63${data.contactNo}`;
+          }
+
+          const res = await api.updateWorker(username, data);
+          contactNo.value = parseInt(
+            res.data.contactNo.replace(res.data.contactNo.substring(0, 2), '')
+          );
+          console.log(contactNo);
+          emit('updateWorker', res.data);
+          updateWorkerValidation.passwordValidation = true;
+        }
       } catch (err) {
-        console.log(err.response);
+        console.log(err);
       }
     }
 
+    function setAll(obj, val) {
+      Object.keys(obj).forEach(function (index) {
+        obj[index] = val;
+      });
+    }
+
+    function isValidPassword() {
+      updateWorkerValidation.passwordValidation =
+        (staffData.confirmPassword === staffData.password ? true : false) &&
+        staffData.confirmPassword &&
+        staffData.password;
+      if (!staffData.confirmPassword && !staffData.password) {
+        updateWorkerValidation.passwordValidation = true;
+      }
+    }
+
+    function checkBoolean(obj) {
+      return Object.values(obj).every(Boolean);
+    }
+
     return {
+      props,
+      contactNo,
       showEditStaffModal,
       showConfirmDeleteModal,
       toggleEditStaffModal,
@@ -375,6 +485,9 @@ export default {
       deleteWorker,
       updateWorker,
       staffData,
+      isValidPassword,
+      vUpdateWorker,
+      updateWorkerValidation,
     };
   },
 };

@@ -286,14 +286,24 @@ export default {
         // reset field
         state.submitted = false;
 
-        const emailData = {
+        const clientEmailData = {
           id: res.data.id,
           name: data.name,
           email: data.email,
         };
 
+        const staffEmailData = {
+          id: res.data.id,
+          name: data.name,
+          contactNo: data.contactNo,
+          address: data.address,
+        };
+
         // send email to client
-        await api.sendEmailOrderPlaced(emailData);
+        await api.sendEmailOrderPlaced(clientEmailData);
+
+        // send email to staff
+        await api.sendEmailNewOrder(staffEmailData);
       }
     }
 

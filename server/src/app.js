@@ -16,6 +16,7 @@ import workerRoutes from './routes/worker_routes.js';
 import reportRoutes from './routes/report_routes.js';
 import paymentRoutes from './routes/payment_routes.js';
 import adminRoutes from './routes/admin_routes.js';
+import emailRoutes from './routes/email_routes.js';
 
 // connect to AGC Print database
 connectDatabase();
@@ -83,6 +84,7 @@ app.use('/report', reportRoutes);
 app.use('/payment', paymentRoutes);
 app.use('/workers', workerRoutes);
 app.use('/admin', adminRoutes);
+app.use('/email', emailRoutes);
 
 // if (process.env.NODE_ENV === 'production') {
 //   app.use(express.static('../client/dist'));

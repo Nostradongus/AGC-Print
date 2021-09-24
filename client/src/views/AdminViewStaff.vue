@@ -32,8 +32,14 @@
                 type="text"
                 class="manrope-regular input-text-field w-36 ml-4"
                 v-model.trim="staff.firstname"
+                :class="{ 'border-red': vAddWorker.firstname.$error }"
               />
-              <p class="ml-9 text-red manrope-bold text-left text-sm"></p>
+              <p
+                class="ml-4 text-red manrope-bold text-left text-sm"
+                v-if="vAddWorker.firstname.$error"
+              >
+                {{ vAddWorker.firstname.$errors[0].$message }}
+              </p>
             </div>
             <div class="flex">
               <label
@@ -54,8 +60,14 @@
                   type="text"
                   class="manrope-regular input-text-field w-36 ml-4"
                   v-model.trim="staff.lastname"
+                  :class="{ 'border-red': vAddWorker.lastname.$error }"
                 />
-                <p class="ml-9 text-red manrope-bold text-left text-sm"></p>
+                <p
+                  class="ml-4 text-red manrope-bold text-left text-sm"
+                  v-if="vAddWorker.lastname.$error"
+                >
+                  {{ vAddWorker.lastname.$errors[0].$message }}
+                </p>
               </div>
             </div>
           </div>
@@ -79,8 +91,17 @@
                   type="text"
                   class="manrope-regular input-text-field w-48 ml-4"
                   v-model.trim="staff.username"
+                  @keypress="isValidUsername(staff.username)"
+                  :class="{
+                    'border-red': !addWorkerValidation.usernameValidation,
+                  }"
                 />
-                <p class="ml-9 text-red manrope-bold text-left text-sm"></p>
+                <p
+                  class="ml-4 text-red manrope-bold text-left text-sm"
+                  v-if="!addWorkerValidation.usernameValidation"
+                >
+                  Value is required and shoud only be alphanumeric
+                </p>
               </div>
             </div>
             <div class="flex">
@@ -101,8 +122,14 @@
                   type="email"
                   class="manrope-regular input-text-field w-60 ml-4"
                   v-model.trim="staff.email"
+                  :class="{ 'border-red': vAddWorker.email.$error }"
                 />
-                <p class="ml-9 text-red manrope-bold text-left text-sm"></p>
+                <p
+                  class="ml-4 text-red manrope-bold text-left text-sm"
+                  v-if="vAddWorker.email.$error"
+                >
+                  {{ vAddWorker.email.$errors[0].$message }}
+                </p>
               </div>
             </div>
             <div class="flex">
@@ -135,7 +162,14 @@
                       ml-9
                     "
                     v-model.trim="staff.contactNo"
+                    :class="{ 'border-red': vAddWorker.contactNo.$error }"
                   />
+                  <p
+                    class="ml-9 text-red manrope-bold text-left text-sm"
+                    v-if="vAddWorker.contactNo.$error"
+                  >
+                    {{ vAddWorker.contactNo.$errors[0].$message }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -157,8 +191,15 @@
                   type="password"
                   class="manrope-regular input-text-field w-60 ml-4"
                   v-model.trim="staff.password"
+                  :class="{ 'border-red': vAddWorker.password.$error }"
+                  @keypress="isValidPassword()"
                 />
-                <p class="ml-9 text-red manrope-bold text-left text-sm"></p>
+                <p
+                  class="ml-4 text-red manrope-bold text-left text-sm"
+                  v-if="vAddWorker.password.$error"
+                >
+                  {{ vAddWorker.password.$errors[0].$message }}
+                </p>
               </div>
             </div>
             <div class="flex">
@@ -179,8 +220,17 @@
                   type="password"
                   class="manrope-regular input-text-field w-60 ml-4"
                   v-model.trim="staff.confirmPassword"
+                  :class="{
+                    'border-red': !addWorkerValidation.passwordValidation,
+                  }"
+                  @keyup="isValidPassword()"
                 />
-                <p class="ml-9 text-red manrope-bold text-left text-sm"></p>
+                <p
+                  class="ml-4 text-red manrope-bold text-left text-sm"
+                  v-if="!addWorkerValidation.passwordValidation"
+                >
+                  Passwords does not match
+                </p>
               </div>
             </div>
           </div>
@@ -210,7 +260,39 @@
         >
           There are no staff yet.
         </p>
-        <div v-else class="flex-1" />
+        <div v-else class="flex-1">
+          <div
+            v-if="state.empty != null && !state.empty"
+            class="flex flex-row justify-start mt-4 content-end"
+          >
+            <h1
+              class="
+                manrope-extrabold
+                text-lg text-center
+                mt-1.5
+                mr-3
+                text-primary-blue
+              "
+            >
+              Search Staff:
+            </h1>
+            <input
+              type="text"
+              class="
+                h-10
+                lg:w-96
+                md:w-80
+                border
+                search
+                placeholder-primary-blue
+                text-primary-blue
+              "
+              placeholder="Search by Username..."
+              v-model.trim="state.search"
+              v-on:keyup="searchWorker(state.search)"
+            />
+          </div>
+        </div>
         <button
           class="
             flex
@@ -248,6 +330,14 @@
           </div>
         </button>
       </div>
+      <p
+        class="manrope-bold left-0 -top-3.5 text-xl pt-3 px-8 text-red"
+        v-if="
+          state.workers != null && !state.workers.length && state.search !== ''
+        "
+      >
+        No staff with "{{ state.search }}" username.
+      </p>
       <div class="overflow-y-auto max-h-screen scrollbar-hidden mb-5">
         <StaffCard
           v-for="(worker, index) in state.workers"
@@ -266,8 +356,17 @@ import StaffCard from '../components/StaffCard.vue';
 import SideBar from '../components/SideBar.vue';
 import PageHeader from '../components/PageHeader.vue';
 import AddStaffModal from '../components/Modals/AddStaffModal.vue';
-import { reactive, onBeforeMount, ref } from 'vue';
+import { reactive, onBeforeMount, ref, computed } from 'vue';
 import { useStore } from 'vuex';
+import {
+  required,
+  alpha,
+  email,
+  numeric,
+  maxLength,
+  minLength,
+} from '@vuelidate/validators';
+import useVuelidate from '@vuelidate/core';
 import * as api from '../api';
 export default {
   name: 'AdminViewStaff',
@@ -283,7 +382,10 @@ export default {
     const state = reactive({
       empty: null,
       workers: null,
+      search: null,
+      allWorkers: null,
     });
+
     const staff = reactive({
       firstname: null,
       lastname: null,
@@ -294,11 +396,33 @@ export default {
       confirmPassword: null,
     });
 
+    const addWorkerValidation = reactive({
+      usernameValidation: true,
+      passwordValidation: true,
+    });
+
+    const addWorkerRules = {
+      firstname: { required, alpha },
+      lastname: { required, alpha },
+      username: { required },
+      email: { required, email },
+      contactNo: {
+        required,
+        numeric,
+        minLength: minLength(9),
+        maxLength: maxLength(10),
+      },
+      password: { required, minLength: minLength(8) },
+      confirmPassword: { required },
+    };
+
+    const vAddWorker = useVuelidate(addWorkerRules, staff);
+
     async function getInitWorkers() {
       try {
         // get all workers
         const result = await api.getWorkers();
-        state.workers = result.data;
+        state.workers = state.allWorkers = result.data;
         if (state.workers.length === 0) {
           state.empty = true;
         } else {
@@ -312,15 +436,23 @@ export default {
 
     function toggleAddStaffModal() {
       showAddStaffModal.value = !showAddStaffModal.value;
+      setAll(staff, null);
     }
 
     async function registerWorker() {
       try {
-        staff.contactNo = `63${staff.contactNo}`;
-        toggleAddStaffModal();
-        const res = await api.registerWorker(staff);
-        if (res.status == 201) {
-          state.workers.push(res.data);
+        const validated = await vAddWorker.value.$validate();
+        if (validated && checkBoolean(addWorkerValidation)) {
+          const data = JSON.parse(JSON.stringify(staff));
+          toggleAddStaffModal();
+          data.contactNo = `63${data.contactNo}`;
+          const res = await api.registerWorker(data);
+          if (res.status == 201) {
+            state.workers.push(res.data);
+          }
+        } else {
+          setAll(addWorkerValidation, false);
+          console.log(addWorkerValidation);
         }
 
         console.log(res.error);
@@ -338,16 +470,45 @@ export default {
       }
     }
 
+    function setAll(obj, val) {
+      Object.keys(obj).forEach(function (index) {
+        obj[index] = val;
+      });
+    }
+
     async function updateWorker(worker, index, update) {
       try {
-        update.contactNo = `63${update.contactNo}`;
         const res = {};
         Object.keys(worker).forEach((k) => (res[k] = update[k] ?? worker[k]));
-        await api.updateWorker(update.initUsername, update);
         state.workers[index] = res;
       } catch (err) {
         console.log(err.response);
       }
+    }
+
+    function searchWorker(search) {
+      state.workers = computed(() => {
+        return state.allWorkers.filter((worker) => {
+          return worker.username.match(search);
+        });
+      });
+    }
+
+    function isValidUsername(username) {
+      addWorkerValidation.usernameValidation =
+        (/^[a-zA-Z0-9_]*$/.test(username) ? true : false) &&
+        staff.username != null;
+    }
+
+    function isValidPassword() {
+      addWorkerValidation.passwordValidation =
+        (staff.confirmPassword === staff.password ? true : false) &&
+        staff.confirmPassword != null &&
+        staff.password != null;
+    }
+
+    function checkBoolean(obj) {
+      return Object.values(obj).every(Boolean);
     }
 
     onBeforeMount(() => {
@@ -364,9 +525,14 @@ export default {
       getInitWorkers,
       showAddStaffModal,
       toggleAddStaffModal,
+      isValidUsername,
+      isValidPassword,
       registerWorker,
       deleteWorker,
       updateWorker,
+      searchWorker,
+      vAddWorker,
+      addWorkerValidation,
     };
   },
 };

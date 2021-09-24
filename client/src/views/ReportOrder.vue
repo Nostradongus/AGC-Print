@@ -348,11 +348,6 @@ export default {
 
       if (isValid) {
         const user = JSON.parse(localStorage.getItem('user'));
-        const emailData = {
-          name: user.firstname + ' ' + user.lastname,
-          email: user.email,
-          id: route.params.id,
-        };
 
         // indicate that report form has been submitted
         state.submitted = true;
@@ -390,7 +385,14 @@ export default {
           // go back to order details page afterwards
           router.push({ path: `/order-details/${route.params.id}` });
 
-          await api.sendEmailReport(emailData);
+          const emailData = {
+            name: user.firstname + ' ' + user.lastname,
+            email: user.email,
+            id: route.params.id,
+          };
+
+          // send email to staff
+          await api.sendEmailReport(route.params.id);
         }
       }
     }

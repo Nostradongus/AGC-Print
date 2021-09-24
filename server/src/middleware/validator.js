@@ -46,6 +46,8 @@ const validator = {
         .withMessage('Please input a valid email.'),
       // checks contact number input field
       check('contactNo')
+        .isNumeric()
+        .withMessage('Contact number must consists of numbers only')
         .notEmpty()
         .withMessage('Please input your contact number.'),
       // checks repeat password input field
@@ -63,6 +65,36 @@ const validator = {
         .isEmail()
         .withMessage('Please input a valid email.')
         .optional({ checkFalsy: true }),
+    ];
+    return validation;
+  },
+
+  validateWorkerProfileUpdate: () => {
+    const validation = [
+      check('firstname')
+        .isAlpha()
+        .withMessage('Please input a valid firstname.')
+        .optional({ checkFalsy: true }),
+      check('lastname')
+        .isAlpha()
+        .withMessage('Please input a valid lastname.')
+        .optional({ checkFalsy: true }),
+      check('email')
+        .isEmail()
+        .withMessage('Please input a valid email.')
+        .optional({ checkFalsy: true }),
+      // checks contact number input field
+      check('contactNo')
+        .isNumeric()
+        .withMessage('Please input a valid contact number.')
+        .optional({ checkFalsy: true }),
+      // checks password input field
+      check('password')
+        .isLength({ min: 8 })
+        .withMessage('Password must be 8 characters.')
+        .optional({ checkFalsy: true }),
+      // checks repeat password input field
+      check('confirmPassword').optional({ checkFalsy: true }),
     ];
     return validation;
   },

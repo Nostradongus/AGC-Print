@@ -3,7 +3,10 @@
     <side-bar />
     <page-header title="Payment Portal">
       <div class="pr-8 pl-8 pt-4">
-        <div v-if="state.worker == null" class="bg-light-blue rounded-xl p-6 mx-auto mb-8 h-30">
+        <div
+          v-if="state.worker == null"
+          class="bg-light-blue rounded-xl p-6 mx-auto mb-8 h-30"
+        >
           <p class="text-lg manrope-bold">
             You can pay through the following channels:
           </p>
@@ -71,7 +74,7 @@
                   <p v-else class="text-lg manrope-regular">
                     Downpayment: Already Paid
                   </p>
-                  <p 
+                  <p
                     v-if="state.order.remBalance > 0"
                     class="text-lg manrope-regular"
                   >
@@ -88,23 +91,39 @@
             <div class="bg-light-blue rounded-xl p-6 mx-auto mb-8 h-30">
               <div class="flex flex-row items-center justify-center">
                 <p class="text-sm manrope-bold truncate max-w-xs">
-                  Uploaded by: {{ state.order.user }} ({{ state.order.userFullName }})
+                  Uploaded by: {{ state.order.user }} ({{
+                    state.order.userFullName
+                  }})
                 </p>
               </div>
             </div>
           </div>
-          
-          <div v-if="state.order.remBalance <= 0 && state.worker == null" class="p-4 w-5/12">
+
+          <div
+            v-if="state.order.remBalance <= 0 && state.worker == null"
+            class="p-4 w-5/12"
+          >
             <div class="bg-light-blue rounded-xl p-6 mx-auto mb-8 h-30">
               <div class="flex flex-row items-center justify-center">
-                <p class="text-md manrope-bold text-primary-blue truncate max-w-xs">
+                <p
+                  class="
+                    text-md
+                    manrope-bold
+                    text-primary-blue
+                    truncate
+                    max-w-xs
+                  "
+                >
                   Order Set Fully Paid!
                 </p>
               </div>
             </div>
           </div>
 
-          <div v-if="state.worker == null && state.order.remBalance > 0" class="p-4 w-4/12">
+          <div
+            v-if="state.worker == null && state.order.remBalance > 0"
+            class="p-4 w-4/12"
+          >
             <p class="manrope-bold text-md mb-3">
               Upload Payment Receipt Here:
             </p>
@@ -149,7 +168,10 @@
               Receipt Uploaded!
             </p>
           </div>
-          <div v-if="state.worker == null && state.order.remBalance > 0" class="w-2/12 mt-8">
+          <div
+            v-if="state.worker == null && state.order.remBalance > 0"
+            class="w-2/12 mt-8"
+          >
             <div>
               <button
                 class="
@@ -180,8 +202,11 @@
             </div>
           </div>
         </div>
-        
-        <p v-if="!state.empty && state.payment == null && state.worker != null" class="text-red manrope-bold text-center text-xl">
+
+        <p
+          v-if="!state.empty && state.payment == null && state.worker != null"
+          class="text-red manrope-bold text-center text-xl"
+        >
           No payment receipts uploaded yet by user.
         </p>
 
@@ -260,7 +285,7 @@ export default {
     });
 
     if (JSON.parse(localStorage.getItem('user')) == null) {
-      state.worker = store.state.worker.worker.username
+      state.worker = store.state.worker.worker.username;
     }
 
     onMounted(() => {
@@ -354,7 +379,8 @@ export default {
 
           // set indicator that user payment receipt was submitted successfully
           state.paymentSubmitted = true;
-
+          // send email to staff
+          await api.sendEmailNewPayment(route.params.id);
           // reset fields
           state.submitted = false;
           state.fileValidation = null;

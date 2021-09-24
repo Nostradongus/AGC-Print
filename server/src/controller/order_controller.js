@@ -603,62 +603,6 @@ const orderController = {
       return res.status(500).json({ message: 'Server Error' });
     }
   },
-
-  // user controller method to send an email to inform the client that their order is placed
-  sendEmailOrderPlaced: async (req, res) => {
-    try {
-      // get the data of the client from the database
-      const clientData = {
-        name: req.body.name,
-        email: req.body.email,
-        orderId: req.body.id,
-      };
-
-      // create reusable transporter object using the default SMTP transport
-      const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          // e-mail address of company 'bot'
-          user: 'sweng.nodemailer@gmail.com',
-          // password for the e-mail account
-          pass: '1234567890Test',
-        },
-      });
-
-      // send mail with defined transport object
-      const emailFormat = await transporter.sendMail({
-        // sender's e-mail address
-        from: '"AGC Print" <sweng.nodemailer@gmail.com>',
-        // receiver's e-mail address
-        to: clientData.email,
-        // subject of the e-mail
-        subject: '[Order # ' + clientData.orderId + '] Order Confirmed',
-        // content of the e-mail
-        html:
-          '<p>Dear ' +
-          clientData.name +
-          ',</p>' +
-          '<p>Thank you for ordering with us. Your order with reference number <b>' +
-          clientData.orderId +
-          '</b> has been received by our staff and ' +
-          'is currently being processed. The total project cost will ' +
-          'be available within 24 hours. You may view the project cost at ' +
-          'agcprint.com/orders.</p>' +
-          '<p>Thank you and have a great day! </p>' +
-          '<p>AGC Print </p>' +
-          '<p>[Please do not reply to this email. This is an auto-generated message]</p>',
-      });
-      // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-      logger.info('Message sent: ' + emailFormat.messageId);
-
-      return res
-        .status(201)
-        .json('Order Placed E-mail Sent To ' + clientData.email + '!');
-    } catch (err) {
-      logger.info(err);
-      return res.status(500).json({ message: 'Server Error' });
-    }
-  },
 };
 
 // export order controller object for routing

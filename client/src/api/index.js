@@ -49,8 +49,6 @@ export const updateOrder = (id, data) =>
   API.patch(`/order/update/order/${id}`, data);
 export const updateOrderSetReported = (id, status) =>
   API.patch(`/order/update/orderSet/reported/${id}`, status);
-export const sendEmailOrderPlaced = (emailData) =>
-  API.post('/order/cart/confirm/sendEmailOrderPlaced', emailData);
 
 // user data api methods
 export const getUsers = () => API.get('/users');
@@ -73,7 +71,6 @@ export const removeNote = (id, data) =>
 export const deleteReport = (id) => API.delete(`/report/delete/${id}`);
 export const updateReportStatus = (id, data) =>
   API.patch(`/report/update/${id}`, data);
-export const sendEmailReport = (user) => API.post('/report/sendEmail', user);
 
 // payment receipt data api methods
 export const getAllPayments = () => API.get('/payment');
@@ -91,12 +88,6 @@ export const deletePayment = (id) => API.delete(`/payment/delete/${id}`);
 // worker data api methods
 export const getWorker = (username) => API.get(`/workers/${username}`);
 export const getWorkers = () => API.get('/workers');
-export const sendEmailProjectCost = (emailData) =>
-  API.post(`/workers/sendEmailProjectCost`, emailData);
-export const sendEmailProcessingOrder = (emailData) =>
-  API.post(`/workers/sendEmailProcessingOrder`, emailData);
-export const sendEmailOrderComplete = (emailData) =>
-  API.post(`/workers/sendEmailOrderComplete`, emailData);
 
 // admin data api methods
 export const registerWorker = (staffData) =>
@@ -105,3 +96,25 @@ export const deleteWorker = (username) =>
   API.delete(`admin/deleteWorker/${username}`);
 export const updateWorker = (username, staffData) =>
   API.patch(`admin/updateWorker/${username}`, staffData);
+
+// send email to client api methods
+export const sendEmailOrderPlaced = (emailData) =>
+  API.post('/email/client/sendEmailOrderPlaced', emailData);
+export const sendEmailReport = (user) =>
+  API.post('/email/client/sendEmailReport', user);
+export const sendEmailProjectCost = (emailData) =>
+  API.post(`/email/client/sendEmailProjectCost`, emailData);
+export const sendEmailProcessingOrder = (emailData) =>
+  API.post(`/email/client/sendEmailProcessingOrder`, emailData);
+export const sendEmailOrderComplete = (emailData) =>
+  API.post(`/email/client/sendEmailOrderComplete`, emailData);
+
+// send email to staff api methods
+export const sendEmailNewOrder = (emailData) =>
+  API.post('/email/staff/sendEmailNewOrder', emailData);
+export const sendEmailNewPayment = (id) =>
+  API.post(`/email/staff/sendEmailNewPayment`, id);
+export const sendEmailNewDelivery = (emailData) =>
+  API.post(`/email/staff/sendEmailNewDelivery`, emailData);
+export const sendEmailNewReport = (id) =>
+  API.post(`/email/staff/sendEmailNewReport`, id);
