@@ -380,7 +380,7 @@ export default {
           // set indicator that user payment receipt was submitted successfully
           state.paymentSubmitted = true;
           // send email to staff
-          await api.sendEmailNewPayment(route.params.id);
+          await api.sendEmailNewPayment({ id: route.params.id });
           // reset fields
           state.submitted = false;
           state.fileValidation = null;
