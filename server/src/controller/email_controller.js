@@ -303,6 +303,118 @@ const sendEmail = {
       return res.status(500).json({ message: 'Server Error' });
     }
   },
+  // email controller method to send an email to inform the client that their order is complete
+  sendEmailOrderComplete: async (req, res) => {
+    try {
+      // get the data of the client
+      const clientData = {
+        name: req.body.name,
+        email: req.body.email,
+        orderId: req.body.id,
+      };
+
+      // create reusable transporter object using the default SMTP transport
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          // e-mail address of company 'bot'
+          user: 'web.agcprint@gmail.com',
+          // password for the e-mail account
+          pass: 'Agc1984print',
+        },
+      });
+
+      // send mail with defined transport object
+      const emailFormat = await transporter.sendMail({
+        // sender's e-mail address
+        from: '"AGC Print" <web.agcprint@gmail.com>',
+        // receiver's e-mail address
+        to: clientData.email,
+        // subject of the e-mail
+        subject: '[Order # ' + clientData.orderId + '] Order Completed',
+        // content of the e-mail
+        html:
+          '<p>Dear ' +
+          clientData.name +
+          ',</p>' +
+          '<p>Your order # <b>' +
+          clientData.orderId +
+          '</b> has been completed. If there is remaining balance unpaid ' +
+          'in this order, please pay it via the payment channels as seen in the payment portal page. ' +
+          'Upload the payment slip / proof of payment afterwards, you ' +
+          'may access this by going to the details page of the order and clicking ' +
+          'on the pay here button located at the bottom right of the page.</p>' +
+          '<p>If there are issues or defects regarding the order, you may report these through the details page of the order. ' +
+          'Click the Report Order button at the bottom right of the page and fill up the required fields regarding the issue. ' +
+          'The report will be processed as soon as possible by our staff.</p>' +
+          '<p>Thank you and have a great day! </p>' +
+          '<p>AGC Print </p>' +
+          '<p>[Please do not reply to this email. This is an auto-generated message]</p>',
+      });
+      // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+      logger.info('Message sent: ' + emailFormat.messageId);
+
+      return res.status(201).json({
+        message: 'E-mail successfully sent!',
+      });
+    } catch (err) {
+      return res.status(500).json({ message: 'Server Error' });
+    }
+  },
+  // email controller method to send an email to inform the client that their order is complete
+  sendEmailReadyForDelivery: async (req, res) => {
+    try {
+      // get the data of the client
+      const clientData = {
+        name: req.body.name,
+        email: req.body.email,
+        orderId: req.body.id,
+      };
+
+      // create reusable transporter object using the default SMTP transport
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          // e-mail address of company 'bot'
+          user: 'web.agcprint@gmail.com',
+          // password for the e-mail account
+          pass: 'Agc1984print',
+        },
+      });
+
+      // send mail with defined transport object
+      const emailFormat = await transporter.sendMail({
+        // sender's e-mail address
+        from: '"AGC Print" <web.agcprint@gmail.com>',
+        // receiver's e-mail address
+        to: clientData.email,
+        // subject of the e-mail
+        subject:
+          '[Order # ' + clientData.orderId + '] Order Ready for Delivery',
+        // content of the e-mail
+        html:
+          '<p>Dear ' +
+          clientData.name +
+          ',</p>' +
+          '<p>Your order # <b>' +
+          clientData.orderId +
+          '</b> is ready for delivery and you may now set your preferred schedule for the delivery.  ' +
+          'You may access this by viewing the details of your order then clicking on the schedule delivery ' +
+          'button located at the bottom of the page. The date that you set is subject for approval by our staff.</p>' +
+          '<p>Thank you and have a great day! </p>' +
+          '<p>AGC Print </p>' +
+          '<p>[Please do not reply to this email. This is an auto-generated message]</p>',
+      });
+      // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+      logger.info('Message sent: ' + emailFormat.messageId);
+
+      return res.status(201).json({
+        message: 'E-mail successfully sent!',
+      });
+    } catch (err) {
+      return res.status(500).json({ message: 'Server Error' });
+    }
+  },
   // email controller methods to be sent to the staff
   // email controller method to send an email to inform the staff that a new order has been placed
   // used in DeliveryInformation.vue

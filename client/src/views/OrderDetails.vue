@@ -1383,15 +1383,20 @@ export default {
                 totalCost: parseFloat(state.order.price).toFixed(2),
               };
               await api.sendEmailProjectCost(emailData);
-            }
-            if (updateData.status === 'Complete') {
+            } else if (updateData.status === 'Complete') {
               const emailData = {
                 name: updateData.name,
                 email: updateData.email,
                 id: state.order.id,
-                rmBal: state.order.remBalance,
               };
               await api.sendEmailOrderComplete(emailData);
+            } else if (updateData.status === 'Ready for Delivery') {
+              const emailData = {
+                name: updateData.name,
+                email: updateData.email,
+                id: state.order.id,
+              };
+              await api.sendEmailReadyForDelivery(emailData);
             }
           }
         }

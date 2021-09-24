@@ -108,6 +108,8 @@ export const sendEmailProcessingOrder = (emailData) =>
   API.post(`/email/client/sendEmailProcessingOrder`, emailData);
 export const sendEmailOrderComplete = (emailData) =>
   API.post(`/email/client/sendEmailOrderComplete`, emailData);
+export const sendEmailReadyForDelivery = (emailData) =>
+  API.post(`/email/client/sendEmailReadyForDelivery`, emailData);
 
 // send email to staff api methods
 export const sendEmailNewOrder = (emailData) =>
