@@ -280,7 +280,7 @@ const sendEmail = {
           '<p>Dear ' +
           clientData.name +
           ',</p>' +
-          '<p>We have received your report for order <b>' +
+          '<p>We have received your report for order #<b>' +
           clientData.orderId +
           '</b>.We apologize for the inconvenience this may have caused.' +
           'We will get back to you within 24-48 hours via phone or email.</p>' +
