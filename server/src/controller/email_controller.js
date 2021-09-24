@@ -198,10 +198,6 @@ const sendEmail = {
         email: req.body.email,
         orderId: req.body.id,
       };
-      // order set id of the placed order
-      const payment = {
-        rmBal: req.body.rmBal,
-      };
 
       // create reusable transporter object using the default SMTP transport
       const transporter = nodemailer.createTransport({
@@ -227,16 +223,14 @@ const sendEmail = {
           '<p>Dear ' +
           clientData.name +
           ',</p>' +
-          '<p>Your order has been completed. You may pay the remaining ' +
-          'balance amounting to <b>₱' +
-          payment.rmBal +
-          '</b> via the following payment channels. ' +
-          'Please upload the payment slip / proof of payment. You ' +
-          'may access this by going to the My Order page and clicking ' +
-          'on the pay here button located at the bottom of the page.</p>' +
-          '<p>You may also schedule the product delivery via the My ' +
-          'Orders page. Click the Schedule Delivery button and select ' +
-          'a delivery date. The date is subject to approval by our staff.</p>' +
+          '<p>Your order has been completed. If there is remaining balance unpaid ' +
+          'in this order, please pay it via the payment channels as seen in the payment portal page. ' +
+          'Upload the payment slip / proof of payment afterwards, you ' +
+          'may access this by going to the details page of the order and clicking ' +
+          'on the pay here button located at the bottom right of the page.</p>' +
+          '<p>If there are issues or defects regarding the order, you may report these through the details page of the order. ' +
+          'Click the Report Order button at the bottom right of the page and fill up the required fields regarding the issue. ' +
+          'The report will be processed as soon as possible by our staff.</p>' +
           '<p>Thank you and have a great day! </p>' +
           '<p>AGC Print </p>' +
           '<p>[Please do not reply to this email. This is an auto-generated message]</p>',
