@@ -435,7 +435,7 @@
           <!-- NOTE: USE IF ACCESSING FROM CLOUDINARY -->
           <img
             :src="order.filePath"
-            onerror="this.onerror=null;this.src='../src/assets/nopreview.png'"
+            onerror="this.onerror=null;this.src='https://res.cloudinary.com/agc-print/image/upload/v1632476595/nopreview_uwhwy9.png'"
             alt="Order Image"
             class="order-img h-full w-full object-contain cursor-pointer"
             border="0"
