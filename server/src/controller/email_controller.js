@@ -372,8 +372,6 @@ const sendEmail = {
         orderId: req.body.id,
       };
 
-      console.log(req.body.id);
-
       // create reusable transporter object using the default SMTP transport
       // e-mail account that will send the email
       const transporter = nodemailer.createTransport({
