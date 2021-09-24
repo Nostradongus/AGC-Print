@@ -369,8 +369,10 @@ const sendEmail = {
     try {
       // get the data of the client
       const clientData = {
-        orderId: req.body,
+        orderId: req.body.id,
       };
+
+      console.log(req.body.id);
 
       // create reusable transporter object using the default SMTP transport
       // e-mail account that will send the email
@@ -483,7 +485,7 @@ const sendEmail = {
     try {
       // get the data of the client
       const clientData = {
-        orderId: req.body,
+        orderId: req.body.id,
       };
 
       // create reusable transporter object using the default SMTP transport
