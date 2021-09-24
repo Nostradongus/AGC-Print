@@ -225,7 +225,9 @@ const sendEmail = {
           '<p>Dear ' +
           clientData.name +
           ',</p>' +
-          '<p>Your order has been completed. If there is remaining balance unpaid ' +
+          '<p>Your order # ' +
+          clientData.orderId +
+          ' has been completed. If there is remaining balance unpaid ' +
           'in this order, please pay it via the payment channels as seen in the payment portal page. ' +
           'Upload the payment slip / proof of payment afterwards, you ' +
           'may access this by going to the details page of the order and clicking ' +
@@ -284,7 +286,7 @@ const sendEmail = {
           ',</p>' +
           '<p>We have received your report for order #<b>' +
           clientData.orderId +
-          '</b>.We apologize for the inconvenience this may have caused.' +
+          '</b>. We apologize for the inconvenience this may have caused. ' +
           'We will get back to you within 24-48 hours via phone or email.</p>' +
           '<p>Thank you and have a great day! </p>' +
           '<p>AGC Print </p>' +
