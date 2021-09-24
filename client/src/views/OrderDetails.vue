@@ -1167,6 +1167,9 @@ export default {
           data['comment'] = reportData.resolveComment;
         }
 
+        // close modal
+        toggleResolveReportModal();
+
         // update report status
         const result = await api.updateReportStatus(state.report.id, data);
 
@@ -1175,9 +1178,6 @@ export default {
           // report is resolved
           state.report.status = 'Resolved';
           state.report.comment = reportData.resolveComment;
-
-          // close modal
-          toggleResolveReportModal();
         }
       } catch (err) {
         console.log(err);
@@ -1196,6 +1196,9 @@ export default {
           data['comment'] = reportData.cancelComment;
         }
 
+        // close modal
+        toggleCancelReportModal();
+
         // update report status
         const result = await api.updateReportStatus(state.report.id, data);
 
@@ -1204,9 +1207,6 @@ export default {
           // report is cancelled
           state.report.status = 'Cancelled';
           state.report.comment = reportData.cancelComment;
-
-          // close modal
-          toggleCancelReportModal();
         }
       } catch (err) {
         console.log(err);
@@ -1227,6 +1227,9 @@ export default {
             staffLastname: state.worker.lastname,
           };
 
+          // close modal
+          toggleAddNoteModal();
+
           // add note to report in the database
           const result = await api.addNote(state.report.id, staffNote);
 
@@ -1239,9 +1242,6 @@ export default {
             if (reportData.emptyNotes) {
               reportData.emptyNotes = false;
             }
-
-            // close modal
-            toggleAddNoteModal();
           }
         } catch (err) {
           console.log(err);
@@ -1250,27 +1250,24 @@ export default {
     }
 
     async function deleteNote(staffNote) {
+      // delete note from notes list
+      const tempNotes = [];
+      for (let ctr = 0; ctr < state.report.notes.length; ctr++) {
+        if (state.report.notes[ctr].id !== staffNote.id) {
+          tempNotes.push(state.report.notes[ctr]);
+        }
+      }
+      state.report.notes = tempNotes;
+
+      // check if notes list becomes empty after deletion
+      if (state.report.notes.length === 0) {
+        reportData.emptyNotes = true;
+      }
+
       // delete note from report in the database
       const result = await api.removeNote(state.report.id, {
         noteId: staffNote.id,
       });
-
-      // if successful, update note list in UI
-      if (result.status === 204) {
-        // delete note from notes list
-        const tempNotes = [];
-        for (let ctr = 0; ctr < state.report.notes.length; ctr++) {
-          if (state.report.notes[ctr].id !== staffNote.id) {
-            tempNotes.push(state.report.notes[ctr]);
-          }
-        }
-        state.report.notes = tempNotes;
-
-        // check if notes list becomes empty after deletion
-        if (state.report.notes.length === 0) {
-          reportData.emptyNotes = true;
-        }
-      }
     }
 
     const updateRules = {

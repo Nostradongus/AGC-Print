@@ -8,6 +8,14 @@
       >
         Loading data, please wait...
       </p>
+
+      <p
+        class="manrope-bold left-0 -top-3.5 text-xl pt-6 px-8 text-red"
+        v-if="state.empty != null && state.empty"
+      >
+        There are no user reports yet.
+      </p>
+
       <!-- display all user reports -->
       <div class="h-full w-full" v-if="state.empty != null && !state.empty">
         <!-- message and status filter option box -->

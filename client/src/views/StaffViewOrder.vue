@@ -8,6 +8,14 @@
       >
         Loading data, please wait...
       </p>
+
+      <p
+        class="manrope-bold left-0 -top-3.5 text-xl pt-6 px-8 text-red"
+        v-if="state.empty != null && state.empty"
+      >
+        There are no user orders yet.
+      </p>
+
       <!-- display all orders of user -->
       <div
         class="flex-1"
@@ -169,6 +177,7 @@ export default {
           state.empty = false;
         }
       } catch (err) {
+        state.empty = true;
         console.log(err);
       }
     }

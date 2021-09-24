@@ -80,12 +80,20 @@ const adminController = {
 
         // add new worker to database
       } else {
+        // capitalize first letter of first name and last name
+        const firstname =
+          req.body.firstname.charAt(0).toUpperCase() +
+          req.body.firstname.slice(1);
+        const lastname =
+          req.body.lastname.charAt(0).toUpperCase() +
+          req.body.lastname.slice(1);
+
         // create new worker object
         const worker = {
           username: req.body.username.toLowerCase(),
           password: null,
-          firstname: req.body.firstname,
-          lastname: req.body.lastname,
+          firstname: firstname,
+          lastname: lastname,
           contactNo: req.body.contactNo,
           email: req.body.email,
           isSystemAdmin: req.body.isSystemAdmin,
@@ -226,7 +234,6 @@ const adminController = {
         }
       }
     } catch (err) {
-      console.log(err);
       // if error has occurred, send server error status and message
       return res.status(500).json({ message: 'Server Error' });
     }
