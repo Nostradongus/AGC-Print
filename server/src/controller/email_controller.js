@@ -513,10 +513,10 @@ const sendEmail = {
         // content of the e-mail
         html:
           '<p>Dear Staff,</p>' +
-          '<p>A new delivery schedule has been set for the order # <b> ' +
+          '<p>A new report has been submitted for the order # <b> ' +
           clientData.orderId +
           '</b></p>' +
-          '<p>You may view the report details via the order management portal.</p>' +
+          '<p>You may view the report details via the details page of the order.</p>' +
           '<p>Thank you and have a great day! </p>' +
           '<p>[Please do not reply to this email. This is an auto-generated message]</p>',
       });
