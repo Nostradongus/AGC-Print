@@ -449,7 +449,7 @@ export default {
           const res = await api.registerWorker(data);
           if (res.status == 201) {
             state.empty = false;
-            state.workers.push(res.data);
+            state.workers.push(data);
           }
         } else {
           // if (!addWorkerValidation.usernameValidation) {
