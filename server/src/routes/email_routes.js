@@ -31,6 +31,13 @@ router.post(
   emailController.sendEmailProcessingOrder
 );
 
+// route for sending email to inform the client that their report is noted
+router.post(
+  '/client/sendEmailReport',
+  token.authenticateToken,
+  emailController.sendEmailReport
+);
+
 // route for sending email to inform the client that their order is complete
 router.post(
   '/client/sendEmailOrderComplete',
@@ -38,11 +45,11 @@ router.post(
   emailController.sendEmailOrderComplete
 );
 
-// route for sending email to inform the client that their report is noted
+// route for sending email to inform the client that their order is complete
 router.post(
-  '/client/sendEmailReport',
+  '/client/sendEmailReadyForDelivery',
   token.authenticateToken,
-  emailController.sendEmailReport
+  emailController.sendEmailReadyForDelivery
 );
 
 // route for sending email to inform the staff that a client has placed a new order
