@@ -465,6 +465,10 @@ export default {
       try {
         await api.deleteWorker(username);
         state.workers.splice(index, 1);
+
+        if (state.workers.length === 0) {
+          state.empty = true;
+        }
       } catch (err) {
         console.log(err);
       }
