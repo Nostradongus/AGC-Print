@@ -391,8 +391,11 @@ export default {
             id: route.params.id,
           };
 
+          // send email to client
+          await api.sendEmailReport(emailData);
+
           // send email to staff
-          await api.sendEmailReport(route.params.id);
+          await api.sendEmailNewReport({ id: route.params.id });
         }
       }
     }
