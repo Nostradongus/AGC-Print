@@ -386,8 +386,8 @@ export default {
           router.push({ path: `/order-details/${route.params.id}` });
 
           const emailData = {
-            name: user.firstname + ' ' + user.lastname,
-            email: user.email,
+            name: state.order.name,
+            email: state.order.email,
             id: route.params.id,
           };
 
