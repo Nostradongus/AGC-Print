@@ -43,7 +43,7 @@ const sendEmail = {
           '</b> has been received by our staff and ' +
           'is currently being processed. The total project cost will ' +
           'be available within 24 hours. You may view the project cost at ' +
-          'agcprint.com/orders.</p>' +
+          'https://agcprint.netlify.app//orders.</p>' +
           '<p>Thank you and have a great day! </p>' +
           '<p>AGC Print </p>' +
           '<p>[Please do not reply to this email. This is an auto-generated message]</p>',
