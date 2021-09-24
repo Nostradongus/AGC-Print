@@ -18,7 +18,7 @@
                 Delivery Time: {{ order.deliverySched.time }} 
               </span>
             </div>
-            <div v-if="order.deliverySched.remarks" class="text-sm manrope-regular">
+            <div v-if="order.deliverySched.remarks" class="text-sm manrope-regular truncate w-52">
               <span class="text-sm manrope-bold">
                 Remarks: {{ order.deliverySched.remarks }}
               </span>

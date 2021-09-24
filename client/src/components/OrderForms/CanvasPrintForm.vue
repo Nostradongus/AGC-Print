@@ -164,7 +164,7 @@
       >
         <option value="placeholder" disabled selected hidden>Select one</option>
         <option value="White Edges">White Edges</option>
-        <option value="Black Edges">Printed Edges</option>
+        <option value="Printed Edges">Printed Edges</option>
       </select>
       <label
         for="frameedges"
@@ -203,7 +203,7 @@
         v-if="state.fileTypeValidation != null && !state.fileTypeValidation"
         class="text-red manrope-bold text-left text-sm"
       >
-        File must be in .jpg, .png, .svg, .psd, .ai, or .pdf format.
+        File must be in .jpg, .png, .svg, .psd, or .ai format.
       </p>
     </div>
 
@@ -319,7 +319,7 @@ export default {
         state.orderFile = file.value.files[0];
 
         // valid file type extensions
-        const extensions = ['png', 'jpg', 'jpeg', 'svg', 'ai', 'psd', 'pdf'];
+        const extensions = ['png', 'jpg', 'jpeg', 'svg', 'ai', 'psd'];
 
         // get uploaded file's extension
         const fileExtension = state.orderFile.name.substring(state.orderFile.name.indexOf('.') + 1);

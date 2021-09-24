@@ -43,7 +43,10 @@
                     v-model="rescheduleData.date"
                     :min="rescheduleData.currDate"
                     class="manrope-bold text-md input-text-field w-96 ml-4"
-                    :class="{ 'border-red': v3.date.$error || !rescheduleData.dateValidation }"
+                    :class="{
+                      'border-red':
+                        v3.date.$error || !rescheduleData.dateValidation,
+                    }"
                   />
                   <p
                     v-if="v3.date.$error"
@@ -125,7 +128,10 @@
                   ease-in-out
                   text-center text-md
                   hover:bg-link-water hover:text-primary-blue
-                  w-32 h-10 ml-5 -mt-1
+                  w-32
+                  h-10
+                  ml-5
+                  -mt-1
                   rounded-xl
                   bg-primary-blue
                 "
@@ -1056,9 +1062,9 @@ export default {
 
     const v3 = useVuelidate(rescheduleRules, rescheduleData);
 
-    // to initialize current date today 
+    // to initialize current date today
     function initCurrentDate() {
-      // get today's date for date input start value 
+      // get today's date for date input start value
       const today = new Date();
 
       // initialize current date today
@@ -1067,10 +1073,10 @@ export default {
       let day = today.getDate() + 1; // starting day should be tomorrow
       // format month and day if needed
       if (month < 10) {
-        month = "0" + month;
+        month = '0' + month;
       }
       if (day < 10) {
-        day = "0" + day;
+        day = '0' + day;
       }
 
       // set current date
@@ -1080,14 +1086,17 @@ export default {
     // to validate date inputted
     function validateDate() {
       // get date values from current date and inputted date
-      const currDate = rescheduleData.currDate.split("-");
-      const inputDate = rescheduleData.date.split("-");
+      const currDate = rescheduleData.currDate.split('-');
+      const inputDate = rescheduleData.date.split('-');
 
       // temporary set date validation value to true
       rescheduleData.dateValidation = true;
 
       // check year first, year inputted should not be less than the current year
-      if (parseInt(inputDate[0]) < parseInt(currDate[0]) || inputDate[0].length !== 4) {
+      if (
+        parseInt(inputDate[0]) < parseInt(currDate[0]) ||
+        inputDate[0].length !== 4
+      ) {
         rescheduleData.dateValidation = false;
       } else if (parseInt(inputDate[0]) === parseInt(currDate[0])) {
         // check month afterwards, month inputted should not be less than the current month
@@ -1095,7 +1104,10 @@ export default {
           rescheduleData.dateValidation = false;
         }
         // check day afterwards, day inputted should be tomorrow after the current day or so on
-        else if (parseInt(inputDate[1]) === parseInt(currDate[1]) && parseInt(inputDate[2]) + 1 <= parseInt(currDate[2])) {
+        else if (
+          parseInt(inputDate[1]) === parseInt(currDate[1]) &&
+          parseInt(inputDate[2]) + 1 <= parseInt(currDate[2])
+        ) {
           rescheduleData.dateValidation = false;
         }
       }
@@ -1155,6 +1167,9 @@ export default {
           data['comment'] = reportData.resolveComment;
         }
 
+        // close modal
+        toggleResolveReportModal();
+
         // update report status
         const result = await api.updateReportStatus(state.report.id, data);
 
@@ -1163,9 +1178,6 @@ export default {
           // report is resolved
           state.report.status = 'Resolved';
           state.report.comment = reportData.resolveComment;
-
-          // close modal
-          toggleResolveReportModal();
         }
       } catch (err) {
         console.log(err);
@@ -1184,6 +1196,9 @@ export default {
           data['comment'] = reportData.cancelComment;
         }
 
+        // close modal
+        toggleCancelReportModal();
+
         // update report status
         const result = await api.updateReportStatus(state.report.id, data);
 
@@ -1192,9 +1207,6 @@ export default {
           // report is cancelled
           state.report.status = 'Cancelled';
           state.report.comment = reportData.cancelComment;
-
-          // close modal
-          toggleCancelReportModal();
         }
       } catch (err) {
         console.log(err);
@@ -1215,6 +1227,9 @@ export default {
             staffLastname: state.worker.lastname,
           };
 
+          // close modal
+          toggleAddNoteModal();
+
           // add note to report in the database
           const result = await api.addNote(state.report.id, staffNote);
 
@@ -1227,9 +1242,6 @@ export default {
             if (reportData.emptyNotes) {
               reportData.emptyNotes = false;
             }
-
-            // close modal
-            toggleAddNoteModal();
           }
         } catch (err) {
           console.log(err);
@@ -1238,27 +1250,24 @@ export default {
     }
 
     async function deleteNote(staffNote) {
+      // delete note from notes list
+      const tempNotes = [];
+      for (let ctr = 0; ctr < state.report.notes.length; ctr++) {
+        if (state.report.notes[ctr].id !== staffNote.id) {
+          tempNotes.push(state.report.notes[ctr]);
+        }
+      }
+      state.report.notes = tempNotes;
+
+      // check if notes list becomes empty after deletion
+      if (state.report.notes.length === 0) {
+        reportData.emptyNotes = true;
+      }
+
       // delete note from report in the database
       const result = await api.removeNote(state.report.id, {
         noteId: staffNote.id,
       });
-
-      // if successful, update note list in UI
-      if (result.status === 204) {
-        // delete note from notes list
-        const tempNotes = [];
-        for (let ctr = 0; ctr < state.report.notes.length; ctr++) {
-          if (state.report.notes[ctr].id !== staffNote.id) {
-            tempNotes.push(state.report.notes[ctr]);
-          }
-        }
-        state.report.notes = tempNotes;
-
-        // check if notes list becomes empty after deletion
-        if (state.report.notes.length === 0) {
-          reportData.emptyNotes = true;
-        }
-      }
     }
 
     const updateRules = {
@@ -1339,7 +1348,7 @@ export default {
         // if order set has a scheduled delivery by client
         if (state.order.deliverySched != null) {
           rescheduleData.date = state.order.deliverySched.date;
-          rescheduleData.time = state.order.deliverySched.time.split(" ")[0];
+          rescheduleData.time = state.order.deliverySched.time.split(' ')[0];
           rescheduleData.remarks = state.order.deliverySched.remarks;
         }
 
@@ -1355,6 +1364,7 @@ export default {
       try {
         const validated = await v.value.$validate();
         if (validated && state.nameValidation) {
+          toggleEditOrderSetModal();
           const res = await api.updateOrderSet(state.order.id, updateData);
 
           if (res.status === 204) {
@@ -1364,7 +1374,6 @@ export default {
             state.order.address = updateData.address;
             state.order.status = updateData.status;
 
-            toggleEditOrderSetModal();
             if (updateData.status === 'Waiting for Downpayment') {
               const emailData = {
                 name: updateData.name,
