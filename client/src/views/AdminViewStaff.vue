@@ -333,7 +333,7 @@
       <p
         class="manrope-bold left-0 -top-3.5 text-xl pt-3 px-8 text-red"
         v-if="
-          state.workers != null && !state.workers.length && state.search !== ''
+          state.workers != null && !state.workers.length && state.search !== '' && !state.empty
         "
       >
         No staff with "{{ state.search }}" username.
@@ -448,6 +448,9 @@ export default {
           data.contactNo = `63${data.contactNo}`;
           const res = await api.registerWorker(data);
           if (res.status == 201) {
+            if (state.workers.length === 0) {
+              state.empty = false;
+            }
             state.workers.push(res.data);
           }
         } else {
