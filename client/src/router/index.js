@@ -179,7 +179,7 @@ const routes = [
     name: 'ReportOrder',
     component: ReportOrder,
     meta: {
-      requiresAuth: true,
+      requiresUser: true,
     },
   },
   {
