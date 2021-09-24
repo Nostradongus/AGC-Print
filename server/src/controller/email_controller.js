@@ -19,16 +19,16 @@ const sendEmail = {
         service: 'gmail',
         auth: {
           // e-mail address of company 'bot'
-          user: 'sweng.nodemailer@gmail.com',
+          user: 'web.agcprint@gmail.com',
           // password for the e-mail account
-          pass: '1234567890Test',
+          pass: 'Agc1984print',
         },
       });
 
       // send mail with defined transport object
       const emailFormat = await transporter.sendMail({
         // sender's e-mail address
-        from: '"AGC Print" <sweng.nodemailer@gmail.com>',
+        from: '"AGC Print" <web.agcprint@gmail.com>',
         // receiver's e-mail address
         to: clientData.email,
         // subject of the e-mail
@@ -80,16 +80,16 @@ const sendEmail = {
         service: 'gmail',
         auth: {
           // e-mail address of company 'bot'
-          user: 'sweng.nodemailer@gmail.com',
+          user: 'web.agcprint@gmail.com',
           // password for the e-mail account
-          pass: '1234567890Test',
+          pass: 'Agc1984print',
         },
       });
 
       // send mail with defined transport object
       const emailFormat = await transporter.sendMail({
         // sender's e-mail address
-        from: '"AGC Print" <sweng.nodemailer@gmail.com>',
+        from: '"AGC Print" <web.agcprint@gmail.com>',
         // receiver's e-mail address
         to: clientData.email,
         // subject of the e-mail
@@ -148,16 +148,16 @@ const sendEmail = {
         service: 'gmail',
         auth: {
           // e-mail address of company 'bot'
-          user: 'sweng.nodemailer@gmail.com',
+          user: 'web.agcprint@gmail.com',
           // password for the e-mail account
-          pass: '1234567890Test',
+          pass: 'Agc1984print',
         },
       });
 
       // send mail with defined transport object
       const emailFormat = await transporter.sendMail({
         // sender's e-mail address
-        from: '"AGC Print" <sweng.nodemailer@gmail.com>',
+        from: '"AGC Print" <web.agcprint@gmail.com>',
         // receiver's e-mail address
         to: clientData.email,
         // subject of the e-mail
@@ -208,16 +208,16 @@ const sendEmail = {
         service: 'gmail',
         auth: {
           // e-mail address of company 'bot'
-          user: 'sweng.nodemailer@gmail.com',
+          user: 'web.agcprint@gmail.com',
           // password for the e-mail account
-          pass: '1234567890Test',
+          pass: 'Agc1984print',
         },
       });
 
       // send mail with defined transport object
       const emailFormat = await transporter.sendMail({
         // sender's e-mail address
-        from: '"AGC Print" <sweng.nodemailer@gmail.com>',
+        from: '"AGC Print" <web.agcprint@gmail.com>',
         // receiver's e-mail address
         to: clientData.email,
         // subject of the e-mail
@@ -267,16 +267,16 @@ const sendEmail = {
         service: 'gmail',
         auth: {
           // e-mail address of company 'bot'
-          user: '"AGC Print" sweng.nodemailer@gmail.com',
+          user: 'web.agcprint@gmail.com',
           // password for the e-mail account
-          pass: '1234567890Test',
+          pass: 'Agc1984print',
         },
       });
 
       // send mail with defined transport object
       const emailFormat = await transporter.sendMail({
         // sender's e-mail address
-        from: '"AGC Print" <sweng.nodemailer@gmail.com>',
+        from: '"AGC Print" <web.agcprint@gmail.com>',
         // receiver's e-mail address
         to: clientData.email,
         // subject of the e-mail
@@ -320,22 +320,23 @@ const sendEmail = {
 
       // create reusable transporter object using the default SMTP transport
       // e-mail account that will send the email
+      // create reusable transporter object using the default SMTP transport
       const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
           // e-mail address of company 'bot'
-          user: 'sweng.nodemailer@gmail.com',
+          user: 'web.agcprint@gmail.com',
           // password for the e-mail account
-          pass: '1234567890Test',
+          pass: 'Agc1984print',
         },
       });
 
       // send mail with defined transport object
       const emailFormat = await transporter.sendMail({
         // sender's e-mail address
-        from: '"AGC Print" <sweng.nodemailer@gmail.com>',
+        from: '"AGC Print" <web.agcprint@gmail.com>',
         // receiver's e-mail address
-        to: 'luffytar7@gmail.com',
+        to: 'web.agcprint@gmail.com',
         // subject of the e-mail
         subject: '[Order # ' + clientData.orderId + '] New Client Order',
         // content of the e-mail
@@ -374,7 +375,7 @@ const sendEmail = {
     try {
       // get the data of the client
       const clientData = {
-        orderId: req.body.id,
+        orderId: req.body,
       };
 
       // create reusable transporter object using the default SMTP transport
@@ -383,18 +384,18 @@ const sendEmail = {
         service: 'gmail',
         auth: {
           // e-mail address of company 'bot'
-          user: 'sweng.nodemailer@gmail.com',
+          user: 'web.agcprint@gmail.com',
           // password for the e-mail account
-          pass: '1234567890Test',
+          pass: 'Agc1984print',
         },
       });
 
       // send mail with defined transport object
       const emailFormat = await transporter.sendMail({
         // sender's e-mail address
-        from: '"AGC Print" <sweng.nodemailer@gmail.com>',
+        from: '"AGC Print" <web.agcprint@gmail.com>',
         // receiver's e-mail address
-        to: 'luffytar7@gmail.com',
+        to: 'web.agcprint@gmail.com',
         // subject of the e-mail
         subject: '[Order # ' + clientData.orderId + '] New Client Payment',
         // content of the e-mail
@@ -436,18 +437,18 @@ const sendEmail = {
         service: 'gmail',
         auth: {
           // e-mail address of company 'bot'
-          user: 'sweng.nodemailer@gmail.com',
+          user: 'web.agcprint@gmail.com',
           // password for the e-mail account
-          pass: '1234567890Test',
+          pass: 'Agc1984print',
         },
       });
 
       // send mail with defined transport object
       const emailFormat = await transporter.sendMail({
         // sender's e-mail address
-        from: '"AGC Print" <sweng.nodemailer@gmail.com>',
+        from: '"AGC Print" <web.agcprint@gmail.com>',
         // receiver's e-mail address
-        to: 'luffytar7@gmail.com',
+        to: 'web.agcprint@gmail.com',
         // subject of the e-mail
         subject:
           '[Order # ' + clientData.orderId + '] New Client Delivery Schedule',
@@ -488,7 +489,7 @@ const sendEmail = {
     try {
       // get the data of the client
       const clientData = {
-        orderId: req.body.id,
+        orderId: req.body,
       };
 
       // create reusable transporter object using the default SMTP transport
@@ -497,18 +498,18 @@ const sendEmail = {
         service: 'gmail',
         auth: {
           // e-mail address of company 'bot'
-          user: 'sweng.nodemailer@gmail.com',
+          user: 'web.agcprint@gmail.com',
           // password for the e-mail account
-          pass: '1234567890Test',
+          pass: 'Agc1984print',
         },
       });
 
       // send mail with defined transport object
       const emailFormat = await transporter.sendMail({
         // sender's e-mail address
-        from: '"AGC Print" <sweng.nodemailer@gmail.com>',
+        from: '"AGC Print" <web.agcprint@gmail.com>',
         // receiver's e-mail address
-        to: 'luffytar7@gmail.com',
+        to: 'web.agcprint@gmail.com',
         // subject of the e-mail
         subject: '[Order # ' + clientData.orderId + '] New Client Report',
         // content of the e-mail

@@ -296,7 +296,7 @@
                     Select one
                   </option>
                   <option value="White Edges">White Edges</option>
-                  <option value="Black Edges">Printed Edges</option>
+                  <option value="Printed Edges">Printed Edges</option>
                 </select>
 
                 <p
@@ -781,7 +781,10 @@ export default {
           state.frameFinishingValidation &&
           state.eyeletsValidation
         ) {
-          const result = await api.updateOrder(props.order.id, updateData);
+          const copyUpdate = JSON.parse(JSON.stringify(updateData));
+          toggleEditOrderModal();
+
+          const result = await api.updateOrder(props.order.id, copyUpdate);
 
           if (result.status === 204) {
             if (props.order.type !== 'Tarpaulin') {
@@ -792,51 +795,50 @@ export default {
               state.frameFinishingValidation = null;
             } else {
               if (
-                updateData.frameOption === '3/4 Inches' ||
-                updateData.frameOption === '1.5 Inches'
+                copyUpdate.frameOption === '3/4 Inches' ||
+                copyUpdate.frameOption === '1.5 Inches'
               ) {
                 state.frameFinishingValidation = null;
               }
               if (
-                updateData.frameOption === 'Shadow Box' ||
-                updateData.frameOption === 'Glassless Frame' ||
-                updateData.frameOption === 'Floating Frame'
+                copyUpdate.frameOption === 'Shadow Box' ||
+                copyUpdate.frameOption === 'Glassless Frame' ||
+                copyUpdate.frameOption === 'Floating Frame'
               ) {
                 state.frameEdgesValidation = null;
               }
             }
 
             const orderUpdate = {
-              quantity: updateData.quantity,
-              width: parseFloat(parseFloat(updateData.width).toFixed(2)),
-              height: parseFloat(parseFloat(updateData.height).toFixed(2)),
-              price: parseFloat(parseFloat(updateData.price).toFixed(2)),
-              remarks: updateData.remarks,
+              quantity: copyUpdate.quantity,
+              width: parseFloat(parseFloat(copyUpdate.width).toFixed(2)),
+              height: parseFloat(parseFloat(copyUpdate.height).toFixed(2)),
+              price: parseFloat(parseFloat(copyUpdate.price).toFixed(2)),
+              remarks: copyUpdate.remarks,
             };
             // Tarpaulin only details
-            if (updateData.eyelets) {
-              orderUpdate['eyelets'] = updateData.eyelets;
+            if (copyUpdate.eyelets) {
+              orderUpdate['eyelets'] = copyUpdate.eyelets;
             }
 
             // Sticker only details
-            if (updateData.diecut) {
-              orderUpdate['diecut'] = updateData.diecut;
+            if (copyUpdate.diecut) {
+              orderUpdate['diecut'] = copyUpdate.diecut;
             }
 
             // Canvas Print only details
-            if (updateData.frameOption) {
-              orderUpdate['frameOption'] = updateData.frameOption;
+            if (copyUpdate.frameOption) {
+              orderUpdate['frameOption'] = copyUpdate.frameOption;
             }
-            if (updateData.frameEdges) {
-              orderUpdate['frameEdges'] = updateData.frameEdges;
+            if (copyUpdate.frameEdges) {
+              orderUpdate['frameEdges'] = copyUpdate.frameEdges;
             }
-            if (updateData.frameFinishing) {
-              orderUpdate['frameFinishing'] = updateData.frameFinishing;
+            if (copyUpdate.frameFinishing) {
+              orderUpdate['frameFinishing'] = copyUpdate.frameFinishing;
             }
 
             emit('orderUpdate', orderUpdate);
           }
-          toggleEditOrderModal();
         } else {
           if (props.order.type !== 'Tarpaulin') {
             state.eyeletsValidation = null;
