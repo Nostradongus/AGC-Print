@@ -18,12 +18,6 @@ import cloudinary from '../config/cloudinary.js';
 import uniqid from 'uniqid';
 import UserService from '../service/user_service.js';
 
-// import nodemailer module for sending emails to clients
-import nodemailer from 'nodemailer';
-
-// import logger for terminal messages
-import logger from '../logger/index.js';
-
 // order controller object for order controller methods
 const orderController = {
   // order controller method to retrieve and return all order sets from the database
@@ -321,7 +315,7 @@ const orderController = {
     /* NOTE: USE IF UPLOADING WITH CLOUDINARY */
     // get uploaded file's extension and upload to cloudinary with designated filename format
     const ext = req.file.originalname.substring(
-      req.file.originalname.indexOf('.') + 1
+      req.file.originalname.lastIndexOf('.') + 1
     );
     const filename = `order-${uniqueId}`;
     // cloudinary directory where the order file will be uploaded
