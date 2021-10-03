@@ -157,7 +157,7 @@ const reportController = {
         /* NOTE: USE IF UPLOADING WITH CLOUDINARY */
         // get file extension and create designated filename format for uploaded report file
         const ext = req.files[ctr].originalname.substring(
-          req.files[ctr].originalname.indexOf('.') + 1
+          req.files[ctr].originalname.lastIndexOf('.') + 1
         );
         const filename = `report-${uniqueId}-${ctr}`;
         // cloudinary directory where the report file will be uploaded
