@@ -91,7 +91,7 @@
                   type="text"
                   class="manrope-regular input-text-field w-48 ml-4"
                   v-model.trim="staff.username"
-                  @keypress="isValidUsername()"
+                  @keyup="isValidUsername()"
                   :class="{
                     'border-red': !addWorkerValidation.usernameValidation,
                   }"
@@ -100,7 +100,7 @@
                   class="ml-4 text-red manrope-bold text-left text-sm"
                   v-if="!addWorkerValidation.usernameValidation"
                 >
-                  Value is required and shoud only be alphanumeric
+                  Value is required and should only be alphanumeric
                 </p>
               </div>
             </div>
@@ -192,7 +192,7 @@
                   class="manrope-regular input-text-field w-60 ml-4"
                   v-model.trim="staff.password"
                   :class="{ 'border-red': vAddWorker.password.$error }"
-                  @keypress="isValidPassword()"
+                  @keyup="isValidPassword()"
                 />
                 <p
                   class="ml-4 text-red manrope-bold text-left text-sm"
@@ -333,7 +333,10 @@
       <p
         class="manrope-bold left-0 -top-3.5 text-xl pt-3 px-8 text-red"
         v-if="
-          state.workers != null && !state.workers.length && state.search !== '' && !state.empty
+          state.workers != null &&
+          !state.workers.length &&
+          state.search !== '' &&
+          !state.empty
         "
       >
         No staff with "{{ state.search }}" username.
@@ -508,9 +511,16 @@ export default {
     }
 
     function isValidUsername() {
-      addWorkerValidation.usernameValidation =
-        (/^[a-zA-Z0-9_]*$/.test(staff.username) ? true : false) &&
-        staff.username != null;
+      if (staff.username === '') {
+        addWorkerValidation.usernameValidation = false;
+      } else {
+        addWorkerValidation.usernameValidation =
+          (/^[a-zA-Z0-9]*$/.test(staff.username) ? true : false) &&
+          staff.username != null;
+      }
+
+      console.log(addWorkerValidation.usernameValidation);
+      console.log(staff.username);
     }
 
     function isValidPassword() {
