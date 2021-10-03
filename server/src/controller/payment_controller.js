@@ -159,7 +159,7 @@ const paymentController = {
       /* NOTE: USE IF UPLOADING WITH CLOUDINARY */
       // get uploaded file's extension and upload to cloudinary with designated filename format
       const ext = req.file.originalname.substring(
-        req.file.originalname.indexOf('.') + 1
+        req.file.originalname.lastIndexOf('.') + 1
       );
       const filename = `payment-${uniqueId}`;
       // cloudinary directory where the order file will be uploaded

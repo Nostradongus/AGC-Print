@@ -198,7 +198,7 @@ export default {
         const extensions = ['png', 'jpg', 'jpeg', 'svg', 'ai', 'psd'];
 
         // get uploaded file's extension
-        const fileExtension = state.orderFile.name.substring(state.orderFile.name.indexOf('.') + 1);
+        const fileExtension = state.orderFile.name.substring(state.orderFile.name.lastIndexOf('.') + 1);
 
         // check if uploaded file contains valid file type extension
         state.fileTypeValidation = extensions.includes(fileExtension);

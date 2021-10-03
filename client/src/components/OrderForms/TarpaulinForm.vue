@@ -236,7 +236,7 @@ export default {
 
         // get uploaded file's extension
         const fileExtension = state.orderFile.name.substring(
-          state.orderFile.name.indexOf('.') + 1
+          state.orderFile.name.lastIndexOf('.') + 1
         );
 
         // check if uploaded file contains valid file type extension
