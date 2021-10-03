@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API = axios.create({ baseURL: 'https://agc-print.herokuapp.com' });
+const API = axios.create({ baseURL: 'https://agc-print-test.herokuapp.com' });
 
 // for user access token
 API.interceptors.request.use((req) => {
